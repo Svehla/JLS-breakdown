@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Playground from './Playground'
 import Sound from 'react-sound'
-import cymbal from './cymbal.wav'
+import cymbal from './fast-drum.mp3'
 import './App.css'
 
 class App extends Component {
@@ -19,7 +19,7 @@ class App extends Component {
           position={this.state.position}
           loop
           playStatus={Sound.status.PLAYING}
-          onFinishedPlaying={() => this.setState({ position: 0 })}
+          onFinishedPlaying={() => this.setState({ position: 10 })}
         />
 
         <Playground />

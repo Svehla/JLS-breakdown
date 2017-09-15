@@ -4,7 +4,8 @@ import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import { SHADOW_MARGIN } from '../config'
-import onEatAudio from '../zero.wav'
+import onEatAudio from '../slow.wav'
+import onEatAudioFast from '../fast.mp3'
 import background from '../background.jpg'
 
 const randomWidth = () => Math.random() * 20 + 10
@@ -56,7 +57,7 @@ class Root extends React.Component {
         x: 0,
         y: 0,
       },
-      onEatSoundURL: onEatAudio,
+      onEatSoundURL: onEatAudioFast,
       objects: [
       /*  ...[{
           id: 2,
