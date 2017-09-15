@@ -2,13 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5e036ca-b4c4-46f7-bcd3-3af3a9a4c355" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/cymbal.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/fast-drum.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/fast.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/slow-zero.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/slow.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/zero.wav" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Root.jsx" afterPath="$PROJECT_DIR$/src/Playground/Root.jsx" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -37,8 +30,8 @@
       <file leaf-file-name="Root.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
-              <caret line="152" column="61" lean-forward="false" selection-start-line="152" selection-start-column="61" selection-end-line="152" selection-end-column="61" />
+            <state relative-caret-position="256">
+              <caret line="84" column="32" lean-forward="false" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -266,12 +259,12 @@
       <option name="presentableId" value="Default" />
       <updated>1505414552530</updated>
       <workItem from="1505414554385" duration="46769000" />
-      <workItem from="1505508489218" duration="5319000" />
+      <workItem from="1505508489218" duration="5496000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52088000" />
+    <option name="totallyTimeSpent" value="52265000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="952" y="0" width="976" height="1038" extended-state="0" />
@@ -488,8 +481,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="152" column="61" lean-forward="false" selection-start-line="152" selection-start-column="61" selection-end-line="152" selection-end-column="61" />
+        <state relative-caret-position="256">
+          <caret line="84" column="32" lean-forward="false" selection-start-line="84" selection-start-column="32" selection-end-line="84" selection-end-column="32" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>

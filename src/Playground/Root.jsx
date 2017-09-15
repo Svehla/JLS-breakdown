@@ -23,8 +23,8 @@ class Root extends React.Component {
       topY: 20,
     }
     const playground = {
-      width: 3000,
-      height: 2000,
+      width: 4000,
+      height: 2500,
     }
     this.state = {
       me: {
@@ -81,8 +81,8 @@ class Root extends React.Component {
           deleted: false,
         },
       ],*/
-      ...Array(150).fill(0).map(item => ({
-        ...(Math.random() > 0.5
+      ...Array(120).fill(0).map(item => ({
+        ...(Math.random() > 0.80
           ? {
             type: RECTANGLE,
             width: randomWidth()*2,
