@@ -4,8 +4,10 @@ import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import { SHADOW_MARGIN } from '../config'
-import onEatAudio from '../slow.wav'
-import onEatAudioFast from '../fast.mp3'
+import onEatAudio from '../audio/slow.wav'
+import onEatAudioFast from '../audio/fast-zero.mp3'
+import scream from '../audio/scream.mp3'
+import growl from '../audio/growl.mp3'
 import background from '../background.jpg'
 
 const randomWidth = () => Math.random() * 20 + 10
@@ -57,7 +59,8 @@ class Root extends React.Component {
         x: 0,
         y: 0,
       },
-      onEatSoundURL: onEatAudioFast,
+      onEatCircleURL: onEatAudioFast,
+      onEatRectangleURLs: [scream, growl],
       objects: [
       /*  ...[{
           id: 2,
@@ -144,7 +147,11 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          var audio = new Audio(this.state.onEatSoundURL);
+          var audio = new Audio(
+            item.type === CIRCLE
+              ? this.state.onEatCircleURL
+              : this.state.onEatRectangleURLs[Math.random() < .5 ? 0 : 1]
+          );
           audio.play()
           return { ...item, deleted: true }
         }
