@@ -5,6 +5,7 @@ import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import { SHADOW_MARGIN } from '../config'
 import onEatAudio from '../zero.wav'
+import background from '../background.jpg'
 
 const randomWidth = () => Math.random() * 10 + 10
 const randomColor = () => "#"+((1<<24)*Math.random()|0).toString(16)
@@ -29,12 +30,13 @@ class Root extends React.Component {
         xRel: view.width / 2, // x relative
         yRel: view.height / 2, // y relative
         type: CIRCLE,
-        radius: 70,
+        radius: 90,
         shadowOffsetX: 20,
         shadowOffsetY: 25,
         shadowBlur: 40,
-        opacity: 0.5,
+        opacity: 0.8,
         background: '#F0F',
+        backgroundimage: background,
         maxSpeed: 20,
       },
       timezoneOffset: new Date().getTimezoneOffset(),

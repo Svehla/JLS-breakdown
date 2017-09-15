@@ -14,7 +14,7 @@ class App extends Component {
   render() {
     return (
       <div>
-
+        {/*
         <Sound
           url={cymbal}
           position={this.state.position}
@@ -22,6 +22,7 @@ class App extends Component {
           playStatus={Sound.status.PLAYING}
           onFinishedPlaying={() => this.setState({ position: 0 })}
         />
+        */}
 
         <Playground />
       </div>
