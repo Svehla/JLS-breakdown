@@ -7,8 +7,8 @@ import { SHADOW_MARGIN } from '../config'
 import onEatAudio from '../zero.wav'
 import background from '../background.jpg'
 
-const randomWidth = () => Math.random() * 10 + 10
-const randomColor = () => "#"+((1<<24)*Math.random()|0).toString(16)
+const randomWidth = () => Math.random() * 20 + 10
+const randomColor = () => "#"+((1<<24)*Math.random()/5|0).toString(16)
 
 class Root extends React.Component {
   constructor(props) {;
@@ -77,7 +77,7 @@ class Root extends React.Component {
           deleted: false,
         },
       ],*/
-      ...Array(200).fill(0).map(item => ({
+      ...Array(150).fill(0).map(item => ({
         ...(Math.random() > 0.5
           ? {
             type: RECTANGLE,
@@ -89,7 +89,7 @@ class Root extends React.Component {
           }),
         x: Math.random() * playground.width,
         y: Math.random() * playground.height,
-        shadowOffsetX: SHADOW_MARGIN-7,
+        // shadowOffsetX: SHADOW_MARGIN-7,
         shadowOffsetY: SHADOW_MARGIN-7,
         shadowBlur: 30,
         background: randomColor(),

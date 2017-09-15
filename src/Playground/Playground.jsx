@@ -40,7 +40,7 @@ const App = ({
         <Text
           x={view.width - 200}
           y={0}
-          text={`snědl jsi: ${objects.reduce((pre, curr) => (
+          text={`000 : ${objects.reduce((pre, curr) => (
             curr.deleted ? pre+1 : pre
           ), 0)}`}
           fontSize={30}
