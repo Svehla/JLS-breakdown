@@ -14,8 +14,6 @@ class Me extends React.Component {
     const image = new window.Image()
     image.src = background
     image.onload = () => {
-      console.log('OBRÁZEK SE NAČETL')
-      console.log(image)
       this.setState({
         image: image
       })
