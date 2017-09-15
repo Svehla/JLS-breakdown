@@ -20,8 +20,8 @@ class Root extends React.Component {
       topY: 20,
     }
     const playground = {
-      width: 4000,
-      height: 3000,
+      width: 3000,
+      height: 2000,
     }
     this.state = {
       me: {
