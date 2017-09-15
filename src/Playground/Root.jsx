@@ -4,17 +4,17 @@ import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import { SHADOW_MARGIN } from '../config'
-import onEatAudio from '../audio/slow.wav'
-import onEatAudioFast from '../audio/fast-zero.mp3'
+import fastZero from '../audio/fast-zero.mp3'
 import scream from '../audio/scream.mp3'
 import growl from '../audio/growl.mp3'
+import patAndMat from '../audio/pat-and-mat.wav'
 import background from '../background.jpg'
 
 const randomWidth = () => Math.random() * 20 + 10
 const randomColor = () => "#"+((1<<24)*Math.random()/5|0).toString(16)
 
 class Root extends React.Component {
-  constructor(props) {;
+  constructor(props) {
     super(props)
     const view = {
       width: window.innerWidth,
@@ -59,28 +59,27 @@ class Root extends React.Component {
         x: 0,
         y: 0,
       },
-      onEatCircleURL: onEatAudioFast,
-      onEatRectangleURLs: [scream, growl],
+      // onEatCircleURL: onEatAudioFast,
+      // onEatRectangleURLs: [scream, growl],
       objects: [
-      /*  ...[{
+        ...Array(3).fill(0).map(item => ({
           id: 2,
-          type: RECTANGLE,
-          x: 300,
-          y: 300,
-          width: 40,
-          height: 60,
-          background: '#15F',
-          deleted: false,
-        },
-        {
           type: CIRCLE,
-          x: 300,
-          y: 30,
-          radius: 40,
-          background: '#0FF',
+          x: Math.random() * playground.width,
+          y: Math.random() * playground.height,
+          radius: 400,
+          background: '#FFD700',
+          audio: 'patAndMatAudio',
           deleted: false,
-        },
-      ],*/
+        })),
+          /* {
+             type: CIRCLE,
+             x: 300,
+             y: 30,
+             radius: 40,
+             background: '#0FF',
+             deleted: false,
+           },*/
       ...Array(120).fill(0).map(item => ({
         ...(Math.random() > 0.80
           ? {
@@ -102,6 +101,12 @@ class Root extends React.Component {
       ]
     }
   }
+
+
+  screamAudio = new Audio(scream)
+  growlAudio = new Audio(growl)
+  guitarAudio = new Audio(fastZero)
+  patAndMatAudio = new Audio(patAndMat)
 
   // ZPRACOVÁNÍ POHBYU MYŠI
   componentDidUpdate(props, state) {
@@ -147,11 +152,15 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          var audio = new Audio(
+          var audio = !item.audio ? (
             item.type === CIRCLE
-              ? this.state.onEatCircleURL
-              : this.state.onEatRectangleURLs[Math.random() < .5 ? 0 : 1]
-          );
+              ? this.guitarAudio
+              : Math.random() < .5
+                ? this.screamAudio
+                : this.growlAudio
+            ):(
+              this[item.audio]
+          )
           audio.play()
           return { ...item, deleted: true }
         }
