@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f5e036ca-b4c4-46f7-bcd3-3af3a9a4c355" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Me.jsx" afterPath="$PROJECT_DIR$/src/Playground/Me.jsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Root.jsx" afterPath="$PROJECT_DIR$/src/Playground/Root.jsx" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,10 +17,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="378">
+              <caret line="22" column="10" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Me.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Playground/Me.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
+            <state relative-caret-position="588">
               <caret line="28" column="10" lean-forward="true" selection-start-line="28" selection-start-column="10" selection-end-line="28" selection-end-column="10" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -31,7 +39,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Root.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Root.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
@@ -99,9 +107,9 @@
         <option value="$PROJECT_DIR$/src/Playground/Playground.jsx" />
         <option value="$PROJECT_DIR$/src/Playground/mathCalc.js" />
         <option value="$PROJECT_DIR$/src/Playground/Borders.jsx" />
-        <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/Playground/Me.jsx" />
         <option value="$PROJECT_DIR$/src/Playground/Root.jsx" />
+        <option value="$PROJECT_DIR$/src/App.js" />
       </list>
     </option>
   </component>
@@ -263,12 +271,12 @@
       <option name="presentableId" value="Default" />
       <updated>1505414552530</updated>
       <workItem from="1505414554385" duration="46769000" />
-      <workItem from="1505508489218" duration="2591000" />
+      <workItem from="1505508489218" duration="2693000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49360000" />
+    <option name="totallyTimeSpent" value="49462000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2" y="0" width="944" height="1038" extended-state="0" />
@@ -457,28 +465,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="4" column="18" lean-forward="true" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Playground/Playground.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="35" column="11" lean-forward="false" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Playground/Me.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="28" column="10" lean-forward="true" selection-start-line="28" selection-start-column="10" selection-end-line="28" selection-end-column="10" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
@@ -492,6 +482,24 @@
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Playground/Me.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="28" column="10" lean-forward="true" selection-start-line="28" selection-start-column="10" selection-end-line="28" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="22" column="10" lean-forward="false" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
