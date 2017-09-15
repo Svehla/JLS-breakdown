@@ -1,0 +1,27 @@
+{
+  "name": "canvas-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "konva": "^1.6.8",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-konva": "^1.1.4",
+    "react-scripts": "1.0.13",
+    "react-sound": "^0.8.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
