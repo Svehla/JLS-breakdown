@@ -21,6 +21,7 @@ class Root extends React.Component {
         yRel: view.height / 2, // y relative
         type: CIRCLE,
         radius: isMobile ? 60 : 90,
+        backgroundimage: background,
         fillPatternScale: (isMobile
           ? { x: 0.66, y: 0.66 }
           : { x: 1 , y: 1 }),
@@ -29,7 +30,6 @@ class Root extends React.Component {
         shadowOffsetY: 25,
         shadowBlur: 40,
         background: '#F0F',
-        backgroundimage: background,
         maxSpeed: isMobile ? 15 : 20,
       },
       timezoneOffset: new Date().getTimezoneOffset(),
