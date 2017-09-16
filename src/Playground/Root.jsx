@@ -63,7 +63,7 @@ class Root extends React.Component {
   // LIVECYCLES
   // game loop
   componentWillReceiveProps(nextProps){
-    if(!nextProps.loading){
+    if(!nextProps.stop){
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
         request: requestAnimationFrame(this.tick),
@@ -74,15 +74,14 @@ class Root extends React.Component {
       })
     }
   }
-  componentDidMount () {
-  }
-
   componentWillUnmount () {
     cancelAnimationFrame(this.state.request)
   }
 
   setMousePositions = ({ x, y }) => {
-    this.setState({ mousePos: { x, y } })
+    if(!this.props.stop){
+      this.setState({ mousePos: { x, y } })
+    }
   }
   onMouseMove = (e) => {
     const x = e.pageX
@@ -144,7 +143,7 @@ class Root extends React.Component {
               const { x, y } = e.currentTarget.pointerPos
               this.setMousePositions({ x, y })
             }}
-            loading={this.props.loading}
+            stop={this.props.stop}
             {...this.state}
           />
         </div>

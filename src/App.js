@@ -50,7 +50,7 @@ class App extends Component {
           console.log(e.key)
         }}
       >
-        <Playground loading={this.state.loading} />
+        <Playground stop={this.state.loading} />
 
       </div>
     )

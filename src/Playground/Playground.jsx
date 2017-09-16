@@ -12,7 +12,7 @@ const App = ({
   playground,
   backgroundConfig,
   onMove,
-  loading,
+  stop,
   deletedObjects
 }) => {
   const inActualViewFunc = isInView(view)
@@ -45,7 +45,7 @@ const App = ({
         />
 
         {
-          loading && <Text
+          stop && <Text
             x={view.width / 2}
             y={30}
             text={`Loading`}
