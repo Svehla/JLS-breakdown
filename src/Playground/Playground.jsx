@@ -11,6 +11,7 @@ const App = ({
   me,
   playground,
   backgroundConfig,
+  onClick
 }) => {
   const inActualViewFunc = isInView(view)
   // const filteredObjects = objects.filter(isInView(view))
@@ -18,6 +19,7 @@ const App = ({
   return (
     <Stage
       background={'#456'}
+      onTap={onClick}
       width={view.width} height={view.height}>
       <Layer>
         <Borders

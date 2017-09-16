@@ -29,7 +29,6 @@ class Me extends React.Component {
         ...meProps,
       },
       view,
-      backgroundImage
     } = this.props
     return (
       <Circle

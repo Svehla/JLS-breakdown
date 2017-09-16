@@ -86,38 +86,33 @@ class Root extends React.Component {
         ...createDataElements(20, RECTANGLE, {
           audio: 'scream',
         }),
-        ...createDataElements(80, CIRCLE, {
+        ...createDataElements(180, CIRCLE, {
           audio: 'fastZero',
         })
       ]
     }
-    console.log(this.state)
   }
 
   // LIVECYCLES
   // game loop
   componentDidMount () {
+    document.addEventListener('mousemove', this.onMouseMove)
     this.setState({
       request: requestAnimationFrame(this.tick)
     })
-  }
-
-  // ZPRACOVÁNÍ POHBYU MYŠI
-  componentDidUpdate(props, state) {
-    document.addEventListener('mousemove', this.onMouseMove)
   }
 
   componentWillUnmount () {
     cancelAnimationFrame(this.state.request)
   }
 
+  setMousePositions = ({ x, y }) => {
+    this.setState({ mousePos: { x, y } })
+  }
   onMouseMove = (e) => {
-    this.setState({
-      mousePos: {
-        x: e.pageX,
-        y: e.pageY
-      }
-    })
+    const x = e.pageX
+    const y = e.pageY
+    this.setMousePositions({ x, y })
   }
 
   tick = () => {
@@ -161,7 +156,13 @@ class Root extends React.Component {
     return (
       <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
         <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
-          <Playground {...this.state} />
+          <Playground
+            onClick={(e) => {
+              const { x, y } = e.currentTarget.pointerPos
+              console.log(x, y)
+              this.setMousePositions({ x, y })
+            }}
+            {...this.state} />
         </div>
         {/*
         <pre>
