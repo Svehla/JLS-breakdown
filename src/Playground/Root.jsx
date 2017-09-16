@@ -138,7 +138,7 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          sounds[item.audio].pause()
+          sounds[item.audio].currentTime = 0
           sounds[item.audio].play()
           return { ...item, deleted: true }
         }

@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5e036ca-b4c4-46f7-bcd3-3af3a9a4c355" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Playground/createDataElement.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/audio/index.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/audio/fast-drum.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/audio/fast-zero.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/audio/pat-and-mat.wav" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/audio/slow-zero.mp3" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Me.jsx" afterPath="$PROJECT_DIR$/src/Playground/Me.jsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Player.jsx" afterPath="$PROJECT_DIR$/src/Playground/Player.jsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Playground.jsx" afterPath="$PROJECT_DIR$/src/Playground/Playground.jsx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Root.jsx" afterPath="$PROJECT_DIR$/src/Playground/Root.jsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/mathCalc.js" afterPath="$PROJECT_DIR$/src/Playground/mathCalc.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config.js" afterPath="$PROJECT_DIR$/src/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/constants.js" afterPath="$PROJECT_DIR$/src/constants.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -31,23 +17,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Playground.jsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Playground/Playground.jsx">
+      <file leaf-file-name="Root.jsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="32" column="18" lean-forward="false" selection-start-line="30" selection-start-column="16" selection-end-line="32" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="createDataElement.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Playground/createDataElement.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="593">
-              <caret line="39" column="24" lean-forward="false" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
+            <state relative-caret-position="436">
+              <caret line="140" column="44" lean-forward="false" selection-start-line="140" selection-start-column="44" selection-end-line="140" selection-end-column="44" />
               <folding>
-                <element signature="e#0#84#0" expanded="true" />
+                <element signature="e#0#25#0" expanded="true" />
+                <marker date="1505528459874" expanded="true" signature="4213:4291" ph="..." />
               </folding>
             </state>
           </provider>
@@ -75,7 +52,6 @@
       <find>blue</find>
       <find>forEach</find>
       <find>fastZero</find>
-      <find>play</find>
       <find>randomWidth</find>
       <find>SHADOW_MARGIN</find>
       <find>audio</find>
@@ -87,6 +63,7 @@
       <find>Image</find>
       <find>circl</find>
       <find>play(</find>
+      <find>play</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -113,9 +90,9 @@
         <option value="$PROJECT_DIR$/src/Playground/mathCalc.js" />
         <option value="$PROJECT_DIR$/src/Playground/Me.jsx" />
         <option value="$PROJECT_DIR$/src/Playground/Player.jsx" />
-        <option value="$PROJECT_DIR$/src/Playground/Root.jsx" />
         <option value="$PROJECT_DIR$/src/Playground/createDataElement.js" />
         <option value="$PROJECT_DIR$/src/Playground/Playground.jsx" />
+        <option value="$PROJECT_DIR$/src/Playground/Root.jsx" />
       </list>
     </option>
   </component>
@@ -288,12 +265,12 @@
       <option name="presentableId" value="Default" />
       <updated>1505414552530</updated>
       <workItem from="1505414554385" duration="46769000" />
-      <workItem from="1505508489218" duration="16409000" />
+      <workItem from="1505508489218" duration="17024000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63178000" />
+    <option name="totallyTimeSpent" value="63793000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="776" y="0" width="1152" height="1038" extended-state="0" />
@@ -379,7 +356,7 @@
           <caret line="144" column="22" lean-forward="true" selection-start-line="144" selection-start-column="22" selection-end-line="144" selection-end-column="22" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <marker date="1505527332368" expanded="true" signature="4205:4283" ph="..." />
+            <marker date="1505528459874" expanded="true" signature="4213:4291" ph="..." />
           </folding>
         </state>
       </provider>
@@ -505,17 +482,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="59" column="28" lean-forward="false" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <marker date="1505527332368" expanded="true" signature="4205:4283" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Playground/Me.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="21">
@@ -534,6 +500,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Playground/Playground.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="11" column="6" lean-forward="false" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Playground/createDataElement.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="593">
@@ -544,11 +518,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Playground/Playground.jsx">
+    <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="32" column="18" lean-forward="false" selection-start-line="30" selection-start-column="16" selection-end-line="32" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="436">
+          <caret line="140" column="44" lean-forward="false" selection-start-line="140" selection-start-column="44" selection-end-line="140" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <marker date="1505528459874" expanded="true" signature="4213:4291" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
