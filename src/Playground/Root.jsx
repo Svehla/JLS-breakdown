@@ -3,7 +3,7 @@ import Playground from './Playground'
 import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
-import { playground, view, dataObjects } from '../config'
+import { LOADING_BG_COLOR, PLAY_BG_COLOR, playground, view, dataObjects } from '../config'
 import background from '../background.jpg'
 import { allSounds } from '../audio/index'
 const play = require('audio-play')
@@ -40,7 +40,7 @@ class Root extends React.Component {
         y: 0,
         width: playground.width,
         height: playground.height,
-        background: '#EEF',
+        background: LOADING_BG_COLOR,
       },
       mousePos: {
         x: 0,
@@ -50,13 +50,25 @@ class Root extends React.Component {
     }
   }
 
+  componentWIllR
   // LIVECYCLES
   // game loop
+  componentWillReceiveProps(nextProps){
+    console.log('nextProps')
+    console.log(nextProps)
+    if(!nextProps.loading){
+      document.addEventListener('mousemove', this.onMouseMove)
+      this.setState({
+        request: requestAnimationFrame(this.tick),
+        backgroundConfig: {
+          ...this.state.backgroundConfig,
+          background: PLAY_BG_COLOR
+        }
+      })
+    }
+    //if(nextProps.)
+  }
   componentDidMount () {
-    document.addEventListener('mousemove', this.onMouseMove)
-    this.setState({
-      request: requestAnimationFrame(this.tick)
-    })
   }
 
   componentWillUnmount () {
@@ -90,10 +102,10 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          console.log(allSounds)
-          console.log(allSounds.audio)
-          console.log(allSounds.fastZero)
-          console.log(allSounds[item.audio])
+          //console.log(allSounds)
+          //console.log(allSounds.audio)
+          //console.log(allSounds.fastZero)
+          // console.log(allSounds[item.audio])
           // allSounds[item.audio]
           play(allSounds[item.audio])
           return { ...item, deleted: true }

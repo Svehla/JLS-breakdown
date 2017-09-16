@@ -1,5 +1,7 @@
 import { createDataElements } from './Playground/createDataElement'
 import { RECTANGLE, CIRCLE } from './constants'
+export const LOADING_BG_COLOR = '#333'
+export const PLAY_BG_COLOR = '#EEF'
 
 export const view = {
   width: window.innerWidth,

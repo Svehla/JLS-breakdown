@@ -11,6 +11,16 @@ const initSoundsConfig = {
   }
 }
 
+const fullScreenDiv = {
+  background: 'rgba(10, 10, 10, .5)',
+  width: '100%',
+  height: '100%',
+  position: 'relative',
+  top: 0,
+  left: 0,
+  zIndex: 80000,
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -23,7 +33,6 @@ class App extends Component {
   componentDidMount () {
     initSounds(initSoundsConfig).then((allSounds) => {
       this.setState({ loading: false })
-      // console.log(allSounds.fastDrum)
       play(allSounds.fastDrum, initSoundsConfig.fastDrum)
     })
   }
@@ -31,11 +40,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        {
-          this.state.loading
-            ? <h1>loading sounds bank</h1>
-            : <Playground />
-        }
+        <Playground loading={this.state.loading} />
       </div>
     )
   }
