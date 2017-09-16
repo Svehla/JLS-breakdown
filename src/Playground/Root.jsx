@@ -7,15 +7,34 @@ import { SHADOW_MARGIN } from '../config'
 import fastZero from '../audio/fast-zero.mp3'
 import scream from '../audio/scream.mp3'
 import growl from '../audio/growl.mp3'
+import slza from '../audio/slza.wav'
+import omg from '../audio/omg.wav'
+import blue from '../audio/blue.wav'
 import patAndMat from '../audio/pat-and-mat.wav'
 import background from '../background.jpg'
 
 const randomWidth = () => Math.random() * 20 + 10
 const randomColor = () => "#"+((1<<24)*Math.random()/5|0).toString(16)
+const sounds = {}
+//require v forEachu
+const audioSources = {
+  fastZero,
+  scream,
+  growl,
+  patAndMat,
+  omg,
+  slza,
+  blue,
+  default: fastZero,
+}
+
+console.log(audioSources)
 
 class Root extends React.Component {
+
   constructor(props) {
     super(props)
+
     const view = {
       width: window.innerWidth,
       height: window.innerHeight, // - 150,
@@ -24,7 +43,7 @@ class Root extends React.Component {
     }
     const playground = {
       width: 4000,
-      height: 2500,
+      height: 3000,
     }
     this.state = {
       me: {
@@ -62,14 +81,45 @@ class Root extends React.Component {
       // onEatCircleURL: onEatAudioFast,
       // onEatRectangleURLs: [scream, growl],
       objects: [
-        ...Array(3).fill(0).map(item => ({
+        ...Array(2).fill(0).map(item => ({
           id: 2,
           type: CIRCLE,
           x: Math.random() * playground.width,
           y: Math.random() * playground.height,
-          radius: 400,
+          radius: 150,
           background: '#FFD700',
-          audio: 'patAndMatAudio',
+          audio: 'patAndMat',
+          deleted: false,
+        })),
+        ...Array(6).fill(0).map(item => ({
+          id: 2,
+          type: RECTANGLE,
+          x: Math.random() * playground.width,
+          y: Math.random() * playground.height,
+          width: 100,
+          height: 100,
+          background: '#F00',
+          audio: 'omg',
+          deleted: false,
+        })),
+        ...Array(2).fill(0).map(item => ({
+          id: 2,
+          type: CIRCLE,
+          x: Math.random() * playground.width,
+          y: Math.random() * playground.height,
+          radius: 160,
+          background: '#0FD',
+          audio: 'slza',
+          deleted: false,
+        })),
+        ...Array(1).fill(0).map(item => ({
+          id: 2,
+          type: CIRCLE,
+          x: Math.random() * playground.width,
+          y: Math.random() * playground.height,
+          radius: 300,
+          background: '#00F',
+          audio: 'blue',
           deleted: false,
         })),
           /* {
@@ -85,10 +135,12 @@ class Root extends React.Component {
           ? {
             type: RECTANGLE,
             width: randomWidth()*2,
-            height: randomWidth()*2
+            height: randomWidth()*2,
+            audio: Math.random() > 0.5 ? 'growl' : 'scream',
           } : {
             type: CIRCLE,
-            radius: randomWidth()
+            radius: randomWidth(),
+            audio: 'fastZero',
           }),
         x: Math.random() * playground.width,
         y: Math.random() * playground.height,
@@ -102,11 +154,18 @@ class Root extends React.Component {
     }
   }
 
-
-  screamAudio = new Audio(scream)
-  growlAudio = new Audio(growl)
-  guitarAudio = new Audio(fastZero)
-  patAndMatAudio = new Audio(patAndMat)
+  // LIVECYCLES
+  // game loop
+  componentDidMount () {
+    Object.keys(audioSources).forEach(audioName => {
+      console.log(audioSources[audioName])
+      sounds[audioName] = () => new Audio(audioSources[audioName])
+    })
+    console.log(this)
+    this.setState({
+      request: requestAnimationFrame(this.tick)
+    })
+  }
 
   // ZPRACOVÁNÍ POHBYU MYŠI
   componentDidUpdate(props, state) {
@@ -123,14 +182,6 @@ class Root extends React.Component {
         x: e.pageX,
         y: e.pageY
       }
-    })
-  }
-
-  // LIVECYCLES
-  // game loop
-  componentDidMount() {
-    this.setState({
-      request: requestAnimationFrame(this.tick)
     })
   }
 
@@ -152,15 +203,7 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          var audio = !item.audio ? (
-            item.type === CIRCLE
-              ? this.guitarAudio
-              : Math.random() < .5
-                ? this.screamAudio
-                : this.growlAudio
-            ):(
-              this[item.audio]
-          )
+          var audio = sounds[item.audio]()
           audio.play()
           return { ...item, deleted: true }
         }
@@ -181,8 +224,8 @@ class Root extends React.Component {
 
   render() {
     return (
-      <div style={{width: '100%', height: '100%', background:'#DFA'}}>
-        <div style={{ background: '#fff', width: this.state.view.width +'px' }}>
+      <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
+        <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
           <Playground {...this.state} />
         </div>
         {/*
