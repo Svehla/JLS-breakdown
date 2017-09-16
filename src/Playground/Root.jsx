@@ -125,6 +125,7 @@ class Root extends React.Component {
   }
 
   render() {
+    console.log(this.props.loading)
     return (
       <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
         <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
@@ -133,6 +134,7 @@ class Root extends React.Component {
               const { x, y } = e.currentTarget.pointerPos
               this.setMousePositions({ x, y })
             }}
+            loading={this.props.loading}
             {...this.state}
           />
         </div>

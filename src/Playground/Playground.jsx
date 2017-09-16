@@ -11,7 +11,8 @@ const App = ({
   me,
   playground,
   backgroundConfig,
-  onClick
+  onClick,
+  loading,
 }) => {
   const inActualViewFunc = isInView(view)
   // const filteredObjects = objects.filter(isInView(view))
@@ -39,6 +40,18 @@ const App = ({
           me={me}
           view={view}
         />
+        
+        {
+          loading && <Text
+            x={view.width / 2}
+            y={30}
+            text={`Loading`}
+            fontSize={30}
+            fontFamily={'Calibri'}
+            fill={'#fff'}
+          />
+        }
+
         <Text
           x={view.width - 200}
           y={0}
