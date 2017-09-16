@@ -13,6 +13,7 @@ const App = ({
   backgroundConfig,
   onClick,
   loading,
+  deletedObjects
 }) => {
   const inActualViewFunc = isInView(view)
   // const filteredObjects = objects.filter(isInView(view))
@@ -55,9 +56,7 @@ const App = ({
         <Text
           x={view.width - 200}
           y={0}
-          text={`${objects.reduce((pre, curr) => (
-            curr.deleted ? pre+1 : pre
-          ), 0)} / ${objects.length}`}
+          text={`${deletedObjects} / ${objects.length}`}
           fontSize={30}
           fontFamily={'Calibri'}
           fill={'#000'}

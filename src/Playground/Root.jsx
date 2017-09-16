@@ -13,7 +13,6 @@ class Root extends React.Component {
 
   constructor(props) {
     super(props)
-    console.log(isMobile)
     this.state = {
       me: {
         x: view.leftX + view.width / 2, // x absolute
@@ -29,15 +28,14 @@ class Root extends React.Component {
         shadowOffsetX: 20,
         shadowOffsetY: 25,
         shadowBlur: 40,
-        opacity: 0.8,
         background: '#F0F',
         backgroundimage: background,
-        maxSpeed: isMobile ? 25 : 20,
+        maxSpeed: isMobile ? 15 : 20,
       },
       timezoneOffset: new Date().getTimezoneOffset(),
       request: 0,
       // http://cubiq.org/performance-tricks-for-mobile-web-development
-      framePerSec: isMobile ? 16 : 33,
+      framePerSec: isMobile ? 33 : 44,
       playground,
       view,
       backgroundConfig: {
@@ -53,6 +51,11 @@ class Root extends React.Component {
         y: 0,
       },
       objects: dataObjects,
+      // cache deleted data => high performance
+      // 0.15-0.3 ms for 232 items
+      deletedObjects: dataObjects.reduce((pre, curr) => (
+        curr.deleted ? pre+1 : pre
+      ), 0)
     }
   }
 
@@ -109,12 +112,15 @@ class Root extends React.Component {
           return item
         }else{
           play(allSounds[item.audio])
+          this.setState({
+            deletedObjects: this.state.deletedObjects +1
+          })
           return { ...item, deleted: true }
         }
       }
     })
     // console.timeEnd('eated')
-    console.time('setState')
+    // console.time('setState')
     this.setState({
       me: { ...me, x, y, },
       view: {
@@ -125,7 +131,7 @@ class Root extends React.Component {
       request: requestAnimationFrame(this.tick),
       objects: unEated,
     }, () => {
-      console.timeEnd('setState')
+    //  console.timeEnd('setState')
     })
   }
 

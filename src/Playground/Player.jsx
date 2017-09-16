@@ -3,7 +3,6 @@ import { Circle, Rect } from 'react-konva'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { getActualPossition } from './mathCalc'
 
-
 const Enemy = ({
   view,
   type,

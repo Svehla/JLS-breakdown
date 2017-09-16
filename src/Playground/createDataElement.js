@@ -3,11 +3,10 @@ import {
   RECTANGLE,
   SHADOW_MARGIN, DEFAULT_AUDIO
 } from '../constants'
-import { isMobile } from '../utils'
 import { playground } from '../config'
 
 const randomWidth = () => Math.random() * 20 + 10
-const randomColor = () => "#"+((1<<24)*Math.random()/5|0).toString(16)
+const randomColor = () => "#"+((1<<24)*Math.random()/8|0).toString(16)
 export const createDataElement = type => ({
   x = Math.random() * playground.width,
   y = Math.random() * playground.height,
@@ -16,9 +15,8 @@ export const createDataElement = type => ({
   height = type === CIRCLE ? undefined : randomWidth() * 2,
   background = randomColor(),
   audio = DEFAULT_AUDIO,
-  shadowOffsetY = SHADOW_MARGIN-7,
-  shadowOffsetX = SHADOW_MARGIN-7,
-  shadowBlur = 30,
+  // PERFORMANCE!!! shadowOffsetY = SHADOW_MARGIN-7,
+  // PERFORMANCE!!! shadowBlur = 30,
   deleted = false,
   ...props,
 }) => {
@@ -36,15 +34,6 @@ export const createDataElement = type => ({
     background,
     audio,
     deleted,
-    ...(
-      isMobile
-        ? {}
-        : {
-            shadowOffsetX,
-            shadowOffsetY,
-            shadowBlur,
-        }
-    ),
     ...props,
     ...customProperties,
   }
