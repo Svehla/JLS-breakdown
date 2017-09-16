@@ -1,7 +1,7 @@
 import React from 'react'
 import { Rect } from 'react-konva'
 import { getActualPossition } from './mathCalc'
-import background from '../grid.png'
+import background from '../img/grid.png'
 const backgroundImageConfig = {
   backgroundimage: background,
   fillPatternScale: { x: 1 , y: 1 },
@@ -26,7 +26,7 @@ class Borders extends React.Component {
     }
   }
 
-  render(){
+  render() {
     const {
       view,
       x,

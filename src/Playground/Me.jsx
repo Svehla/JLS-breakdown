@@ -1,6 +1,5 @@
 import React from 'react'
 import { Circle } from 'react-konva'
-import background from '../background1.jpg'
 
 class Me extends React.Component {
   constructor (props){
@@ -12,7 +11,7 @@ class Me extends React.Component {
 
   componentDidMount() {
     const image = new window.Image()
-    image.src = background
+    image.src = this.props.me.backgroundImage
     image.onload = () => {
       this.setState({
         image: image
@@ -35,5 +34,13 @@ class Me extends React.Component {
     )
   }
 }
+
+/*
+) {...(
+          this.state.image
+            ? { fillPatternImage: this.state.image }
+            : { background: '#000' }
+        )}
+ */
 
 export default Me

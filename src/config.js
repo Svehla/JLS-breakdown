@@ -1,9 +1,12 @@
 import { createDataElements } from './Playground/createDataElement'
 import { RECTANGLE, CIRCLE } from './constants'
+import jolanda from './img/jolanda.png'
+import helloKitty from './img/hello-kitty.png'
 import { isMobile } from './utils'
 export const LOADING_BG_COLOR = '#333'
 export const PLAY_BG_COLOR = '#EEF'
-
+// console.log(helloKitty)
+// console.log(mainLogo)
 export const view = {
   width: window.innerWidth,
   height: window.innerHeight, // - 150,
@@ -21,9 +24,10 @@ export const dataObjects = [
     background: '#FFD700',
     audio: 'patAndMat',
   }),
-  ...createDataElements(6, RECTANGLE, {
-    width: 100,
-    height: 100,
+  ...createDataElements(9, RECTANGLE, {
+    width: 114,
+    height: 137,
+    backgroundImage: helloKitty,
     background: '#F00',
     audio: 'omg',
   }),
@@ -37,8 +41,11 @@ export const dataObjects = [
     background: '#00F',
     audio: 'blue',
   }),
-  ...createDataElements(20, RECTANGLE, {
+  ...createDataElements(20, CIRCLE, {
     audio: 'growl',
+    backgroundImage: jolanda,
+    fillPatternOffset: { x : -59, y : -59 },
+    radius: 59,
   }),
   ...createDataElements(20, RECTANGLE, {
     audio: 'scream',

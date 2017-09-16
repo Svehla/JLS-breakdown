@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layer, Stage, Text } from 'react-konva'
 import Me from './Me'
-import Player from './Player'
+import GameObject from './GameObject'
 import { isInView } from './mathCalc'
 import Borders from './Borders'
 
@@ -33,7 +33,7 @@ const App = ({
           objects.map((item, index) => (
             !inActualViewFunc(item) || item.deleted
               ?  null
-              : <Player
+              : <GameObject
                 key={index}
                 view={view}
                 {...item} />

@@ -25,7 +25,7 @@ export const getDistance = (mousePos, actualPos, maxSpeed) => {
   const c = pythagorC(xDiff, yDiff)
   const tanRatio = yDiff / xDiff
   const tanAngle = atan(tanRatio)
-  const possibleAcceleration = pow(c / 10, 2)
+  const possibleAcceleration = pow(c / 40, 2)
   const finAcceleration = possibleAcceleration < maxSpeed ? possibleAcceleration : maxSpeed
   const newX = cos(tanAngle) * finAcceleration || 0
   const newY = sin(tanAngle) * finAcceleration || 0

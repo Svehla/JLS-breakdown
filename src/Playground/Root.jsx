@@ -4,7 +4,7 @@ import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import { LOADING_BG_COLOR, PLAY_BG_COLOR, playground, view, dataObjects } from '../config'
-import background from '../background.jpg'
+import mainLogo from '../img/mainLogo.jpg'
 import { allSounds } from '../audio/index'
 import { isMobile } from '../utils'
 const play = require('audio-play')
@@ -21,7 +21,7 @@ class Root extends React.Component {
         yRel: view.height / 2, // y relative
         type: CIRCLE,
         radius: isMobile ? 60 : 90,
-        backgroundimage: background,
+        backgroundImage: mainLogo,
         fillPatternScale: (isMobile
           ? { x: 0.66, y: 0.66 }
           : { x: 1 , y: 1 }),
