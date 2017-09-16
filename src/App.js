@@ -35,7 +35,10 @@ class App extends Component {
           }}
           onFinishedPlaying={() => this.setState({ position: 10 })}
         />
-        <Playground />
+        {
+          this.state.showPlayground &&
+            <Playground />
+        }
       </div>
     )
   }
