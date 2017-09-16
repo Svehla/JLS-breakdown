@@ -140,7 +140,7 @@ class Root extends React.Component {
       <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
         <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
           <Playground
-            onClick={(e) => {
+            onMove={(e) => {
               const { x, y } = e.currentTarget.pointerPos
               this.setMousePositions({ x, y })
             }}

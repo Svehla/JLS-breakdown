@@ -11,7 +11,7 @@ const App = ({
   me,
   playground,
   backgroundConfig,
-  onClick,
+  onMove,
   loading,
   deletedObjects
 }) => {
@@ -21,7 +21,9 @@ const App = ({
   return (
     <Stage
       background={'#456'}
-      onTap={onClick}
+      onTap={onMove}
+      onTouchStart={onMove}
+      onTouchMove={onMove}
       width={view.width} height={view.height}>
       <Layer>
         <Borders
@@ -54,8 +56,8 @@ const App = ({
         }
 
         <Text
-          x={view.width - 200}
-          y={0}
+          x={view.width / 2}
+          y={10}
           text={`${deletedObjects} / ${objects.length}`}
           fontSize={30}
           fontFamily={'Calibri'}
