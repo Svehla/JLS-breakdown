@@ -1,5 +1,6 @@
 import { createDataElements } from './Playground/createDataElement'
 import { RECTANGLE, CIRCLE } from './constants'
+import { isMobile } from './utils'
 export const LOADING_BG_COLOR = '#333'
 export const PLAY_BG_COLOR = '#EEF'
 
@@ -10,8 +11,8 @@ export const view = {
   topY: 20,
 }
 export const playground = {
-  width: 5000,
-  height: 3000,
+  width: isMobile ? 3500 : 5000,
+  height: isMobile ? 2500 : 3000,
 }
 
 export const dataObjects = [

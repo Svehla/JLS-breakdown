@@ -6,13 +6,14 @@ import { twoShapesColliding } from './collisions'
 import { LOADING_BG_COLOR, PLAY_BG_COLOR, playground, view, dataObjects } from '../config'
 import background from '../background.jpg'
 import { allSounds } from '../audio/index'
+import { isMobile } from '../utils'
 const play = require('audio-play')
 
 class Root extends React.Component {
 
   constructor(props) {
     super(props)
-
+    console.log(isMobile)
     this.state = {
       me: {
         x: view.leftX + view.width / 2, // x absolute
@@ -20,18 +21,23 @@ class Root extends React.Component {
         xRel: view.width / 2, // x relative
         yRel: view.height / 2, // y relative
         type: CIRCLE,
-        radius: 90,
+        radius: isMobile ? 60 : 90,
+        fillPatternScale: (isMobile
+          ? { x: 0.66, y: 0.66 }
+          : { x: 1 , y: 1 }),
+        fillPatternOffset: { x : -100, y : 100 },
         shadowOffsetX: 20,
         shadowOffsetY: 25,
         shadowBlur: 40,
         opacity: 0.8,
         background: '#F0F',
         backgroundimage: background,
-        maxSpeed: 20,
+        maxSpeed: isMobile ? 25 : 20,
       },
       timezoneOffset: new Date().getTimezoneOffset(),
       request: 0,
-      framePerSec: 33,
+      // http://cubiq.org/performance-tricks-for-mobile-web-development
+      framePerSec: isMobile ? 16 : 33,
       playground,
       view,
       backgroundConfig: {
@@ -54,8 +60,6 @@ class Root extends React.Component {
   // LIVECYCLES
   // game loop
   componentWillReceiveProps(nextProps){
-    console.log('nextProps')
-    console.log(nextProps)
     if(!nextProps.loading){
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
@@ -66,7 +70,6 @@ class Root extends React.Component {
         }
       })
     }
-    //if(nextProps.)
   }
   componentDidMount () {
   }
@@ -93,7 +96,10 @@ class Root extends React.Component {
   recalculatePositions = () => {
     // console.time('all')
     const { mousePos, me, playground } = this.state
+    // console.time('myPos')
     const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground)
+    // console.timeEnd('myPos')
+    // console.time('eated')
     const unEated = this.state.objects.map((item) => {
       if(item.deleted){
         return item
@@ -102,16 +108,13 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          //console.log(allSounds)
-          //console.log(allSounds.audio)
-          //console.log(allSounds.fastZero)
-          // console.log(allSounds[item.audio])
-          // allSounds[item.audio]
           play(allSounds[item.audio])
           return { ...item, deleted: true }
         }
       }
     })
+    // console.timeEnd('eated')
+    console.time('setState')
     this.setState({
       me: { ...me, x, y, },
       view: {
@@ -121,11 +124,12 @@ class Root extends React.Component {
       },
       request: requestAnimationFrame(this.tick),
       objects: unEated,
+    }, () => {
+      console.timeEnd('setState')
     })
   }
 
   render() {
-    console.log(this.props.loading)
     return (
       <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
         <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>

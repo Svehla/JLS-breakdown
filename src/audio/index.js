@@ -23,8 +23,7 @@ export const initSounds = async(initSoundsConfig) => {
   const values = await Promise.all(audioSources.map(audioSrc => load(requirePath(audioSrc))))// .then(values => {
   const finalObject = values.reduce((obj, audio, index) => {
     const audioName = audioNames[index]
-    const customConfig = initSoundsConfig[audioName] || {}
-    obj[audioName] = audio // play(audio, customConfig).pause()
+    obj[audioName] = audio
     return obj
   }, {})
   allSounds = finalObject
@@ -32,7 +31,6 @@ export const initSounds = async(initSoundsConfig) => {
   console.timeEnd('loadSounds')
   return finalObject
 }
-
 
 export const sounds = audioSources.reduce((pre, audioNameExt) => {
   const audioName = audioNameExt.split('.')[0]

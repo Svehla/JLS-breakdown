@@ -31,7 +31,6 @@ class Me extends React.Component {
         x={view.width / 2 /* highter prioery then ...me */ }
         y={view.height / 2 /* highter prioery then ...me */ }
         fillPatternImage={this.state.image}
-        fillPatternOffset={{ x : -100, y : 100 }}
       />
     )
   }

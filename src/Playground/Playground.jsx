@@ -29,18 +29,18 @@ const App = ({
         {
           objects.map((item, index) => (
             !inActualViewFunc(item) || item.deleted
-            ?  null
-            : <Player
-              key={index}
-              view={view}
-              {...item} />
+              ?  null
+              : <Player
+                key={index}
+                view={view}
+                {...item} />
           ))
         }
         <Me
           me={me}
           view={view}
         />
-        
+
         {
           loading && <Text
             x={view.width / 2}

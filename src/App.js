@@ -39,8 +39,19 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          background: '#486'
+        }}
+        onKeyDown={(e) => {
+          console.log(e)
+          console.log(e.key)
+        }}
+      >
         <Playground loading={this.state.loading} />
+
       </div>
     )
   }
