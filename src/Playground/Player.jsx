@@ -17,14 +17,14 @@ const Enemy = ({
   return (
     type === RECTANGLE
       ? <Rect
-        {...props}
         fill={background}
+        {...props}
         {...getActualPossition(view, {x, y})}
       />
       : type === CIRCLE
         ? <Circle
-          {...props}
           fill={background}
+          {...props}
           {...getActualPossition(view, {x, y})}
         />
       : ''

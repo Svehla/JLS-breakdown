@@ -1,4 +1,4 @@
-import { SHADOW_MARGIN } from '../config'
+import { SHADOW_MARGIN } from '../constants'
 const {
   PI,
   cos,

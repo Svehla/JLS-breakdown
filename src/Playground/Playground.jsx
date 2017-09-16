@@ -28,9 +28,9 @@ const App = ({
             !inActualViewFunc(item) || item.deleted
             ?  null
             : <Player
-                key={index}
-                view={view}
-                {...item} />
+              key={index}
+              view={view}
+              {...item} />
           ))
         }
         <Me

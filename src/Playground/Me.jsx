@@ -1,5 +1,5 @@
 import React from 'react'
-import { Circle, Image, RegularPolygon } from 'react-konva'
+import { Circle } from 'react-konva'
 import background from '../background1.jpg'
 
 class Me extends React.Component {

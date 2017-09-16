@@ -3,48 +3,16 @@ import Playground from './Playground'
 import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
-import { SHADOW_MARGIN } from '../config'
-import fastZero from '../audio/fast-zero.mp3'
-import scream from '../audio/scream.mp3'
-import growl from '../audio/growl.mp3'
-import slza from '../audio/slza.wav'
-import omg from '../audio/omg.wav'
-import blue from '../audio/blue.wav'
-import patAndMat from '../audio/pat-and-mat.wav'
+import { playground, view } from '../config'
 import background from '../background.jpg'
-
-const randomWidth = () => Math.random() * 20 + 10
-const randomColor = () => "#"+((1<<24)*Math.random()/5|0).toString(16)
-const sounds = {}
-//require v forEachu
-const audioSources = {
-  fastZero,
-  scream,
-  growl,
-  patAndMat,
-  omg,
-  slza,
-  blue,
-  default: fastZero,
-}
-
-console.log(audioSources)
+import { sounds } from '../audio'
+import { createDataElements } from './createDataElement'
 
 class Root extends React.Component {
 
   constructor(props) {
     super(props)
 
-    const view = {
-      width: window.innerWidth,
-      height: window.innerHeight, // - 150,
-      leftX: 20,
-      topY: 20,
-    }
-    const playground = {
-      width: 4000,
-      height: 3000,
-    }
     this.state = {
       me: {
         x: view.leftX + view.width / 2, // x absolute
@@ -81,87 +49,54 @@ class Root extends React.Component {
       // onEatCircleURL: onEatAudioFast,
       // onEatRectangleURLs: [scream, growl],
       objects: [
-        ...Array(2).fill(0).map(item => ({
-          id: 2,
+        {
+          x: 10,
+          y: 10,
           type: CIRCLE,
-          x: Math.random() * playground.width,
-          y: Math.random() * playground.height,
+          radius: 150,
+          background: '#45F',
+          audio: 'patAndMat',
+          width: undefined,
+          height: undefined,
+        },
+        ...createDataElements(2, CIRCLE, {
           radius: 150,
           background: '#FFD700',
           audio: 'patAndMat',
-          deleted: false,
-        })),
-        ...Array(6).fill(0).map(item => ({
-          id: 2,
-          type: RECTANGLE,
-          x: Math.random() * playground.width,
-          y: Math.random() * playground.height,
+        }),
+        ...createDataElements(6, RECTANGLE, {
           width: 100,
           height: 100,
           background: '#F00',
           audio: 'omg',
-          deleted: false,
-        })),
-        ...Array(2).fill(0).map(item => ({
-          id: 2,
-          type: CIRCLE,
-          x: Math.random() * playground.width,
-          y: Math.random() * playground.height,
+        }),
+        ...createDataElements(2, CIRCLE, {
           radius: 160,
           background: '#0FD',
           audio: 'slza',
-          deleted: false,
-        })),
-        ...Array(1).fill(0).map(item => ({
-          id: 2,
-          type: CIRCLE,
-          x: Math.random() * playground.width,
-          y: Math.random() * playground.height,
+        }),
+        ...createDataElements(2, CIRCLE, {
           radius: 300,
           background: '#00F',
           audio: 'blue',
-          deleted: false,
-        })),
-          /* {
-             type: CIRCLE,
-             x: 300,
-             y: 30,
-             radius: 40,
-             background: '#0FF',
-             deleted: false,
-           },*/
-      ...Array(120).fill(0).map(item => ({
-        ...(Math.random() > 0.80
-          ? {
-            type: RECTANGLE,
-            width: randomWidth()*2,
-            height: randomWidth()*2,
-            audio: Math.random() > 0.5 ? 'growl' : 'scream',
-          } : {
-            type: CIRCLE,
-            radius: randomWidth(),
-            audio: 'fastZero',
-          }),
-        x: Math.random() * playground.width,
-        y: Math.random() * playground.height,
-        // shadowOffsetX: SHADOW_MARGIN-7,
-        shadowOffsetY: SHADOW_MARGIN-7,
-        shadowBlur: 30,
-        background: randomColor(),
-        deleted: false,
-      }))
+        }),
+        ...createDataElements(20, RECTANGLE, {
+          audio: 'growl',
+        }),
+        ...createDataElements(20, RECTANGLE, {
+          audio: 'scream',
+        }),
+        ...createDataElements(80, CIRCLE, {
+          audio: 'fastZero',
+        })
       ]
     }
+    console.log(this.state)
   }
 
   // LIVECYCLES
   // game loop
   componentDidMount () {
-    Object.keys(audioSources).forEach(audioName => {
-      console.log(audioSources[audioName])
-      sounds[audioName] = () => new Audio(audioSources[audioName])
-    })
-    console.log(this)
     this.setState({
       request: requestAnimationFrame(this.tick)
     })
@@ -203,8 +138,8 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          var audio = sounds[item.audio]()
-          audio.play()
+          sounds[item.audio].pause()
+          sounds[item.audio].play()
           return { ...item, deleted: true }
         }
       }

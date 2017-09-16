@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Playground from './Playground'
 import Sound from 'react-sound'
-import cymbal from './audio/fast-drum.wav'
+import cymbal from './audio/fastDrum.wav'
 import './App.css'
 
 class App extends Component {
