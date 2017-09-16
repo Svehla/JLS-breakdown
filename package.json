@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "audio-loader": "^1.0.3",
+    "audio-play": "^2.2.0",
     "konva": "^1.6.8",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-konva": "^1.1.4",
-    "react-scripts": "1.0.13",
-    "react-sound": "^0.8.0"
+    "react-scripts": "1.0.13"
   },
   "scripts": {
     "start": "react-scripts start",

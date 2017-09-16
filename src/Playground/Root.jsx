@@ -3,10 +3,10 @@ import Playground from './Playground'
 import { calculateNewObjPos } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
-import { playground, view } from '../config'
+import { playground, view, dataObjects } from '../config'
 import background from '../background.jpg'
-import { sounds } from '../audio'
-import { createDataElements } from './createDataElement'
+import { allSounds } from '../audio/index'
+const play = require('audio-play')
 
 class Root extends React.Component {
 
@@ -46,50 +46,7 @@ class Root extends React.Component {
         x: 0,
         y: 0,
       },
-      // onEatCircleURL: onEatAudioFast,
-      // onEatRectangleURLs: [scream, growl],
-      objects: [
-        {
-          x: 10,
-          y: 10,
-          type: CIRCLE,
-          radius: 150,
-          background: '#45F',
-          audio: 'patAndMat',
-          width: undefined,
-          height: undefined,
-        },
-        ...createDataElements(2, CIRCLE, {
-          radius: 150,
-          background: '#FFD700',
-          audio: 'patAndMat',
-        }),
-        ...createDataElements(6, RECTANGLE, {
-          width: 100,
-          height: 100,
-          background: '#F00',
-          audio: 'omg',
-        }),
-        ...createDataElements(2, CIRCLE, {
-          radius: 160,
-          background: '#0FD',
-          audio: 'slza',
-        }),
-        ...createDataElements(2, CIRCLE, {
-          radius: 300,
-          background: '#00F',
-          audio: 'blue',
-        }),
-        ...createDataElements(20, RECTANGLE, {
-          audio: 'growl',
-        }),
-        ...createDataElements(20, RECTANGLE, {
-          audio: 'scream',
-        }),
-        ...createDataElements(180, CIRCLE, {
-          audio: 'fastZero',
-        })
-      ]
+      objects: dataObjects,
     }
   }
 
@@ -133,8 +90,12 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          sounds[item.audio].currentTime = 0
-          sounds[item.audio].play()
+          console.log(allSounds)
+          console.log(allSounds.audio)
+          console.log(allSounds.fastZero)
+          console.log(allSounds[item.audio])
+          // allSounds[item.audio]
+          play(allSounds[item.audio])
           return { ...item, deleted: true }
         }
       }
@@ -149,7 +110,6 @@ class Root extends React.Component {
       request: requestAnimationFrame(this.tick),
       objects: unEated,
     })
-    // console.timeEnd('all')
   }
 
   render() {
@@ -159,10 +119,10 @@ class Root extends React.Component {
           <Playground
             onClick={(e) => {
               const { x, y } = e.currentTarget.pointerPos
-              console.log(x, y)
               this.setMousePositions({ x, y })
             }}
-            {...this.state} />
+            {...this.state}
+          />
         </div>
         {/*
         <pre>

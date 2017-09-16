@@ -42,9 +42,9 @@ const App = ({
         <Text
           x={view.width - 200}
           y={0}
-          text={`000 : ${objects.reduce((pre, curr) => (
+          text={`${objects.reduce((pre, curr) => (
             curr.deleted ? pre+1 : pre
-          ), 0)}`}
+          ), 0)} / ${objects.length}`}
           fontSize={30}
           fontFamily={'Calibri'}
           fill={'#000'}

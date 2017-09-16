@@ -22,31 +22,19 @@ class Me extends React.Component {
 
   render(){
     const {
-      me: {
-        x,
-        y,
-        background,
-        ...meProps,
-      },
+      me,
       view,
     } = this.props
     return (
       <Circle
-        x={view.width / 2}
-        y={view.height / 2}
+        {...me}
+        x={view.width / 2 /* highter prioery then ...me */ }
+        y={view.height / 2 /* highter prioery then ...me */ }
         fillPatternImage={this.state.image}
-        fillPatternOffset={{ x : -100, y : 100}}
-        {...meProps}
+        fillPatternOffset={{ x : -100, y : 100 }}
       />
     )
   }
 }
-      {/*<Circle
-        x={view.width / 2}
-        y={view.height / 2}
-        fill={background}
-        src={backgroundImage}
-        fillPatternImage={this.state.image}
-        {...meProps}
-      />*/}
+
 export default Me

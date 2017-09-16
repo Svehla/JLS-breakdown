@@ -1,43 +1,40 @@
 import React, { Component } from 'react'
 import Playground from './Playground'
-import Sound from 'react-sound'
-import fastDrum from './audio/fastDrum.wav'
 import './App.css'
-// var _soundmanager2 = require('soundmanager2/script/soundmanager2-nodebug-jsmin.js')
-var soundManager = soundManager
+import { initSounds } from './audio/index'
+const play = require('audio-play')
+
+const initSoundsConfig = {
+  fastDrum: {
+    loop: true,
+    // autoplay: true
+  }
+}
+
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       position: 0,
-      showPlayground: false
+      loading: true
     }
   }
 
-  componentDidMount(){
-    // console.log('soundManager')
-    // console.log(soundManager2)
-    // soundManager.setup({debugMode: false});
-    // audio.addEventListener('canplaythrough', this.isAppLoaded, false);
+  componentDidMount () {
+    initSounds(initSoundsConfig).then((allSounds) => {
+      this.setState({ loading: false })
+      // console.log(allSounds.fastDrum)
+      play(allSounds.fastDrum, initSoundsConfig.fastDrum)
+    })
   }
+
   render() {
     return (
       <div>
-        <Sound
-          url={fastDrum}
-          position={this.state.position}
-          loop
-          playStatus={Sound.status.PLAYING}
-          onLoading={() => {
-            this.setState({
-              showPlayground: true
-            })
-          }}
-          onFinishedPlaying={() => this.setState({ position: 10 })}
-        />
         {
-          this.state.showPlayground &&
-            <Playground />
+          this.state.loading
+            ? <h1>loading sounds bank</h1>
+            : <Playground />
         }
       </div>
     )
