@@ -7,7 +7,8 @@ export const LOADING_BG_COLOR = '#DEF'
 export const PLAY_BG_COLOR = '#EEF'
 
 export const initSoundsConfig = {
-  fastDrum: { loop: true }
+  fastDrum: { loop: true },
+  slowDrum: { loop: true },
 }
 
 export const view = {
@@ -17,13 +18,13 @@ export const view = {
   topY: 20,
 }
 export const playground = {
-  width: isMobile ? 3500 : 5000,
-  height: isMobile ? 2500 : 3000,
+  width: isMobile ? 3500 : 7000,
+  height: isMobile ? 2500 : 5000,
 }
 
 export const dataObjects = [
   ...createDataElements(2, CIRCLE, {
-    radius: 150,
+    radius: 110,
     background: '#FFD700',
     audio: 'patAndMat',
   }),
@@ -40,21 +41,21 @@ export const dataObjects = [
     audio: 'slza',
   }),
   ...createDataElements(2, CIRCLE, {
-    radius: 300,
+    radius: 200,
     background: '#00F',
     audio: 'blue',
   }),
-  ...createDataElements(3, CIRCLE, {
-    shakingTime: 100,
+  ...createDataElements(isMobile ? 3 : 5, CIRCLE, {
+    shakingTime: 80,
     audio: 'growl',
     backgroundImage: jolanda,
     fillPatternOffset: { x : -59, y : -59 },
     radius: 59,
   }),
-  ...createDataElements(20, RECTANGLE, {
+  ...createDataElements(50, RECTANGLE, {
     audio: 'scream',
   }),
-  ...createDataElements(180, CIRCLE, {
+  ...createDataElements(isMobile ? 200 : 350, CIRCLE, {
     audio: 'fastZero',
   })
 ]

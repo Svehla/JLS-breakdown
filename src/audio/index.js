@@ -10,7 +10,8 @@ export const audioSources = [
   'patAndMat.wav',
   'omg.wav',
   'slza.wav',
-  'blue.wav'
+  'blue.wav',
+  'slowDrum.mp3'
 ]
 
 export const audioNames = audioSources.map(item => item.split('.')[0])

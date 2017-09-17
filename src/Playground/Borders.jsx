@@ -1,9 +1,10 @@
 import React from 'react'
 import { Rect } from 'react-konva'
 import { getActualPossition } from './mathCalc'
-import background from '../img/grid.png'
+import gridImage from '../img/grid.png'
+import gridReverseImage from '../img/grid-reverse.png'
+
 const backgroundImageConfig = {
-  backgroundimage: background,
   fillPatternScale: { x: 1 , y: 1 },
   fillPatternOffset: { x : -100, y : 100 },
 }
@@ -12,17 +13,21 @@ class Borders extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      image: null
+      imageLight: null,
+      imageDark: null,
     }
   }
 
   componentDidMount() {
-    const image = new window.Image()
-    image.src = background
-    image.onload = () => {
-      this.setState({
-        image: image
-      })
+    const imageLight = new window.Image()
+    const imageDark = new window.Image()
+    imageLight.src = gridImage
+    imageDark.src = gridReverseImage
+    imageLight.onload = () => {
+      this.setState({ imageLight: imageLight })
+    }
+    imageDark.onload = () => {
+      this.setState({ imageDark: imageDark })
     }
   }
 
@@ -31,7 +36,7 @@ class Borders extends React.Component {
       view,
       x,
       y,
-      // background,
+      shaking,
       ...props,
     } = this.props
     return (
@@ -39,28 +44,14 @@ class Borders extends React.Component {
         {...props}
         {...getActualPossition(view, { x, y })}
         {...backgroundImageConfig}
-
-        fillPatternImage={this.state.image}
+        fillPatternImage={
+          shaking
+            ? this.state.imageDark
+            : this.state.imageLight
+        }
       />
     )
   }
 }
-/*
-const Borders = ({
-  view,
-  x,
-  y,
-  background,
-  ...props,
-}) => {
-  return (
-    <Rect
-      fill={background}
-      {...props}
-      {...getActualPossition(view, { x, y })}
-      {...backgroundImageConfig}
-    />
-  )
-}
-*/
+
 export default Borders

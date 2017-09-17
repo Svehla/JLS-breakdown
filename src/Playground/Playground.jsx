@@ -13,9 +13,11 @@ const App = ({
   backgroundConfig,
   onMove,
   stop,
-  deletedObjects
+  deletedObjects,
+  camera,
 }) => {
   const inActualViewFunc = isInView(view)
+  console.log(camera)
   // const filteredObjects = objects.filter(isInView(view))
   // console.log(filteredObjects.length)
   return (
@@ -28,7 +30,10 @@ const App = ({
       <Layer>
         <Borders
           view={view}
-          {...backgroundConfig} />
+          {...backgroundConfig}
+          shaking={camera.fpsDeduction > 0}
+        />
+
         {
           objects.map((item, index) => (
             !inActualViewFunc(item) || item.deleted
