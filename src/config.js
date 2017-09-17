@@ -45,8 +45,8 @@ export const dataObjects = [
     background: '#00F',
     audio: 'blue',
   }),
-  ...createDataElements(isMobile ? 3 : 5, CIRCLE, {
-    shakingTime: 80,
+  ...createDataElements(isMobile ? 2 : 4, CIRCLE, {
+    shakingTime: 200,
     audio: 'growl',
     backgroundImage: jolanda,
     fillPatternOffset: { x : -59, y : -59 },

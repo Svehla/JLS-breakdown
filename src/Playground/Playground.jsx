@@ -17,7 +17,7 @@ const App = ({
   camera,
 }) => {
   const inActualViewFunc = isInView(view)
-  console.log(camera)
+  // console.log(camera)
   // const filteredObjects = objects.filter(isInView(view))
   // console.log(filteredObjects.length)
   return (

@@ -5,6 +5,7 @@ const requirePath = fileName => require(`../audio/${fileName}`)
 export const audioSources = [
   'fastDrum.wav',
   'fastZero.wav',
+  'slowZero.wav',
   'scream.mp3',
   'growl.mp3',
   'patAndMat.wav',

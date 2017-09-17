@@ -17,7 +17,8 @@ class App extends Component {
   componentDidMount () {
     initSounds(initSoundsConfig).then((allSounds) => {
       this.setState({ loading: false })
-      play(allSounds.fastDrum, initSoundsConfig.fastDrum)
+      play(allSounds.slowDrum, initSoundsConfig.slowDrum)
+      // play(allSounds.fastDrum, initSoundsConfig.fastDrum)
     })
   }
 
@@ -28,10 +29,6 @@ class App extends Component {
           width: '100%',
           height: '100%',
           background: '#fff'
-        }}
-        onKeyDown={(e) => {
-          console.log(e)
-          console.log(e.key)
         }}
       >
         <Playground stop={this.state.loading} />

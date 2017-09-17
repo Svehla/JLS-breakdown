@@ -113,7 +113,7 @@ class Root extends React.Component {
           if(camera.fpsDeduction === 0 ){
             play(allSounds[item.audio])
           }else{
-            play(allSounds['growl'])
+            play(allSounds['slowZero'])
           }
           this.setState({
             camera: {
