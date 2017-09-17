@@ -13,7 +13,7 @@ const App = ({
   backgroundConfig,
   onMove,
   stop,
-  deletedObjects,
+  deletedObjectsCounter,
   camera,
 }) => {
   const inActualViewFunc = isInView(view)
@@ -28,12 +28,13 @@ const App = ({
       onTouchMove={onMove}
       width={view.width} height={view.height}>
       <Layer>
+        { deletedObjectsCounter !== objects.length &&
         <Borders
           view={view}
           {...backgroundConfig}
           shaking={camera.fpsDeduction > 0}
         />
-
+        }
         {
           objects.map((item, index) => (
             !inActualViewFunc(item) || item.deleted
@@ -63,12 +64,13 @@ const App = ({
         <Text
           x={view.width / 2}
           y={10}
-          text={`${deletedObjects} / ${objects.length}`}
+          text={`${deletedObjectsCounter} / ${objects.length}`}
           fontSize={30}
           fontFamily={'Calibri'}
           fill={'#000'}
         />
-        {camera.fpsDeduction > 0 &&
+        {
+          camera.fpsDeduction > 0 &&
           <Text
             x={102}
             y={10}
@@ -76,6 +78,17 @@ const App = ({
             fontSize={30}
             fontFamily={'Calibri'}
             fill={'#FFF'}
+          />
+        }
+
+        {deletedObjectsCounter === objects.length &&
+          <Text
+            x={102}
+            y={10}
+            text={`You Lose \nthe Game... \n noob`}
+            fontSize={70}
+            fontFamily={'Calibri'}
+            fill={'#330'}
           />
         }
       </Layer>

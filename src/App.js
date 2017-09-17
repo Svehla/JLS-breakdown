@@ -5,6 +5,11 @@ import { initSounds } from './audio/index'
 import { initSoundsConfig } from './config'
 const play = require('audio-play')
 
+const backgroundStyle = {
+  width: '100%',
+  height: '100%',
+  background: '#fff'
+}
 class App extends Component {
   constructor(props) {
     super(props)
@@ -15,24 +20,17 @@ class App extends Component {
   }
 
   componentDidMount () {
-    initSounds(initSoundsConfig).then((allSounds) => {
+    initSounds().then((allSounds) => {
       this.setState({ loading: false })
-      play(allSounds.slowDrum, initSoundsConfig.slowDrum)
       // play(allSounds.fastDrum, initSoundsConfig.fastDrum)
     })
   }
 
   render() {
     return (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          background: '#fff'
-        }}
-      >
-        <Playground stop={this.state.loading} />
-
+      <div style={backgroundStyle} >
+        <Playground
+          stop={this.state.loading} />
       </div>
     )
   }

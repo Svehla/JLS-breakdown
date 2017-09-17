@@ -7,9 +7,10 @@ import { isMobile } from './utils'
 export const LOADING_BG_COLOR = '#DEF'
 export const PLAY_BG_COLOR = '#EEF'
 
-export const initSoundsConfig = {
-  fastDrum: { loop: true },
-  slowDrum: { loop: true },
+export const initSoundsConf = {
+// have to return new instance
+  fastDrum: () => ({ loop: true }),
+  slowDrum: () => ({ loop: true, volume: 4 }),
 }
 
 export const view = {
@@ -46,8 +47,8 @@ export const dataObjects = [
     background: '#00F',
     audio: 'blue',
   }),
-  ...createDataElements(isMobile ? 2 : 3, CIRCLE, {
-    shakingTime: 150,
+  ...createDataElements(isMobile ? 2 : 4, CIRCLE, {
+    shakingTime: 150, // 20
     audio: 'growl',
     backgroundImage: jolanda,
     fillPatternOffset: { x : -59, y : -59 },
