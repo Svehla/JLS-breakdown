@@ -65,7 +65,7 @@ export const calculateNewObjPos = (mousePos, meElement, maxSpeed, playground, ca
   }
 }
 const isInAxios = (position, larger, lower, halfWidth) => (
-  position + halfWidth + SHADOW_MARGIN >= larger && position <= lower + SHADOW_MARGIN + halfWidth
+  position + halfWidth >= larger && position <= lower + halfWidth
 )
 
 export const isInView = view => ({

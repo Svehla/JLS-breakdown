@@ -1,4 +1,3 @@
-const play = require('audio-play')
 const load = require('audio-loader')
 
 const requirePath = fileName => require(`../audio/${fileName}`)
