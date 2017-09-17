@@ -1,7 +1,7 @@
 import {
   CIRCLE,
   RECTANGLE,
-  SHADOW_MARGIN, DEFAULT_AUDIO
+  DEFAULT_AUDIO
 } from '../constants'
 import { playground } from '../config'
 
