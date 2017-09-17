@@ -18,6 +18,7 @@ export const createDataElement = type => ({
   // PERFORMANCE!!! shadowOffsetY = SHADOW_MARGIN-7,
   // PERFORMANCE!!! shadowBlur = 30,
   deleted = false,
+  shakingTime = null,
   ...props,
 }) => {
   const customProperties = (
@@ -34,6 +35,7 @@ export const createDataElement = type => ({
     background,
     audio,
     deleted,
+    shakingTime,
     ...props,
     ...customProperties,
   }

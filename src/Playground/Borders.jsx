@@ -39,6 +39,7 @@ class Borders extends React.Component {
         {...props}
         {...getActualPossition(view, { x, y })}
         {...backgroundImageConfig}
+
         fillPatternImage={this.state.image}
       />
     )

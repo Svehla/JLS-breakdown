@@ -15,10 +15,10 @@ class gameObject extends React.Component {
     const backgroundImage = this.props.backgroundImage
     const image = new window.Image()
     if(backgroundImage){
-      console.log('asdf')
+      // console.time('loadPicture')
       image.src = backgroundImage
       image.onload = () => {
-        console.log(image)
+        // console.timeEnd('loadPicture')
         this.setState({
           image: image
         })

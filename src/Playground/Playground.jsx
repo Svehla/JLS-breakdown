@@ -46,12 +46,12 @@ const App = ({
 
         {
           stop && <Text
-            x={view.width / 2}
-            y={30}
+            x={10}
+            y={20}
             text={`Loading`}
-            fontSize={30}
+            fontSize={150}
             fontFamily={'Calibri'}
-            fill={'#fff'}
+            fill={'#000'}
           />
         }
 

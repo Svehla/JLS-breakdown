@@ -18,7 +18,7 @@ export const audioNames = audioSources.map(item => item.split('.')[0])
 // side effect shitty shit initSounds() se from bad scope
 export let allSounds = {}
 
-export const initSounds = async(initSoundsConfig) => {
+export const initSounds = async () => {
   console.time('loadSounds')
   const values = await Promise.all(audioSources.map(audioSrc => load(requirePath(audioSrc))))// .then(values => {
   const finalObject = values.reduce((obj, audio, index) => {

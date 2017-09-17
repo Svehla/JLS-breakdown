@@ -9,6 +9,7 @@ const {
   abs
 } = Math
 
+export const lowerToZero = number => number - 1 < 0 ? 0 : number - 1
 export const pythagorC = (a, b) => sqrt(pow(a, 2) + pow(b, 2))
 export const toDegrees = angle => angle * (180 / PI)
 export const toRadians = angle => angle * (PI / 180)
@@ -43,16 +44,25 @@ const borderCollisions = (coordinate, min, max) => (
   : coordinate
 )
 
-export const calculateNewObjPos = (mousePos, meElement, maxSpeed, playground) => {
+const addShaking = shakingParam => position => (
+  shakingParam.fpsDeduction > 0
+    ? position + Math.random() * shakingParam.shakingLarge - shakingParam.shakingLarge/2
+    : position
+)
+
+export const calculateNewObjPos = (mousePos, meElement, maxSpeed, playground, cameraShaking) => {
   const {
     distanceX,
     distanceY
   } = getDistance(mousePos, meElement, maxSpeed)
   const x = calculateProgress(mousePos.x, meElement.x, meElement.xRel, distanceX)
   const y = calculateProgress(mousePos.y, meElement.y, meElement.yRel, distanceY)
+  const xWithBorder = borderCollisions(x, 0, playground.width)
+  const yWithBorder = borderCollisions(y, 0, playground.height)
+  const shakingFunc = addShaking(cameraShaking)
   return {
-    x: borderCollisions(x, 0, playground.width),
-    y: borderCollisions(y, 0, playground.height),
+    x: shakingFunc(xWithBorder),
+    y: shakingFunc(yWithBorder),
   }
 }
 const isInAxios = (position, larger, lower, halfWidth) => (

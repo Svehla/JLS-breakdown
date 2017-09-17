@@ -1,6 +1,6 @@
 import React from 'react'
 import Playground from './Playground'
-import { calculateNewObjPos } from './mathCalc'
+import { calculateNewObjPos, lowerToZero } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import { LOADING_BG_COLOR, PLAY_BG_COLOR, playground, view, dataObjects } from '../config'
@@ -34,6 +34,10 @@ class Root extends React.Component {
       },
       timezoneOffset: new Date().getTimezoneOffset(),
       request: 0,
+      camera: {
+        shakingLarge: 50,
+        fpsDeduction: 0,
+      },
       // http://cubiq.org/performance-tricks-for-mobile-web-development
       framePerSec: isMobile ? 33 : 44,
       playground,
@@ -96,12 +100,8 @@ class Root extends React.Component {
   }
 
   recalculatePositions = () => {
-    // console.time('all')
-    const { mousePos, me, playground } = this.state
-    // console.time('myPos')
-    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground)
-    // console.timeEnd('myPos')
-    // console.time('eated')
+    const { mousePos, me, playground, camera } = this.state
+    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
     const unEated = this.state.objects.map((item) => {
       if(item.deleted){
         return item
@@ -110,16 +110,24 @@ class Root extends React.Component {
         if(isntDeleted){
           return item
         }else{
-          play(allSounds[item.audio])
+          if(camera.fpsDeduction === 0 ){
+            play(allSounds[item.audio])
+          }else{
+            play(allSounds['growl'])
+          }
           this.setState({
-            deletedObjects: this.state.deletedObjects +1
+            camera: {
+              ...camera,
+              fpsDeduction: item.shakingTime
+                ? camera.fpsDeduction + item.shakingTime
+                : camera.fpsDeduction
+            },
+            deletedObjects: this.state.deletedObjects + 1
           })
           return { ...item, deleted: true }
         }
       }
     })
-    // console.timeEnd('eated')
-    // console.time('setState')
     this.setState({
       me: { ...me, x, y, },
       view: {
@@ -127,37 +135,32 @@ class Root extends React.Component {
         leftX: x - this.state.view.width / 2,
         topY: y - this.state.view.height / 2,
       },
+      camera: {
+        ...camera,
+        fpsDeduction: lowerToZero(this.state.camera.fpsDeduction)
+      },
       request: requestAnimationFrame(this.tick),
       objects: unEated,
-    }, () => {
-    //  console.timeEnd('setState')
     })
   }
 
   render() {
     return (
-      <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
-        <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
-          <Playground
-            onMove={(e) => {
-              const { x, y } = e.currentTarget.pointerPos
-              this.setMousePositions({ x, y })
-            }}
-            stop={this.props.stop}
-            {...this.state}
-          />
-        </div>
-        {/*
-        <pre>
-          { JSON.stringify({
-            ...this.state,
-            objects: `[..${this.state.objects.length}...]`
-          }, null, 2) }
-        </pre>
-        */}
-      </div>
+      <Playground
+        onMove={(e) => {
+          const { x, y } = e.currentTarget.pointerPos
+          this.setMousePositions({ x, y })
+        }}
+        stop={this.props.stop}
+        {...this.state}
+      />
     )
   }
 }
-
+/*
+      <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
+        <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
+        </div>
+      </div>
+*/
 export default Root
