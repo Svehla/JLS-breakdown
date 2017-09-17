@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5e036ca-b4c4-46f7-bcd3-3af3a9a4c355" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Playground.jsx" afterPath="$PROJECT_DIR$/src/Playground/Playground.jsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/Root.jsx" afterPath="$PROJECT_DIR$/src/Playground/Root.jsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Playground/mathCalc.js" afterPath="$PROJECT_DIR$/src/Playground/mathCalc.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config.js" afterPath="$PROJECT_DIR$/src/config.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -20,10 +23,22 @@
       <file leaf-file-name="config.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/config.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="421">
-              <caret line="47" column="36" lean-forward="false" selection-start-line="47" selection-start-column="36" selection-end-line="47" selection-end-column="36" />
+            <state relative-caret-position="437">
+              <caret line="61" column="43" lean-forward="false" selection-start-line="61" selection-start-column="43" selection-end-line="61" selection-end-column="43" />
               <folding>
                 <element signature="e#0#67#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Root.jsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2289">
+              <caret line="6" column="39" lean-forward="false" selection-start-line="6" selection-start-column="39" selection-end-line="6" selection-end-column="39" />
+              <folding>
+                <marker date="1505623835134" expanded="true" signature="3123:3154" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -33,17 +48,11 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>camerS</find>
-      <find>fpsDeduction</find>
-      <find>cameraShaking</find>
-      <find>consol</find>
-      <find>camera</find>
       <find>fpsDe</find>
       <find>lowerToZero</find>
       <find>camera.</find>
       <find>initSoundsConfig</find>
       <find>patAnd</find>
-      <find>jolan</find>
       <find>slow</find>
       <find>camer</find>
       <find>spee</find>
@@ -59,10 +68,16 @@
       <find>SHADOW_MAR</find>
       <find>SHADOW_MA</find>
       <find>play</find>
-      <find>jolanda</find>
       <find>cos</find>
       <find>con</find>
       <find>console.</find>
+      <find>shakingTime</find>
+      <find>fpsDeduction</find>
+      <find>shakingLar</find>
+      <find>pointerPos</find>
+      <find>mousePos</find>
+      <find>jolanda</find>
+      <find>jolan</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -87,12 +102,12 @@
         <option value="$PROJECT_DIR$/src/utils.js" />
         <option value="$PROJECT_DIR$/src/Playground/Borders.jsx" />
         <option value="$PROJECT_DIR$/src/App.js" />
-        <option value="$PROJECT_DIR$/src/Playground/Playground.jsx" />
-        <option value="$PROJECT_DIR$/src/Playground/Root.jsx" />
         <option value="$PROJECT_DIR$/src/Playground/createDataElement.js" />
         <option value="$PROJECT_DIR$/src/constants.js" />
         <option value="$PROJECT_DIR$/src/audio/index.js" />
         <option value="$PROJECT_DIR$/src/Playground/mathCalc.js" />
+        <option value="$PROJECT_DIR$/src/Playground/Playground.jsx" />
+        <option value="$PROJECT_DIR$/src/Playground/Root.jsx" />
         <option value="$PROJECT_DIR$/src/config.js" />
       </list>
     </option>
@@ -206,12 +221,6 @@
               <item name="canvas-app" type="b2602c69:ProjectViewProjectNode" />
               <item name="canvas-app" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="audio" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="canvas-app" type="b2602c69:ProjectViewProjectNode" />
-              <item name="canvas-app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Playground" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -276,12 +285,12 @@
       <workItem from="1505591558943" duration="158000" />
       <workItem from="1505591728252" duration="137000" />
       <workItem from="1505591880477" duration="609000" />
-      <workItem from="1505592839924" duration="21002000" />
+      <workItem from="1505592839924" duration="22375000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="104518000" />
+    <option name="totallyTimeSpent" value="105891000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="954" y="0" width="974" height="1038" extended-state="0" />
@@ -496,14 +505,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Playground/mathCalc.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="67" column="23" lean-forward="true" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Playground/createDataElement.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -528,14 +529,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Playground/Playground.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="9" column="10" lean-forward="true" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="434">
@@ -546,21 +539,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/img/grid-loading.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Playground/mathCalc.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="47" column="58" lean-forward="false" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-dom/lib/setTextContent.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Playground/Playground.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Playground/Root.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="115" column="29" lean-forward="false" selection-start-line="115" selection-start-column="29" selection-end-line="115" selection-end-column="29" />
+        <state relative-caret-position="-2289">
+          <caret line="6" column="39" lean-forward="false" selection-start-line="6" selection-start-column="39" selection-end-line="6" selection-end-column="39" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <marker date="1505613039423" expanded="true" signature="3122:3153" ph="{...}" />
+            <marker date="1505623835134" expanded="true" signature="3123:3154" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/config.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="47" column="36" lean-forward="false" selection-start-line="47" selection-start-column="36" selection-end-line="47" selection-end-column="36" />
+        <state relative-caret-position="437">
+          <caret line="61" column="43" lean-forward="false" selection-start-line="61" selection-start-column="43" selection-end-line="61" selection-end-column="43" />
           <folding>
             <element signature="e#0#67#0" expanded="true" />
           </folding>

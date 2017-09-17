@@ -45,7 +45,7 @@ const borderCollisions = (coordinate, min, max) => (
 
 const addShaking = shakingParam => position => (
   shakingParam.fpsDeduction > 0
-    ? position + Math.random() * shakingParam.shakingLarge - shakingParam.shakingLarge/2
+    ? position + Math.random() * shakingParam.fpsDeduction - shakingParam.fpsDeduction/2
     : position
 )
 

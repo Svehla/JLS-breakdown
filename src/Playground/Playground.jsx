@@ -54,7 +54,7 @@ const App = ({
             x={10}
             y={20}
             text={`Loading`}
-            fontSize={150}
+            fontSize={30}
             fontFamily={'Calibri'}
             fill={'#000'}
           />
@@ -68,6 +68,16 @@ const App = ({
           fontFamily={'Calibri'}
           fill={'#000'}
         />
+        {camera.fpsDeduction > 0 &&
+          <Text
+            x={102}
+            y={10}
+            text={`${camera.fpsDeduction}`}
+            fontSize={30}
+            fontFamily={'Calibri'}
+            fill={'#FFF'}
+          />
+        }
       </Layer>
     </Stage>
   )

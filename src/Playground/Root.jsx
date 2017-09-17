@@ -35,7 +35,6 @@ class Root extends React.Component {
       timezoneOffset: new Date().getTimezoneOffset(),
       request: 0,
       camera: {
-        shakingLarge: 50,
         fpsDeduction: 0,
       },
       // http://cubiq.org/performance-tricks-for-mobile-web-development
@@ -51,8 +50,8 @@ class Root extends React.Component {
         background: LOADING_BG_COLOR,
       },
       mousePos: {
-        x: 0,
-        y: 0,
+        x: view.width / 2,
+        y: view.height / 2,
       },
       objects: dataObjects,
       // cache deleted data => high performance
