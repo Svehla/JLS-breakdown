@@ -2,24 +2,21 @@ import React from 'react'
 import { Layer, Stage, Text } from 'react-konva'
 import Me from './Me'
 import GameObject from './GameObject'
-import { isInView } from './mathCalc'
+// import { isInView } from './mathCalc'
 import Borders from './Borders'
 
-const App = ({
+const Playground = ({
   view,
   objects,
   me,
-  playground,
   backgroundConfig,
   onMove,
   stop,
   deletedObjectsCounter,
   camera,
 }) => {
-  const inActualViewFunc = isInView(view)
-  // console.log(camera)
-  // const filteredObjects = objects.filter(isInView(view))
-  // console.log(filteredObjects.length)
+  // const inActualViewFunc += isInView(view)
+  // inActualViewFunc(item)
   return (
     <Stage
       background={'#456'}
@@ -37,8 +34,8 @@ const App = ({
         }
         {
           objects.map((item, index) => (
-            !inActualViewFunc(item) || item.deleted
-              ?  null
+            !item.visibleOnView || item.deleted
+              ? null
               : <GameObject
                 key={index}
                 view={view}
@@ -96,4 +93,4 @@ const App = ({
   )
 }
 
-export default App
+export default Playground

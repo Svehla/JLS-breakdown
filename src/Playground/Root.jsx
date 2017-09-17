@@ -1,14 +1,24 @@
 import React from 'react'
 import Playground from './Playground'
-import { calculateNewObjPos, lowerToZero } from './mathCalc'
+import { isInView, calculateNewObjPos, lowerToZero } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
-import { LOADING_BG_COLOR, PLAY_BG_COLOR, playground, view, dataObjects } from '../config'
+import {
+  playground, view,
+  dataObjects, initSoundsConf
+} from '../config'
 import mainLogo from '../img/mainLogo.jpg'
 import { allSounds } from '../audio/index'
 import { isMobile } from '../utils'
-import { initSoundsConf } from '../config'
 const play = require('audio-play')
+
+const addViewKey = view => item => ({
+  ...item,
+  visibleOnView: item.deleted
+    ? false // performance optimalization
+    : isInView(view)(item)
+})
+
 
 class Root extends React.Component {
 
@@ -48,7 +58,6 @@ class Root extends React.Component {
         y: 0,
         width: playground.width,
         height: playground.height,
-        background: LOADING_BG_COLOR,
       },
       mousePos: {
         x: view.width / 2,
@@ -69,25 +78,22 @@ class Root extends React.Component {
   // game loop
 
   componentWillReceiveProps(nextProps){
-    if(!nextProps.stop) {
+    if (!nextProps.stop) {
       // init game
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
         request: requestAnimationFrame(this.tick),
-        backgroundConfig: {
-          ...this.state.backgroundConfig,
-          background: PLAY_BG_COLOR
-        },
         actualDrum: play(allSounds.fastDrum, initSoundsConf.fastDrum())
       })
     }
   }
+
   componentWillUnmount () {
     cancelAnimationFrame(this.state.request)
   }
 
   setMousePositions = ({ x, y }) => {
-    if(!this.props.stop){
+    if (!this.props.stop) {
       this.setState({ mousePos: { x, y } })
     }
   }
@@ -103,6 +109,7 @@ class Root extends React.Component {
       this.recalculateActualState()
     }, 1000 / this.state.framePerSec)
   }
+
   stopDrumAndGetNew = (drumName) => {
     this.state.actualDrum.pause()
     return {
@@ -111,42 +118,45 @@ class Root extends React.Component {
   }
 
   recalculateActualState = () => {
-    const { mousePos, me, playground, camera, deletedObjectsCounter } = this.state
+    const { mousePos, me, playground, camera, view, deletedObjectsCounter } = this.state
     const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
     // unpure variables for map each cycle
     let newFpsDeduction = camera.fpsDeduction
     let newDrum = {}
     let newDeleteObjectsCounter = deletedObjectsCounter
-    const unEated = this.state.objects.map((item) => {
+    const unEated = this.state.objects.map(addViewKey(view)).map((item) => {
       if (item.deleted) {
         return item
       } else {
-        const isntDeleted = twoShapesColliding(me)(item)
-        if (isntDeleted) {
+        if(!item.visibleOnView){
           return item
         } else {
-          if (item.shakingTime) {
-            newDrum = this.stopDrumAndGetNew('slowDrum')
-            // bad sad fckng += && ++ :/ sad optimalization
-            newFpsDeduction += item.shakingTime
-          }
-          if(newFpsDeduction === 0){
-            play(allSounds[item.audio])
+          const isntColliding = twoShapesColliding(me)(item)
+          if (isntColliding) {
+            return item
           } else {
-            play(allSounds['slowZero'])
+            if (item.shakingTime) {
+              newDrum = this.stopDrumAndGetNew('slowDrum')
+              // bad sad fckng += && ++ :/ sad optimalization
+              newFpsDeduction += item.shakingTime
+            }
+            if(newFpsDeduction === 0){
+              play(allSounds[item.audio])
+            } else {
+              play(allSounds['slowZero'])
+            }
+            newDeleteObjectsCounter++
+            return { ...item, deleted: true }
           }
-          newDeleteObjectsCounter ++
-          return { ...item, deleted: true }
         }
       }
     })
-
     if(newFpsDeduction === 1){
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
     this.setState({
-      me: { ...me, x, y, },
+      me: { ...me, x, y },
       view: {
         ...this.state.view,
         leftX: x - this.state.view.width / 2,
@@ -176,10 +186,5 @@ class Root extends React.Component {
     )
   }
 }
-/*
-      <div style={{ width: '100%', height: '100%', background:'#DFA' }}>
-        <div style={{ background: '#fff', width: this.state.view.width + 'px' }}>
-        </div>
-      </div>
-*/
+
 export default Root

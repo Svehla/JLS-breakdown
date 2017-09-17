@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Playground from './Playground'
-import './App.css'
 import { initSounds } from './audio/index'
 import { initSoundsConfig } from './config'
 const play = require('audio-play')

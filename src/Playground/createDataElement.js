@@ -19,6 +19,9 @@ export const createDataElement = type => ({
   // PERFORMANCE!!! shadowBlur = 30,
   deleted = false,
   shakingTime = null,
+
+  // performance tuning
+  visibleOnView = true,
   ...props,
 }) => {
   const customProperties = (
@@ -36,6 +39,7 @@ export const createDataElement = type => ({
     audio,
     deleted,
     shakingTime,
+    visibleOnView,
     ...props,
     ...customProperties,
   }

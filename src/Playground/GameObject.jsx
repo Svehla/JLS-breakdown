@@ -11,14 +11,12 @@ class gameObject extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const backgroundImage = this.props.backgroundImage
     const image = new window.Image()
-    if(backgroundImage){
-      // console.time('loadPicture')
+    if (backgroundImage) {
       image.src = backgroundImage
       image.onload = () => {
-        // console.timeEnd('loadPicture')
         this.setState({
           image: image
         })
@@ -26,7 +24,7 @@ class gameObject extends React.Component {
     }
   }
 
-  render(){
+  render () {
     const {
       type,
       view,
@@ -58,37 +56,5 @@ class gameObject extends React.Component {
     )
   }
 }
-/*
-const gameObject = ({
-  type,
-  view,
-  x,
-  y,
-  background,
-  backgroundImage,
-  ...props,
-}) => {
-  if(backgroundImage){
-    console.log(background)
-    // console.log(backgroundImage)
-  }
-  // const isViewed = isInView(view)({ x, y, ...props })
-  // console.log(isViewed)
-  return (
-    type === RECTANGLE
-      ? <Rect
-        fill={background}
-        {...props}
-        {...getActualPossition(view, {x, y})}
-      />
-      : type === CIRCLE
-        ? <Circle
-          fill={background}
-          {...props}
-          {...getActualPossition(view, {x, y})}
-        />
-      : ''
-  )
-}
-*/
+
 export default gameObject

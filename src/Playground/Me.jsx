@@ -35,12 +35,4 @@ class Me extends React.Component {
   }
 }
 
-/*
-) {...(
-          this.state.image
-            ? { fillPatternImage: this.state.image }
-            : { background: '#000' }
-        )}
- */
-
 export default Me

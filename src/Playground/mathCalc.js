@@ -75,8 +75,8 @@ export const isInView = view => ({
   height,
   radius,
 }) => {
-  // circle has only width -> ractangle has width and height
-  height = height || width || radius
+  // circle has only radis -> ractangle has width and height
+  height = height || radius
   width = width || radius
   const v = view // abbrevation for me
   const rightX = v.leftX + v.width
