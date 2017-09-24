@@ -4,7 +4,7 @@ import Me from './Me'
 import GameObject from './GameObject'
 // import { isInView } from './mathCalc'
 import Borders from './Borders'
-
+import { Circle } from 'react-konva'
 const Playground = ({
   view,
   objects,
@@ -15,6 +15,7 @@ const Playground = ({
   deletedObjectsCounter,
   camera,
   consoleText,
+  mousePos,
 }) => {
   // const inActualViewFunc += isInView(view)
   // inActualViewFunc(item)
@@ -26,6 +27,7 @@ const Playground = ({
       onTouchMove={onMove}
       width={view.width} height={view.height}>
       <Layer>
+
         { deletedObjectsCounter !== objects.length &&
         <Borders
           view={view}
@@ -98,6 +100,13 @@ const Playground = ({
           fontFamily={'Calibri'}
           fill={'#330'}
         />
+
+
+        <Circle
+          x={mousePos.x}
+          y={mousePos.y}
+          radius={5}
+          fill='#f45' />
       </Layer>
     </Stage>
   )

@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import Playground from './Playground'
 import { initSounds } from './audio/index'
 import { initSoundsConfig } from './config'
+import './basicStyle.css'
 const play = require('audio-play')
 
 const backgroundStyle = {
   width: '100%',
   height: '100%',
-  background: '#fff'
+  background: '#fff',
 }
 class App extends Component {
   constructor(props) {

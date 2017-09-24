@@ -10,6 +10,7 @@ import {
 import mainLogo from '../img/mainLogo.jpg'
 import { allSounds } from '../audio/index'
 import { isMobile } from '../utils'
+import { newDirection } from '../socket-handling'
 const play = require('audio-play')
 
 const addViewKey = view => item => ({
@@ -23,6 +24,9 @@ class Root extends React.Component {
 
   constructor (props) {
     super(props)
+    newDirection(({ beta, gamma }) => {
+      this.handleOrientation({ beta, gamma })
+    })
     this.state = {
       me: {
         x: view.leftX + view.width / 2, // x absolute
@@ -33,8 +37,8 @@ class Root extends React.Component {
         radius: isMobile ? 60 : 90,
         backgroundImage: mainLogo,
         fillPatternScale: (isMobile
-          ? {x: 0.66, y: 0.66}
-          : {x: 1, y: 1}),
+          ? { x: 0.66, y: 0.66 }
+          : { x: 1, y: 1 }),
         fillPatternOffset: {x: -100, y: 100},
         shadowOffsetX: 20,
         shadowOffsetY: 25,
@@ -97,7 +101,7 @@ class Root extends React.Component {
 
   setMousePositions = ({x, y}) => {
     if (!this.props.stop) {
-      this.setState({mousePos: {x, y}})
+      this.setState({ mousePos: { x, y } })
     }
   }
 
