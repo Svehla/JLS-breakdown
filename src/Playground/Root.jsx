@@ -88,7 +88,7 @@ class Root extends React.Component {
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
         request: requestAnimationFrame(this.tick),
-        actualDrum: play(allSounds.fastDrum, initSoundsConf.fastDrum())
+        // actualDrum: play(allSounds.fastDrum, initSoundsConf.fastDrum())
       })
     }
   }
@@ -171,9 +171,9 @@ class Root extends React.Component {
               window.navigator.vibrate(1000 / this.state.framePerSec * item.vibration)
             }
             if (newFpsDeduction === 0) {
-              play(allSounds[item.audio])
+              // play(allSounds[item.audio])
             } else {
-              play(allSounds['slowZero'])
+              // play(allSounds['slowZero'])
             }
             newDeleteObjectsCounter++
             return {...item, deleted: true}
@@ -207,7 +207,7 @@ class Root extends React.Component {
     return (
       <Playground
         onMove={(e) => {
-          const {x, y} = e.currentTarget.pointerPos
+          const { x, y } = e.currentTarget.pointerPos
           this.setMousePositions({x, y})
         }}
         stop={this.props.stop}

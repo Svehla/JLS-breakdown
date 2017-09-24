@@ -70,7 +70,7 @@ export const dataObjects = [
   ...createDataElements(100, RECTANGLE, {
     audio: 'growl',
   }),
-  ...createDataElements(isMobile ? 200 : 500, CIRCLE, {
+  ...createDataElements(isMobile ? 150 : 250, CIRCLE, {
     audio: 'fastZero',
   })
 ]
