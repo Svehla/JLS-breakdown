@@ -68,6 +68,16 @@ const isInAxios = (position, larger, lower, halfWidth) => (
   position + halfWidth >= larger && position <= lower + halfWidth
 )
 
+export const getInRange = ({
+  range = 1,
+  number
+}) => (
+  number > range
+    ? range
+  : number < ( - range )
+    ? ( - range )
+  : number
+)
 export const isInView = view => ({
   x,
   y,

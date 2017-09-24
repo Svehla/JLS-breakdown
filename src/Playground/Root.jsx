@@ -1,6 +1,6 @@
 import React from 'react'
 import Playground from './Playground'
-import { isInView, calculateNewObjPos, lowerToZero } from './mathCalc'
+import { isInView, calculateNewObjPos, lowerToZero, getInRange } from './mathCalc'
 import { RECTANGLE, CIRCLE } from '../constants'
 import { twoShapesColliding } from './collisions'
 import {
@@ -19,10 +19,9 @@ const addViewKey = view => item => ({
     : isInView(view)(item)
 })
 
-
 class Root extends React.Component {
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       me: {
@@ -34,9 +33,9 @@ class Root extends React.Component {
         radius: isMobile ? 60 : 90,
         backgroundImage: mainLogo,
         fillPatternScale: (isMobile
-          ? { x: 0.66, y: 0.66 }
-          : { x: 1 , y: 1 }),
-        fillPatternOffset: { x : -100, y : 100 },
+          ? {x: 0.66, y: 0.66}
+          : {x: 1, y: 1}),
+        fillPatternOffset: {x: -100, y: 100},
         shadowOffsetX: 20,
         shadowOffsetY: 25,
         shadowBlur: 40,
@@ -68,8 +67,9 @@ class Root extends React.Component {
       // cache deleted data => high performance
       // 0.15-0.3 ms for 232 items
       deletedObjectsCounter: dataObjects.reduce((pre, curr) => (
-        curr.deleted ? pre+1 : pre
-      ), 0)
+        curr.deleted ? pre + 1 : pre
+      ), 0),
+      consoleText: '',
     }
   }
 
@@ -77,9 +77,10 @@ class Root extends React.Component {
   // LIVECYCLES
   // game loop
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps (nextProps) {
     if (!nextProps.stop) {
       // init game
+      window.addEventListener('deviceorientation', this.handleOrientation, true)
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
         request: requestAnimationFrame(this.tick),
@@ -88,14 +89,36 @@ class Root extends React.Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     cancelAnimationFrame(this.state.request)
+    window.removeEventListener('deviceorientation', this.handleOrientation, false)
+    window.removeEventListener('mousemove', this.onMouseMove, false)
   }
 
-  setMousePositions = ({ x, y }) => {
+  setMousePositions = ({x, y}) => {
     if (!this.props.stop) {
-      this.setState({ mousePos: { x, y } })
+      this.setState({mousePos: {x, y}})
     }
+  }
+
+  // beta nahoru dolů (y)
+  // gama doleva doprava (x)
+  handleOrientation = ({ beta, gamma }) => {
+
+    const { width, height } = this.state.view
+    // angle only {angleForMax}deg for 90pos
+    const angleForMax = 20
+    const gammaRatio = getInRange({ number: gamma / angleForMax })
+    const betaRatio = getInRange({ number: beta / angleForMax })
+    const xPlayGroundRelPos = (gammaRatio * width) / 2
+    const yPlayGroundRelPos = (betaRatio * height) / 2
+    const finalX = xPlayGroundRelPos + this.state.me.xRel
+    const finalY = yPlayGroundRelPos + this.state.me.yRel
+
+    this.setMousePositions({
+      x: finalX,
+      y: finalY,
+    })
   }
 
   onMouseMove = (e) => {
@@ -118,8 +141,8 @@ class Root extends React.Component {
   }
 
   recalculateActualState = () => {
-    const { mousePos, me, playground, camera, view, deletedObjectsCounter } = this.state
-    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
+    const {mousePos, me, playground, camera, view, deletedObjectsCounter} = this.state
+    const {x, y} = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
     // unpure variables for map each cycle
     let newFpsDeduction = camera.fpsDeduction
     let newDrum = {}
@@ -128,7 +151,7 @@ class Root extends React.Component {
       if (item.deleted) {
         return item
       } else {
-        if(!item.visibleOnView){
+        if (!item.visibleOnView) {
           return item
         } else {
           const isntColliding = twoShapesColliding(me)(item)
@@ -140,23 +163,26 @@ class Root extends React.Component {
               // bad sad fckng += && ++ :/ sad optimalization
               newFpsDeduction += item.shakingTime
             }
-            if(newFpsDeduction === 0){
+            if (item.vibration && window.navigator.vibrate) {
+              window.navigator.vibrate(1000 / this.state.framePerSec * item.vibration)
+            }
+            if (newFpsDeduction === 0) {
               play(allSounds[item.audio])
             } else {
               play(allSounds['slowZero'])
             }
             newDeleteObjectsCounter++
-            return { ...item, deleted: true }
+            return {...item, deleted: true}
           }
         }
       }
     })
-    if(newFpsDeduction === 1){
+    if (newFpsDeduction === 1) {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
     this.setState({
-      me: { ...me, x, y },
+      me: {...me, x, y},
       view: {
         ...this.state.view,
         leftX: x - this.state.view.width / 2,
@@ -173,12 +199,12 @@ class Root extends React.Component {
     })
   }
 
-  render() {
+  render () {
     return (
       <Playground
         onMove={(e) => {
-          const { x, y } = e.currentTarget.pointerPos
-          this.setMousePositions({ x, y })
+          const {x, y} = e.currentTarget.pointerPos
+          this.setMousePositions({x, y})
         }}
         stop={this.props.stop}
         {...this.state}

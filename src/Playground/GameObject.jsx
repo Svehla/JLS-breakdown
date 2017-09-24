@@ -31,6 +31,7 @@ class gameObject extends React.Component {
       x,
       y,
       background,
+      // vibration,
       ...props,
     } = this.props
     return (

@@ -47,8 +47,9 @@ export const dataObjects = [
     background: '#00F',
     audio: 'blue',
   }),
-  ...createDataElements(isMobile ? 2 : 4, CIRCLE, {
-    shakingTime: 150, // 20
+  ...createDataElements(isMobile ? 10 : 20, CIRCLE, {
+    shakingTime: 100, // 20
+    vibration: 100,
     audio: 'growl',
     backgroundImage: jolanda,
     fillPatternOffset: { x : -59, y : -59 },
@@ -63,10 +64,13 @@ export const dataObjects = [
     fillPatternOffset: { x : -150, y : -150 },
     radius: 150,
   }),
-  ...createDataElements(50, RECTANGLE, {
+  ...createDataElements(100, RECTANGLE, {
     audio: 'scream',
   }),
-  ...createDataElements(isMobile ? 200 : 363, CIRCLE, {
+  ...createDataElements(100, RECTANGLE, {
+    audio: 'growl',
+  }),
+  ...createDataElements(isMobile ? 200 : 500, CIRCLE, {
     audio: 'fastZero',
   })
 ]

@@ -14,6 +14,7 @@ const Playground = ({
   stop,
   deletedObjectsCounter,
   camera,
+  consoleText,
 }) => {
   // const inActualViewFunc += isInView(view)
   // inActualViewFunc(item)
@@ -82,12 +83,21 @@ const Playground = ({
           <Text
             x={102}
             y={10}
-            text={`You Lose \nthe Game... \n noob`}
+            text={`You Lost \nthe Game... \n noob`}
             fontSize={70}
             fontFamily={'Calibri'}
             fill={'#330'}
           />
         }
+
+        <Text
+          x={0}
+          y={10}
+          text={consoleText}
+          fontSize={40}
+          fontFamily={'Calibri'}
+          fill={'#330'}
+        />
       </Layer>
     </Stage>
   )
