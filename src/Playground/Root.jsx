@@ -10,8 +10,9 @@ import {
 import mainLogo from '../img/mainLogo.jpg'
 import { allSounds } from '../audio/index'
 import { isMobile } from '../utils'
-import { newDirection } from '../socket-handling'
-const play = require('audio-play')
+import { newDirection, changeCode } from '../socket-handling'
+import Config from './Config'
+const playAudio = require('audio-play')
 
 const addViewKey = view => item => ({
   ...item,
@@ -74,6 +75,9 @@ class Root extends React.Component {
         curr.deleted ? pre + 1 : pre
       ), 0),
       consoleText: '',
+      // config
+      sounds: true,
+      authCode: ''
     }
   }
 
@@ -88,7 +92,7 @@ class Root extends React.Component {
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
         request: requestAnimationFrame(this.tick),
-        actualDrum: play(allSounds.fastDrum, initSoundsConf.fastDrum())
+        actualDrum: this.play(allSounds.fastDrum, initSoundsConf.fastDrum())
       })
     }
   }
@@ -105,12 +109,15 @@ class Root extends React.Component {
     }
   }
 
+  // audio middleware
+  play = (...params) => {
+    return playAudio(...params)
+  }
   // beta nahoru dolů (y)
   // gama doleva doprava (x)
   handleOrientation = ({ beta, gamma }) => {
-
     const { width, height } = this.state.view
-    // angle only {angleForMax}deg for 90pos
+    // angle only {angleForMax} deg for 90pos
     const angleForMax = 20
     const gammaRatio = getInRange({ number: gamma / angleForMax })
     const betaRatio = getInRange({ number: beta / angleForMax })
@@ -121,7 +128,7 @@ class Root extends React.Component {
 
     this.setMousePositions({
       x: finalX,
-      y: finalY,
+      y: finalY
     })
   }
 
@@ -140,13 +147,13 @@ class Root extends React.Component {
   stopDrumAndGetNew = (drumName) => {
     this.state.actualDrum.pause()
     return {
-      actualDrum: play(allSounds[drumName], initSoundsConf[drumName]())
+      actualDrum: this.play(allSounds[drumName], initSoundsConf[drumName]())
     }
   }
 
   recalculateActualState = () => {
-    const {mousePos, me, playground, camera, view, deletedObjectsCounter} = this.state
-    const {x, y} = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
+    const { mousePos, me, playground, camera, view, deletedObjectsCounter } = this.state
+    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
     // unpure variables for map each cycle
     let newFpsDeduction = camera.fpsDeduction
     let newDrum = {}
@@ -171,12 +178,12 @@ class Root extends React.Component {
               window.navigator.vibrate(1000 / this.state.framePerSec * item.vibration)
             }
             if (newFpsDeduction === 0) {
-              play(allSounds[item.audio])
+              this.play(allSounds[item.audio])
             } else {
-              play(allSounds['slowZero'])
+              this.play(allSounds['slowZero'])
             }
             newDeleteObjectsCounter++
-            return {...item, deleted: true}
+            return { ...item, deleted: true }
           }
         }
       }
@@ -186,7 +193,7 @@ class Root extends React.Component {
     }
 
     this.setState({
-      me: {...me, x, y},
+      me: { ...me, x, y },
       view: {
         ...this.state.view,
         leftX: x - this.state.view.width / 2,
@@ -205,14 +212,26 @@ class Root extends React.Component {
 
   render () {
     return (
-      <Playground
-        onMove={(e) => {
-          const { x, y } = e.currentTarget.pointerPos
-          this.setMousePositions({x, y})
-        }}
-        stop={this.props.stop}
-        {...this.state}
-      />
+      <div>
+        <Config
+          auth={this.state.sounds}
+          onAuthChange={e => {
+            const newCode = e.target.value
+            changeCode(newCode)
+            this.setState({ authCode: e.target.value })
+          }}
+          sounds={this.state.sounds}
+          onSoundsClick={sounds => this.setState({ sounds })}
+        />
+        <Playground
+          onMove={(e) => {
+            const { x, y } = e.currentTarget.pointerPos
+            this.setMousePositions({ x, y })
+          }}
+          stop={this.props.stop}
+          {...this.state}
+        />
+      </div>
     )
   }
 }

@@ -31,7 +31,7 @@ export const createDataElement = type => ({
       ? { height, width }
     : {}
   )
-  return{
+  return {
     type,
     x,
     y,

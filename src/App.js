@@ -29,8 +29,14 @@ class App extends Component {
   render() {
     return (
       <div style={backgroundStyle} >
-        <Playground
-          stop={this.state.loading} />
+        <div style={{ float: 'left' }}>
+          <Playground
+            stop={this.state.loading} />
+        </div>
+        <div style={{ borderLeft: '3px solid #333', float: 'right' }}>
+          <Playground
+            stop={this.state.loading} />
+        </div>
       </div>
     )
   }

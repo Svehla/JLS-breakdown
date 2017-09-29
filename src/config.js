@@ -4,8 +4,8 @@ import jolanda from './img/jolanda.png'
 import jelinek from './img/jelinek.png'
 import helloKitty from './img/hello-kitty.png'
 import { isMobile } from './utils'
-export const LOADING_BG_COLOR = '#DEF'
-export const PLAY_BG_COLOR = '#EEF'
+// export const LOADING_BG_COLOR = '#DEF'
+// export const PLAY_BG_COLOR = '#EEF'
 
 export const initSoundsConf = {
 // have to return new instance
@@ -14,11 +14,12 @@ export const initSoundsConf = {
 }
 
 export const view = {
-  width: window.innerWidth,
+  width: window.innerWidth / 2 - 10,
   height: window.innerHeight, // - 150,
   leftX: 20,
   topY: 20,
 }
+
 export const playground = {
   width: isMobile ? 5500 : 5500,
   height: isMobile ? 2500 : 5000,

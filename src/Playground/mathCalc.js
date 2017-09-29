@@ -10,21 +10,21 @@ const {
 
 export const lowerToZero = number => number - 1 < 0 ? 0 : number - 1
 export const pythagorC = (a, b) => sqrt(pow(a, 2) + pow(b, 2))
-export const toDegrees = angle => angle * (180 / PI)
-export const toRadians = angle => angle * (PI / 180)
+// export const toDegrees = angle => angle * (180 / PI)
+// export const toRadians = angle => angle * (PI / 180)
 
 export const calculateProgress = (mousePos, currPosAbs, currPosRel, distance) => {
   return mousePos > currPosRel
-      ? currPosAbs + distance
-      : currPosAbs - distance
+    ? currPosAbs + distance
+    : currPosAbs - distance
 }
 
 export const getDistance = (mousePos, actualPos, maxSpeed) => {
   const xDiff = mousePos.x - actualPos.xRel // division by zero => .js Infinity
   const yDiff = mousePos.y - actualPos.yRel
-  const c = pythagorC(xDiff, yDiff)
   const tanRatio = yDiff / xDiff
   const tanAngle = atan(tanRatio)
+  const c = pythagorC(xDiff, yDiff)
   const possibleAcceleration = pow(c / 40, 2)
   const finAcceleration = possibleAcceleration < maxSpeed ? possibleAcceleration : maxSpeed
   const newX = cos(tanAngle) * finAcceleration || 0
@@ -106,4 +106,3 @@ export const getActualPossition = (view, {x, y}) => {
     y: relativeYCoor
   }
 }
-
