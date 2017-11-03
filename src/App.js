@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import Playground from './Playground'
 import { initSounds } from './audio/index'
-import { initSoundsConfig } from './config'
+// import { initSoundsConfig } from './config'
 import './basicStyle.css'
-const play = require('audio-play')
+// const play = require('audio-play')
 
 const backgroundStyle = {
   width: '100%',
   height: '100%',
-  background: '#fff',
+  background: '#fff'
 }
+
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       position: 0,
@@ -20,9 +21,8 @@ class App extends Component {
   }
 
   componentDidMount () {
-    initSounds().then((allSounds) => {
+    initSounds().then((/* allSounds */) => {
       this.setState({ loading: false })
-      // play(allSounds.fastDrum, initSoundsConfig.fastDrum)
     })
   }
 
@@ -30,10 +30,6 @@ class App extends Component {
     return (
       <div style={backgroundStyle} >
         <div style={{ float: 'left' }}>
-          <Playground
-            stop={this.state.loading} />
-        </div>
-        <div style={{ borderLeft: '3px solid #333', float: 'right' }}>
           <Playground
             stop={this.state.loading} />
         </div>

@@ -4,17 +4,15 @@ import jolanda from './img/jolanda.png'
 import jelinek from './img/jelinek.png'
 import helloKitty from './img/hello-kitty.png'
 import { isMobile } from './utils'
-// export const LOADING_BG_COLOR = '#DEF'
-// export const PLAY_BG_COLOR = '#EEF'
 
 export const initSoundsConf = {
 // have to return new instance
-  fastDrum: () => ({ loop: true }),
+  fastDrum: () => ({ loop: true, }),
   slowDrum: () => ({ loop: true, volume: 4 }),
 }
 
 export const view = {
-  width: window.innerWidth / 2 - 10,
+  width: window.innerWidth, // / 2 - 10,
   height: window.innerHeight, // - 150,
   leftX: 20,
   topY: 20,

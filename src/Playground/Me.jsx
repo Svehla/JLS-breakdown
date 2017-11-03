@@ -1,20 +1,30 @@
 import React from 'react'
 import { Circle } from 'react-konva'
+import architectsMainLogo from '../img/architectsMainLogo.png'
+import JLSMainLogo from '../img/JLSMainLogo.jpg'
 
 class Me extends React.Component {
   constructor (props){
     super(props)
     this.state = {
-      image:null
+      image1: null,
+      image2: null,
     }
   }
 
   componentDidMount() {
-    const image = new window.Image()
-    image.src = this.props.me.backgroundImage
-    image.onload = () => {
+    const jlsImage = new window.Image()
+    const architectsImage = new window.Image()
+    jlsImage.src = JLSMainLogo
+    architectsImage.src = architectsMainLogo
+    architectsImage.onload = () => {
       this.setState({
-        image: image
+        architectsImage,
+      })
+    }
+    jlsImage.onload = () => {
+      this.setState({
+        jlsImage,
       })
     }
   }
@@ -24,12 +34,17 @@ class Me extends React.Component {
       me,
       view,
     } = this.props
+    const bandName = me.backgroundImage
     return (
       <Circle
         {...me}
         x={view.width / 2 /* highter prioery then ...me */ }
         y={view.height / 2 /* highter prioery then ...me */ }
-        fillPatternImage={this.state.image}
+        fillPatternImage={
+          bandName === 'jake-loves-space'
+            ? this.state.jlsImage
+            : this.state.architectsImage
+        }
       />
     )
   }

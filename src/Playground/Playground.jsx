@@ -2,23 +2,27 @@ import React from 'react'
 import { Layer, Stage, Text } from 'react-konva'
 import Me from './Me'
 import GameObject from './GameObject'
-// import { isInView } from './mathCalc'
 import Borders from './Borders'
+import BandIcon from './BandIcon'
+import architects from '../img/architects.png'
+import jakeLovesSpace from '../img/jakeLovesSpace.png'
 import { Circle } from 'react-konva'
+import { playground } from '../config'
+
 const Playground = ({
   view,
   objects,
   me,
   backgroundConfig,
   onMove,
+  onBandClick,
   stop,
   deletedObjectsCounter,
   camera,
   consoleText,
   mousePos,
+  bandName,
 }) => {
-  // const inActualViewFunc += isInView(view)
-  // inActualViewFunc(item)
   return (
     <Stage
       background={'#456'}
@@ -35,6 +39,7 @@ const Playground = ({
           shaking={camera.fpsDeduction > 0}
         />
         }
+
         {
           objects.map((item, index) => (
             !item.visibleOnView || item.deleted
@@ -45,6 +50,7 @@ const Playground = ({
                 {...item} />
           ))
         }
+
         <Me
           me={me}
           view={view}
@@ -82,14 +88,14 @@ const Playground = ({
         }
 
         {deletedObjectsCounter === objects.length &&
-          <Text
-            x={102}
-            y={10}
-            text={`You Lost \nthe Game... \n noob`}
-            fontSize={70}
-            fontFamily={'Calibri'}
-            fill={'#330'}
-          />
+        <Text
+          x={102}
+          y={10}
+          text={`You Lost \nthe Game... \n noob`}
+          fontSize={70}
+          fontFamily={'Calibri'}
+          fill={'#330'}
+        />
         }
 
         <Text
@@ -101,15 +107,32 @@ const Playground = ({
           fill={'#330'}
         />
 
-
         <Circle
           x={mousePos.x}
           y={mousePos.y}
           radius={5}
           fill='#f45' />
+
+        <BandIcon
+          x={view.width - 100}
+          y={60}
+          backgroundImage={jakeLovesSpace}
+          onClick={() => {
+            onBandClick('jake-loves-space')()
+          }}
+        />
+        <BandIcon
+          x={view.width - 230}
+          y={60}
+          backgroundImage={architects}
+          onClick={onBandClick('architects')}
+        />
+
       </Layer>
     </Stage>
   )
+  // const inActualViewFunc += isInView(view)
+  // inActualViewFunc(item)
 }
 
 export default Playground

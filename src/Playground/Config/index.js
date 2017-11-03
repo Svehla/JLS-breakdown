@@ -1,22 +1,25 @@
 import React from 'react'
 
 const Config = ({
-  sounds,
-  onSoundsClick,
   authCode,
   onAuthChange,
+  volume,
+  onVolumeChange,
 }) => {
-
   return (
     <div>
-      <button
-        onClick={() => onSoundsClick(!sounds)}
-      >NEJEDE { sounds ? 'stop' : 'play' } Sounds</button>
+      <input
+        type='range'
+        onChange={onVolumeChange}
+        min={0}
+        max={1}
+        step={0.05}
+        value={volume} />
       <input
         placeholder={'remote device code'}
         maxLength={3}
         onChange={onAuthChange}
-        type='text'
+        type='number'
         value={authCode}
       />
     </div>

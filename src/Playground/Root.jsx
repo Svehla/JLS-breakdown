@@ -7,12 +7,12 @@ import {
   playground, view,
   dataObjects, initSoundsConf
 } from '../config'
-import mainLogo from '../img/mainLogo.jpg'
-import { allSounds } from '../audio/index'
+import JLSMainLogo from '../img/JLSMainLogo.jpg'
+import ArchitectsMainLogo from '../img/architects.png'
+import { allSounds, playAudio } from '../audio/index'
 import { isMobile } from '../utils'
 import { newDirection, changeCode } from '../socket-handling'
 import Config from './Config'
-const playAudio = require('audio-play')
 
 const addViewKey = view => item => ({
   ...item,
@@ -29,6 +29,7 @@ class Root extends React.Component {
       this.handleOrientation({ beta, gamma })
     })
     this.state = {
+      actualBand: 'jake-loves-space',
       me: {
         x: view.leftX + view.width / 2, // x absolute
         y: view.topY + view.height / 2, // y absolute
@@ -36,11 +37,11 @@ class Root extends React.Component {
         yRel: view.height / 2, // y relative
         type: CIRCLE,
         radius: isMobile ? 60 : 90,
-        backgroundImage: mainLogo,
+        backgroundImage: JLSMainLogo,
         fillPatternScale: (isMobile
           ? { x: 0.66, y: 0.66 }
           : { x: 1, y: 1 }),
-        fillPatternOffset: {x: -100, y: 100},
+        fillPatternOffset: { x: -100, y: 100 },
         shadowOffsetX: 20,
         shadowOffsetY: 25,
         shadowBlur: 40,
@@ -76,8 +77,8 @@ class Root extends React.Component {
       ), 0),
       consoleText: '',
       // config
-      sounds: true,
-      authCode: ''
+      authCode: '',
+      volume: 0,
     }
   }
 
@@ -103,16 +104,19 @@ class Root extends React.Component {
     window.removeEventListener('mousemove', this.onMouseMove, false)
   }
 
-  setMousePositions = ({x, y}) => {
+  setMousePositions = ({ x, y }) => {
     if (!this.props.stop) {
       this.setState({ mousePos: { x, y } })
     }
   }
 
   // audio middleware
-  play = (...params) => {
-    return playAudio(...params)
+  play = (audio, config) => {
+    const volume = this.state.volume
+    return playAudio(audio, { ...config, volume })
+    // return playAudio(audio, config)
   }
+
   // beta nahoru dolů (y)
   // gama doleva doprava (x)
   handleOrientation = ({ beta, gamma }) => {
@@ -213,16 +217,20 @@ class Root extends React.Component {
   render () {
     return (
       <div>
+        {/*
         <Config
-          auth={this.state.sounds}
+          auth={this.state.authCode}
           onAuthChange={e => {
             const newCode = e.target.value
             changeCode(newCode)
             this.setState({ authCode: e.target.value })
           }}
-          sounds={this.state.sounds}
-          onSoundsClick={sounds => this.setState({ sounds })}
+          volume={this.state.volume}
+          onVolumeChange={e => {
+            this.setState({ volume: e.target.value })
+          }}
         />
+        */}
         <Playground
           onMove={(e) => {
             const { x, y } = e.currentTarget.pointerPos
@@ -230,6 +238,16 @@ class Root extends React.Component {
           }}
           stop={this.props.stop}
           {...this.state}
+          onBandClick={bandName => () => {
+            this.setState({
+              me: {
+                ...this.state.me,
+                backgroundImage: bandName
+              }
+            })
+            this.state.me.backgroundImage
+          }}
+
         />
       </div>
     )
