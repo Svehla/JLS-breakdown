@@ -10,12 +10,12 @@ export const initSoundsConf = {
   slowDrum: () => ({ loop: true, volume: 4 }),
 }
 
-export const view = {
+export const getView = () => ({
   width: window.innerWidth,
   height: window.innerHeight,
   leftX: 20,
   topY: 20,
-}
+})
 
 export const playground = {
   width: isMobile ? 5500 : 5500,

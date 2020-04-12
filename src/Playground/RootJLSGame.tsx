@@ -1,7 +1,7 @@
 import { Coord, View, calculateNewObjPos, getInRange, isInView, lowerToZero } from './mathCalc'
 import { GameObjectType } from './createGameObjects'
 import { allSounds, pauseSound, playAudio } from '../audio/audio'
-import { gameObjects, initSoundsConf, playground, view } from '../config'
+import { gameObjects, getView, initSoundsConf, playground } from '../config'
 import { isMobile } from '../utils'
 // import { newDirection } from '../socket-handling'
 import { KonvaEventObject } from 'konva/types/Node'
@@ -17,6 +17,7 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
     : isInView(view, item),
 })
 
+const view = getView()
 const defaultState = {
   me: {
     bandName: 'jake-loves-space',
@@ -37,19 +38,17 @@ const defaultState = {
   },
   // animation frame helper for game loop
   request: 0,
-  camera: {
-    shakeIntensity: 0,
-  },
+  cameraShakeIntensity: 0,
   // http://cubiq.org/performance-tricks-for-mobile-web-development
   framePerSec: isMobile ? 33 : 44,
   playground,
-  view,
+  view: getView(),
   mousePos: {
     x: view.width / 2,
     y: view.height / 2,
   },
-  actualDrum: null as null | any,
-  objects: gameObjects,
+  actualDrum: null as any,
+  gameObjects: gameObjects,
   // consoleText: '',
   // config
   authCode: '',
@@ -67,7 +66,7 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
 
     // init game
     window.addEventListener('deviceorientation', this.handleOrientation)
-    document.addEventListener('mousemove', this.onMouseMove)
+    window.addEventListener('mousemove', this.handleMouseMove)
 
     this.setState({
       request: requestAnimationFrame(this.tick),
@@ -78,8 +77,53 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
   componentWillUnmount() {
     cancelAnimationFrame(this.state.request)
     window.removeEventListener('deviceorientation', this.handleOrientation)
-    window.removeEventListener('mousemove', this.onMouseMove)
+    window.removeEventListener('mousemove', this.handleMouseMove)
   }
+
+  // --------------------------
+  // ---- event listeners -----
+
+  // beta (`up` and `down`) (y)
+  // gama (`left` and `right`) (x)
+  handleOrientation = ({ beta, gamma }: any) => {
+    const { width, height } = this.state.view
+    // angle only {angleForMax} deg for 90pos
+    const angleForMax = 20
+    const gammaRatio = getInRange({ number: gamma / angleForMax })
+    const betaRatio = getInRange({ number: beta / angleForMax })
+    const xPlayGroundRelPos = (gammaRatio * width) / 2
+    const yPlayGroundRelPos = (betaRatio * height) / 2
+    const x = xPlayGroundRelPos + this.state.me.xRel
+    const y = yPlayGroundRelPos + this.state.me.yRel
+
+    this.setMousePositions({ x, y })
+  }
+
+  handleMouseMove = (e: MouseEvent) => {
+    const x = e.pageX
+    const y = e.pageY
+    this.setMousePositions({ x, y })
+  }
+
+  handleBandClick = (bandName: string) => {
+    this.setState({
+      me: {
+        ...this.state.me,
+        bandName,
+      },
+    })
+  }
+
+  // support of mobile devices
+  handlePlaygroundMove = (e: KonvaEventObject<Event>) => {
+    // @ts-ignore
+    const { x, y } = e.currentTarget.pointerPos
+    this.setMousePositions({ x, y })
+  }
+
+  // --------------------------
+  // --------- others --------
+  // --------------------------
 
   setMousePositions = ({ x, y }: Coord) => {
     this.setState({ mousePos: { x, y } })
@@ -93,35 +137,9 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
     return playAudio(audio, { ...config, volume })
     // return playAudio(audio, config)
   }
-
-  // beta (`up` and `down`) (y)
-  // gama (`left` and `right`) (x)
-  handleOrientation = ({ beta, gamma }: any) => {
-    const { width, height } = this.state.view
-    // angle only {angleForMax} deg for 90pos
-    const angleForMax = 20
-    const gammaRatio = getInRange({ number: gamma / angleForMax })
-    const betaRatio = getInRange({ number: beta / angleForMax })
-    const xPlayGroundRelPos = (gammaRatio * width) / 2
-    const yPlayGroundRelPos = (betaRatio * height) / 2
-    const finalX = xPlayGroundRelPos + this.state.me.xRel
-    const finalY = yPlayGroundRelPos + this.state.me.yRel
-
-    this.setMousePositions({
-      x: finalX,
-      y: finalY,
-    })
-  }
-
-  onMouseMove = (e: MouseEvent) => {
-    const x = e.pageX
-    const y = e.pageY
-    this.setMousePositions({ x, y })
-  }
-
   tick = () => {
     setTimeout(() => {
-      this.recalculateActualState()
+      this.recalculateGameLoopState()
     }, 1000 / this.state.framePerSec)
   }
 
@@ -132,21 +150,19 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
       pauseSound(currDrum)
     })()
 
-    return {
-      // todo: what about await??
-      // @ts-ignore
-      actualDrum: this.play(allSounds[drumName], initSoundsConf[drumName]()),
-    }
+    // todo: create new structure for saving audio data
+    // @ts-ignore
+    return this.play(allSounds[drumName], initSoundsConf[drumName]())
   }
 
-  recalculateActualState = () => {
-    const { mousePos, me, playground, camera, view } = this.state
-    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
+  recalculateGameLoopState = () => {
+    const { mousePos, me, playground, cameraShakeIntensity, view } = this.state
+    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, cameraShakeIntensity)
 
-    let newCameraShakeIntensity = camera.shakeIntensity
-    let newDrum = {}
+    let newCameraShakeIntensity = cameraShakeIntensity
+    let newDrum = null as any
 
-    const updatedGameObjects = this.state.objects
+    const updatedGameObjects = this.state.gameObjects
       .map(item => addViewProperty(item, view))
       .map(item => {
         if (item.deleted) {
@@ -162,7 +178,8 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
         }
 
         // > <> <> <> <> <> <> <> <> <> <> <
-        // unpure shitty side effect while you eat some new game object (collision is happened)
+        // unpure shitty side effect while you
+        // eat some new game object (aka collision is happened)
         // > <> <> <> <> <> <> <> <> <> <> <
         if (item.shakingTime) {
           newDrum = this.stopDrumAndGetNew('slowDrum')
@@ -196,36 +213,20 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
         leftX: x - this.state.view.width / 2,
         topY: y - this.state.view.height / 2,
       },
-      ...newDrum,
-      camera: {
-        ...camera,
-        shakeIntensity: lowerToZero(newCameraShakeIntensity),
-      },
-      objects: updatedGameObjects,
+      cameraShakeIntensity: lowerToZero(newCameraShakeIntensity),
+      gameObjects: updatedGameObjects,
+      // TODO: change drum audio structure
+      ...(newDrum ? ({ actualDrum: newDrum } as any) : {}),
       // next tick of game loop
       request: requestAnimationFrame(this.tick),
     })
-  }
-
-  onBandClick = (bandName: string) => {
-    this.setState({
-      me: {
-        ...this.state.me,
-        bandName,
-      },
-    })
-  }
-
-  handlePlaygroundMove = (e: KonvaEventObject<Event>) => {
-    // @ts-ignore
-    const { x, y } = e.currentTarget.pointerPos
-    this.setMousePositions({ x, y })
   }
 
   render() {
     return (
       <div>
         {/*
+        // old configuration for debugging purposes
         <Config
           auth={this.state.authCode}
           onAuthChange={e => {
@@ -240,9 +241,13 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
         />
         */}
         <Playground
-          onMove={this.handlePlaygroundMove}
-          onBandClick={this.onBandClick}
-          {...(this.state as any)}
+          view={this.state.view}
+          gameObjects={this.state.gameObjects}
+          me={this.state.me}
+          cameraShakeIntensity={this.state.cameraShakeIntensity}
+          mousePos={this.state.mousePos}
+          handlePlaygroundMove={this.handlePlaygroundMove}
+          handleBandClick={this.handleBandClick}
         />
       </div>
     )

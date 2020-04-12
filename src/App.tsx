@@ -1,6 +1,6 @@
 import './basicStyle.css'
 import { initSounds } from './audio/audio'
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import RootJLSGame from './Playground/RootJLSGame'
 
 // TODO: add styled components
@@ -10,42 +10,28 @@ const styles = {
     height: '100%',
     background: '#fff',
   },
-
-  playgroundWrapper: {
-    // TODO: remove float: left
-    float: 'left',
-  },
 } as const
 
-type State = {
-  position: number
-  loading: boolean
-}
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    ;(async () => {
+      await initSounds()
 
-class App extends Component<{}, State> {
-  state = {
-    position: 0,
-    loading: true,
+      setIsLoading(false)
+    })()
+    return () => undefined
+  }, [])
+
+  if (isLoading) {
+    return <div>loading</div>
   }
 
-  async componentDidMount() {
-    await initSounds()
-
-    this.setState({ loading: false })
-  }
-
-  render() {
-    if (this.state.loading) {
-      return <div>loading</div>
-    }
-    return (
-      <div style={styles.backgroundStyle}>
-        <div style={styles.playgroundWrapper}>
-          <RootJLSGame />
-        </div>
-      </div>
-    )
-  }
+  return (
+    <div style={styles.backgroundStyle}>
+      <RootJLSGame />
+    </div>
+  )
 }
 
 export default App

@@ -60,27 +60,26 @@ const borderCollisions = (coordinate, min, max) =>
   coordinate < min ? min : coordinate > max ? max : coordinate
 
 // @ts-ignore
-const addShaking = shakingParam => position =>
-  shakingParam.shakeIntensity > 0
-    ? position + Math.random() * shakingParam.shakeIntensity - shakingParam.shakeIntensity / 2
+const addShaking = (cameraShakeIntensity, position) =>
+  cameraShakeIntensity > 0
+    ? position + Math.random() * cameraShakeIntensity - cameraShakeIntensity / 2
     : position
 
 export const calculateNewObjPos = (
-  mousePos: any,
+  mousePos: { x: number; y: number },
   meElement: any,
-  maxSpeed: any,
+  maxSpeed: number,
   playground: any,
-  cameraShaking: any
+  cameraShakeIntensity: number
 ) => {
   const { distanceX, distanceY } = getDistance(mousePos, meElement, maxSpeed)
   const x = calculateProgress(mousePos.x, meElement.x, meElement.xRel, distanceX)
   const y = calculateProgress(mousePos.y, meElement.y, meElement.yRel, distanceY)
   const xWithBorder = borderCollisions(x, 0, playground.width)
   const yWithBorder = borderCollisions(y, 0, playground.height)
-  const shakingFunc = addShaking(cameraShaking)
   return {
-    x: shakingFunc(xWithBorder),
-    y: shakingFunc(yWithBorder),
+    x: addShaking(cameraShakeIntensity, xWithBorder),
+    y: addShaking(cameraShakeIntensity, yWithBorder),
   }
 }
 

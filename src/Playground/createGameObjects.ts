@@ -1,12 +1,7 @@
-import { DEFAULT_AUDIO } from '../constants'
 import { playground } from '../config'
+import { randomColor } from '../utils'
 
-// todo: what about seed random
 const randomWidth = () => Math.random() * 20 + 10
-
-// todo: use some lib? or add docs
-// eslint-disable-next-line no-bitwise
-const randomColor = () => '#' + ((((1 << 24) * Math.random()) / 8) | 0).toString(16)
 
 export type GameObjectType = 'RECTANGLE' | 'CIRCLE'
 
@@ -17,7 +12,7 @@ export const createGameObject = (type: GameObjectType) => ({
   width = type === 'CIRCLE' ? undefined : randomWidth() * 2,
   height = type === 'CIRCLE' ? undefined : randomWidth() * 2,
   background = randomColor(),
-  audio = DEFAULT_AUDIO,
+  audio = 'slowZero',
   deleted = false,
   shakingTime = null,
   // performance tuning

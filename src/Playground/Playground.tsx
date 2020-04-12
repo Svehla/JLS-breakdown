@@ -13,13 +13,11 @@ import jakeLovesSpace from '../img/jakeLovesSpace.png'
 
 type Props = {
   view: View
-  objects: any[]
+  gameObjects: any[]
   me: any
-  backgroundConfig: any
-  onMove: (e: KonvaEventObject<Event>) => void
-  onBandClick: any
-  deleteObjectCounter: any
-  camera: any
+  handlePlaygroundMove: (e: KonvaEventObject<Event>) => void
+  handleBandClick: any
+  cameraShakeIntensity: any
   // consoleText: any
   mousePos: any
 }
@@ -27,35 +25,33 @@ type Props = {
 const Playground = (props: Props) => {
   const {
     view,
-    objects,
+    gameObjects,
     me,
-    onMove,
-    onBandClick,
-    camera,
-    // consoleText,
+    handlePlaygroundMove,
+    handleBandClick,
+    cameraShakeIntensity,
     mousePos,
   } = props
 
-  const deletedObjectsCounter = objects.filter(item => item.deleted).length
+  const deletedObjectsCounter = gameObjects.filter(item => item.deleted).length
 
   return (
     <Stage
       background={'#456'}
-      onTap={onMove}
-      onTouchStart={onMove}
-      onTouchMove={onMove}
+      onTap={handlePlaygroundMove}
+      onTouchStart={handlePlaygroundMove}
+      onTouchMove={handlePlaygroundMove}
       width={view.width}
       height={view.height}
     >
       <Layer>
-        {deletedObjectsCounter !== objects.length && (
-          <Borders view={view} isDark={camera.shakeIntensity > 0} />
+        {deletedObjectsCounter !== gameObjects.length && (
+          <Borders view={view} isDark={cameraShakeIntensity > 0} />
         )}
 
-        {objects.map((item, index) =>
-          !item.visibleOnView || item.deleted ? null : (
-            <GameObject key={index} view={view} {...item} />
-          )
+        {gameObjects.map(
+          (item, index) =>
+            item.visibleOnView && !item.deleted && <GameObject key={index} view={view} {...item} />
         )}
 
         <Me me={me} view={view} />
@@ -63,23 +59,23 @@ const Playground = (props: Props) => {
         <Text
           x={view.width / 2}
           y={10}
-          text={`${deletedObjectsCounter} / ${objects.length}`}
+          text={`${deletedObjectsCounter} / ${gameObjects.length}`}
           fontSize={30}
           fontFamily={'Calibri'}
           fill={'#000'}
         />
-        {camera.shakeIntensity > 0 && (
+        {cameraShakeIntensity > 0 && (
           <Text
             x={102}
             y={10}
-            text={`${camera.shakeIntensity}`}
+            text={`${cameraShakeIntensity}`}
             fontSize={30}
             fontFamily={'Calibri'}
             fill={'#FFF'}
           />
         )}
 
-        {deletedObjectsCounter === objects.length && (
+        {deletedObjectsCounter === gameObjects.length && (
           <Text
             x={102}
             y={10}
@@ -97,14 +93,14 @@ const Playground = (props: Props) => {
           y={60}
           backgroundImage={jakeLovesSpace}
           bandName={'jake-loves-space'}
-          onBandClick={onBandClick}
+          onBandClick={handleBandClick}
         />
         <BandIcon
           x={view.width - 230}
           y={60}
           backgroundImage={architects}
           bandName={'architects'}
-          onBandClick={onBandClick}
+          onBandClick={handleBandClick}
         />
       </Layer>
     </Stage>
