@@ -3,7 +3,7 @@ import { allSounds, pauseSound, playAudio } from '../audio/audio'
 import { gameObjects, initSoundsConf, playground, view } from '../config'
 import { isMobile } from '../utils'
 // import { newDirection } from '../socket-handling'
-import { twoShapesColliding } from './collisions'
+import { isTwoShapesCollision } from './collisions'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
 import React from 'react'
@@ -40,7 +40,7 @@ class Root extends React.Component<Props, State> {
     timezoneOffset: new Date().getTimezoneOffset(),
     request: 0,
     camera: {
-      fpsDeduction: 0,
+      shakeIntensity: 0,
     },
     // http://cubiq.org/performance-tricks-for-mobile-web-development
     framePerSec: isMobile ? 33 : 44,
@@ -148,14 +148,13 @@ class Root extends React.Component<Props, State> {
   }
 
   recalculateActualState = () => {
-    const { mousePos, me, playground, camera, view, deletedObjectsCounter } = this.state
+    const { mousePos, me, playground, camera, view } = this.state
     const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, camera)
-    // unpure variables for map each cycle
-    let newFpsDeduction = camera.fpsDeduction
-    let newDrum = {}
-    let newDeleteObjectsCounter = deletedObjectsCounter
 
-    const visibleGameObjects = this.state.objects
+    let newCameraShakeIntensity = camera.shakeIntensity
+    let newDrum = {}
+
+    const updatedGameObjects = this.state.objects
       .map(item => addViewProperty(item, view))
       .map(item => {
         if (item.deleted) {
@@ -164,40 +163,38 @@ class Root extends React.Component<Props, State> {
         if (!item.visibleOnView) {
           return item
         }
-        // TODO: bad name???
-        const isntColliding = twoShapesColliding(me, item)
-        if (isntColliding) {
+
+        // is not in collision -> just return and ignore next code..
+        if (!isTwoShapesCollision(me, item)) {
           return item
         }
 
-        // do i need it to make it for each item in the game?
         if (item.shakingTime) {
           newDrum = this.stopDrumAndGetNew('slowDrum')
           // @ts-ignore
-          newFpsDeduction += item.shakingTime
+          // increment shaking intensity by each ate object
+          newCameraShakeIntensity += item.shakingTime
         }
+
         // @ts-ignore
         if (item.vibration && window.navigator.vibrate) {
           // @ts-ignore
           window.navigator.vibrate((1000 / this.state.framePerSec) * item.vibration)
         }
-        if (newFpsDeduction === 0) {
-          // @ts-ignore
-          this.play(allSounds[item.audio])
-        } else {
-          // @ts-ignore
-          this.play(allSounds['slowZero'])
-        }
-        newDeleteObjectsCounter++
+
+        // @ts-ignore
+        this.play(allSounds[newCameraShakeIntensity === 0 ? item.audio : allSounds['slowZero']])
         return { ...item, deleted: true }
       })
 
-    console.log(visibleGameObjects)
+    // un-effective filter??? todo: some optimisation
+    const newDeleteObjectsCounter = this.state.objects.filter(item => item.deleted).length
 
-    if (newFpsDeduction === 1) {
+    if (newCameraShakeIntensity === 1) {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
+    // TODO: add setState updater
     this.setState({
       me: { ...me, x, y },
       view: {
@@ -208,10 +205,11 @@ class Root extends React.Component<Props, State> {
       ...newDrum,
       camera: {
         ...camera,
-        fpsDeduction: lowerToZero(newFpsDeduction),
+        shakeIntensity: lowerToZero(newCameraShakeIntensity),
       },
       request: requestAnimationFrame(this.tick),
-      objects: visibleGameObjects,
+      objects: updatedGameObjects,
+      // TODO: calc it in render method
       deletedObjectsCounter: newDeleteObjectsCounter,
     })
   }

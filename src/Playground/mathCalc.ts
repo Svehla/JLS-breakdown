@@ -61,8 +61,8 @@ const borderCollisions = (coordinate, min, max) =>
 
 // @ts-ignore
 const addShaking = shakingParam => position =>
-  shakingParam.fpsDeduction > 0
-    ? position + Math.random() * shakingParam.fpsDeduction - shakingParam.fpsDeduction / 2
+  shakingParam.shakeIntensity > 0
+    ? position + Math.random() * shakingParam.shakeIntensity - shakingParam.shakeIntensity / 2
     : position
 
 export const calculateNewObjPos = (

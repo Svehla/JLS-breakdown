@@ -21,7 +21,7 @@ type Props = {
   height: number
 }
 
-const Borders = ({ view, shaking, width, height }: any) => {
+const Borders = ({ view, shaking, width, height }: Props) => {
   const [imageLight] = useImage(gridImage)
   const [imageDark] = useImage(gridReverseImage)
 

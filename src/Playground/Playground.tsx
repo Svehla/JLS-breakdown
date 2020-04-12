@@ -50,7 +50,7 @@ const Playground = ({
         {deletedObjectsCounter !== objects.length && (
           <Borders
             view={view}
-            shaking={camera.fpsDeduction > 0}
+            shaking={camera.shakeIntensity > 0}
             width={backgroundConfig.width}
             height={backgroundConfig.height}
           />
@@ -72,11 +72,11 @@ const Playground = ({
           fontFamily={'Calibri'}
           fill={'#000'}
         />
-        {camera.fpsDeduction > 0 && (
+        {camera.shakeIntensity > 0 && (
           <Text
             x={102}
             y={10}
-            text={`${camera.fpsDeduction}`}
+            text={`${camera.shakeIntensity}`}
             fontSize={30}
             fontFamily={'Calibri'}
             fill={'#FFF'}
