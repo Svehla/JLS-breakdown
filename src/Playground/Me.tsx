@@ -1,48 +1,29 @@
 import { Circle } from 'react-konva'
+import { View } from './mathCalc'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import React from 'react'
 import architectsMainLogo from '../img/architectsMainLogo.png'
+import useImage from 'use-image'
 
-class Me extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      image1: null,
-      image2: null,
-    }
-  }
+type Props = {
+  me: any
+  view: View
+}
 
-  componentDidMount() {
-    const jlsImage = new window.Image()
-    const architectsImage = new window.Image()
-    jlsImage.src = JLSMainLogo
-    architectsImage.src = architectsMainLogo
-    architectsImage.onload = () => {
-      this.setState({
-        architectsImage,
-      })
-    }
-    jlsImage.onload = () => {
-      this.setState({
-        jlsImage,
-      })
-    }
-  }
+const Me = (props: Props) => {
+  const [jlsImg] = useImage(JLSMainLogo)
+  const [architectsImg] = useImage(architectsMainLogo)
 
-  render() {
-    const { me, view } = this.props
-    const bandName = me.backgroundImage
-    return (
-      <Circle
-        {...me}
-        x={view.width / 2 /* highter prioery then ...me */}
-        y={view.height / 2 /* highter prioery then ...me */}
-        fillPatternImage={
-          bandName === 'jake-loves-space' ? this.state.jlsImage : this.state.architectsImage
-        }
-      />
-    )
-  }
+  const { me, view } = props
+  const bandName = me.bandName
+  return (
+    <Circle
+      {...me}
+      x={view.width / 2}
+      y={view.height / 2}
+      fillPatternImage={bandName === 'jake-loves-space' ? jlsImg : architectsImg}
+    />
+  )
 }
 
 export default Me

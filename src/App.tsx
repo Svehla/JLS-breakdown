@@ -1,8 +1,9 @@
 import './basicStyle.css'
 import { initSounds } from './audio/audio'
-import Playground from './Playground'
 import React, { Component } from 'react'
+import RootJLSGame from './Playground/RootJLSGame'
 
+// TODO: add styled components
 const styles = {
   backgroundStyle: {
     width: '100%',
@@ -11,6 +12,7 @@ const styles = {
   },
 
   playgroundWrapper: {
+    // TODO: remove float: left
     float: 'left',
   },
 } as const
@@ -39,7 +41,7 @@ class App extends Component<{}, State> {
     return (
       <div style={styles.backgroundStyle}>
         <div style={styles.playgroundWrapper}>
-          <Playground />
+          <RootJLSGame />
         </div>
       </div>
     )

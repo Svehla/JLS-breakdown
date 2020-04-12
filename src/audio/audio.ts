@@ -89,8 +89,6 @@ export const initSounds = async () => {
     audioBuffers.map((buffer, index) => [audioNames[index], audioNames[index]])
   )
 
-  console.log('###sounds are ready###')
-  console.timeEnd('loadSounds')
   return allSounds
 }
 
@@ -98,8 +96,6 @@ export const sounds = audioSources.reduce((pre, audioNameExt) => {
   const audioName = audioNameExt.split('.')[0]
   const filePath = require(`../audio/${audioNameExt}`)
 
-  console.log(filePath)
   ;(pre as any)[audioName] = new Audio(filePath)
-  // pre[audioName] = new Audio(filePath)
   return pre
 }, {})

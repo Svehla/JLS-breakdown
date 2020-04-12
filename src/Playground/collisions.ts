@@ -1,5 +1,3 @@
-const { abs, sqrt } = Math
-
 // @ts-ignore
 export const isTwoShapesCollision = (circleShape1, shape2) =>
   shape2.type === 'CIRCLE'
@@ -11,8 +9,8 @@ export const isTwoShapesCollision = (circleShape1, shape2) =>
 // return true if the rectangle and circle are colliding
 // @ts-ignore
 const isRectCircleCollision = (circle, rect) => {
-  const distX = abs(circle.x - rect.x - rect.width / 2)
-  const distY = abs(circle.y - rect.y - rect.height / 2)
+  const distX = Math.abs(circle.x - rect.x - rect.width / 2)
+  const distY = Math.abs(circle.y - rect.y - rect.height / 2)
 
   if (distX > rect.width / 2 + circle.radius) {
     return false
@@ -38,6 +36,6 @@ const isRectCircleCollision = (circle, rect) => {
 const isCircleCircleCollision = (circle1, circle2) => {
   const dx = circle1.x - circle2.x
   const dy = circle1.y - circle2.y
-  const distance = sqrt(dx * dx + dy * dy)
+  const distance = Math.sqrt(dx * dx + dy * dy)
   return distance < circle1.radius + circle2.radius
 }

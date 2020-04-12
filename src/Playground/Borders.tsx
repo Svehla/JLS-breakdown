@@ -1,5 +1,6 @@
 import { Rect } from 'react-konva'
 import { View, getActualPosition } from './mathCalc'
+import { playground } from '../config'
 import React from 'react'
 import gridImage from '../img/grid.png'
 import gridReverseImage from '../img/grid-reverse.png'
@@ -16,24 +17,23 @@ const playgroundCoords = {
 
 type Props = {
   view: View
-  shaking: boolean
-  width: number
-  height: number
+  isDark: boolean
 }
 
-const Borders = ({ view, shaking, width, height }: Props) => {
+const Borders = ({ view, isDark }: Props) => {
   const [imageLight] = useImage(gridImage)
   const [imageDark] = useImage(gridReverseImage)
 
   const { x, y } = getActualPosition(view, playgroundCoords)
+
   return (
     <Rect
       type={'RECTANGLE'}
       x={x}
       y={y}
-      width={width}
-      height={height}
-      fillPatternImage={shaking ? imageDark : imageLight}
+      width={playground.width}
+      height={playground.height}
+      fillPatternImage={isDark ? imageDark : imageLight}
       {...backgroundImageConfig}
     />
   )

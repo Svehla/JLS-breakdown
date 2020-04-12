@@ -6,14 +6,14 @@ const socket = openSocket('http://localhost:1337')
 export const newDirection = (cb: any) => {
   socket.on('newDirection', ({ beta, gamma }: any) => {
     // cb(null, timestamp)
-    console.log('i got new position')
+    console.info('i got new position')
     cb({ beta, gamma })
   })
   //socket.emit('subscribeToTimer', 1000);
 }
 
 export const changeCode = (code: any, cb: any) => {
-  console.log('přelogovávám', code)
+  console.info('přelogovávám', code)
   // socket.emit('newAuthCode', code)
   socket.emit('newAuthCode', code)
 }

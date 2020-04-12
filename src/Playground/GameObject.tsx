@@ -16,7 +16,6 @@ const GameObject = ({ type, view, x, y, background, ...props }: Props) => {
   const [bgImage] = useImage(props.backgroundImage)
 
   const isBgImage = Boolean(bgImage)
-  // console.log(isBgImage, bgImage, props.backgroundImage)
 
   return type === 'RECTANGLE' ? (
     <Rect

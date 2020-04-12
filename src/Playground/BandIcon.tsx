@@ -1,44 +1,44 @@
 import { Circle } from 'react-konva'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import useImage from 'use-image'
 
-class BandIcon extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      image: null,
-      hover: false,
-    }
-  }
+const styles = {
+  hover: {
+    shadowOffsetX: 5,
+    shadowOffsetY: 5,
+    shadowBlur: 40,
+  },
+}
+const fillPatternOffset = { x: -50, y: 50 }
 
-  componentDidMount() {
-    const image = new window.Image()
-    image.src = this.props.backgroundImage
-    image.onload = () => {
-      this.setState({
-        image: image,
-      })
-    }
-  }
+type Props = {
+  bandName: string
+  backgroundImage: string
+  x: number
+  y: number
+  onBandClick: (bandName: string) => void
+}
 
-  render() {
-    const { x, y, onClick } = this.props
+const BandIcon = ({ onBandClick, bandName, x, y, backgroundImage }: Props) => {
+  const [isHover, setIsHover] = useState(false)
+  const [img] = useImage(backgroundImage)
+  const setHoverTrue = useCallback(() => setIsHover(true), [])
+  const setHoverFalse = useCallback(() => setIsHover(false), [])
+  const handleClick = useCallback(() => onBandClick(bandName), [onBandClick, bandName])
 
-    const shadow = this.state.hover ? { shadowOffsetX: 5, shadowOffsetY: 5, shadowBlur: 40 } : {}
-    return (
-      <Circle
-        x={x}
-        y={y}
-        radius={50}
-        onMouseMove={() => this.setState({ hover: true })}
-        onMouseLeave={() => this.setState({ hover: false })}
-        alpha={0.5}
-        fillPatternOffset={{ x: -50, y: 50 }}
-        fillPatternImage={this.state.image}
-        {...shadow}
-        onClick={onClick}
-      />
-    )
-  }
+  return (
+    <Circle
+      x={x}
+      y={y}
+      onClick={handleClick}
+      radius={50}
+      onMouseMove={setHoverTrue}
+      onMouseLeave={setHoverFalse}
+      fillPatternOffset={fillPatternOffset}
+      fillPatternImage={img}
+      {...(isHover ? styles.hover : {})}
+    />
+  )
 }
 
 export default BandIcon

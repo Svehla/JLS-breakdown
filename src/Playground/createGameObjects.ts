@@ -8,7 +8,7 @@ const randomWidth = () => Math.random() * 20 + 10
 // eslint-disable-next-line no-bitwise
 const randomColor = () => '#' + ((((1 << 24) * Math.random()) / 8) | 0).toString(16)
 
-type GameObjectType = 'RECTANGLE' | 'CIRCLE'
+export type GameObjectType = 'RECTANGLE' | 'CIRCLE'
 
 export const createGameObject = (type: GameObjectType) => ({
   x = Math.random() * playground.width,

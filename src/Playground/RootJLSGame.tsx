@@ -1,8 +1,10 @@
 import { Coord, View, calculateNewObjPos, getInRange, isInView, lowerToZero } from './mathCalc'
+import { GameObjectType } from './createGameObjects'
 import { allSounds, pauseSound, playAudio } from '../audio/audio'
 import { gameObjects, initSoundsConf, playground, view } from '../config'
 import { isMobile } from '../utils'
 // import { newDirection } from '../socket-handling'
+import { KonvaEventObject } from 'konva/types/Node'
 import { isTwoShapesCollision } from './collisions'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
@@ -11,59 +13,51 @@ import React from 'react'
 const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) => ({
   ...item,
   visibleOnView: item.deleted
-    ? false // performance optimalization
+    ? false // performance optimisation
     : isInView(view, item),
 })
 
-type Props = any
-type State = any
+const defaultState = {
+  me: {
+    bandName: 'jake-loves-space',
+    x: view.leftX + view.width / 2, // x absolute
+    y: view.topY + view.height / 2, // y absolute
+    xRel: view.width / 2, // x relative
+    yRel: view.height / 2, // y relative
+    type: 'CIRCLE' as GameObjectType,
+    radius: isMobile ? 60 : 90,
+    backgroundImage: JLSMainLogo,
+    fillPatternScale: isMobile ? { x: 0.66, y: 0.66 } : { x: 1, y: 1 },
+    fillPatternOffset: { x: -100, y: 100 },
+    shadowOffsetX: 20,
+    shadowOffsetY: 25,
+    shadowBlur: 40,
+    background: '#F0F',
+    maxSpeed: isMobile ? 15 : 20,
+  },
+  // animation frame helper for game loop
+  request: 0,
+  camera: {
+    shakeIntensity: 0,
+  },
+  // http://cubiq.org/performance-tricks-for-mobile-web-development
+  framePerSec: isMobile ? 33 : 44,
+  playground,
+  view,
+  mousePos: {
+    x: view.width / 2,
+    y: view.height / 2,
+  },
+  actualDrum: null as null | any,
+  objects: gameObjects,
+  // consoleText: '',
+  // config
+  authCode: '',
+  volume: 0,
+}
 
-class Root extends React.Component<Props, State> {
-  state = {
-    actualBand: 'jake-loves-space',
-    me: {
-      x: view.leftX + view.width / 2, // x absolute
-      y: view.topY + view.height / 2, // y absolute
-      xRel: view.width / 2, // x relative
-      yRel: view.height / 2, // y relative
-      type: 'CIRCLE' as 'CIRCLE',
-      radius: isMobile ? 60 : 90,
-      backgroundImage: JLSMainLogo,
-      fillPatternScale: isMobile ? { x: 0.66, y: 0.66 } : { x: 1, y: 1 },
-      fillPatternOffset: { x: -100, y: 100 },
-      shadowOffsetX: 20,
-      shadowOffsetY: 25,
-      shadowBlur: 40,
-      background: '#F0F',
-      maxSpeed: isMobile ? 15 : 20,
-    },
-    timezoneOffset: new Date().getTimezoneOffset(),
-    request: 0,
-    camera: {
-      shakeIntensity: 0,
-    },
-    // http://cubiq.org/performance-tricks-for-mobile-web-development
-    framePerSec: isMobile ? 33 : 44,
-    playground,
-    view,
-    backgroundConfig: {
-      width: playground.width,
-      height: playground.height,
-    },
-    mousePos: {
-      x: view.width / 2,
-      y: view.height / 2,
-    },
-    actualDrum: null,
-    objects: gameObjects,
-    // cache deleted data => high performance
-    // 0.15-0.3 ms for 232 items
-    deletedObjectsCounter: gameObjects.reduce((pre, curr) => (curr.deleted ? pre + 1 : pre), 0),
-    consoleText: '',
-    // config
-    authCode: '',
-    volume: 0,
-  }
+class RootJLSGame extends React.Component<{}, typeof defaultState> {
+  state = { ...defaultState }
 
   componentDidMount() {
     // todo: solve socket.io somehow
@@ -88,9 +82,7 @@ class Root extends React.Component<Props, State> {
   }
 
   setMousePositions = ({ x, y }: Coord) => {
-    if (!this.props.stop) {
-      this.setState({ mousePos: { x, y } })
-    }
+    this.setState({ mousePos: { x, y } })
   }
 
   // audio middleware
@@ -102,8 +94,8 @@ class Root extends React.Component<Props, State> {
     // return playAudio(audio, config)
   }
 
-  // beta nahoru dolů (y)
-  // gama doleva doprava (x)
+  // beta (`up` and `down`) (y)
+  // gama (`left` and `right`) (x)
   handleOrientation = ({ beta, gamma }: any) => {
     const { width, height } = this.state.view
     // angle only {angleForMax} deg for 90pos
@@ -169,6 +161,9 @@ class Root extends React.Component<Props, State> {
           return item
         }
 
+        // > <> <> <> <> <> <> <> <> <> <> <
+        // unpure shitty side effect while you eat some new game object (collision is happened)
+        // > <> <> <> <> <> <> <> <> <> <> <
         if (item.shakingTime) {
           newDrum = this.stopDrumAndGetNew('slowDrum')
           // @ts-ignore
@@ -188,7 +183,6 @@ class Root extends React.Component<Props, State> {
       })
 
     // un-effective filter??? todo: some optimisation
-    const newDeleteObjectsCounter = this.state.objects.filter(item => item.deleted).length
 
     if (newCameraShakeIntensity === 1) {
       newDrum = this.stopDrumAndGetNew('fastDrum')
@@ -207,11 +201,25 @@ class Root extends React.Component<Props, State> {
         ...camera,
         shakeIntensity: lowerToZero(newCameraShakeIntensity),
       },
-      request: requestAnimationFrame(this.tick),
       objects: updatedGameObjects,
-      // TODO: calc it in render method
-      deletedObjectsCounter: newDeleteObjectsCounter,
+      // next tick of game loop
+      request: requestAnimationFrame(this.tick),
     })
+  }
+
+  onBandClick = (bandName: string) => {
+    this.setState({
+      me: {
+        ...this.state.me,
+        bandName,
+      },
+    })
+  }
+
+  handlePlaygroundMove = (e: KonvaEventObject<Event>) => {
+    // @ts-ignore
+    const { x, y } = e.currentTarget.pointerPos
+    this.setMousePositions({ x, y })
   }
 
   render() {
@@ -232,19 +240,8 @@ class Root extends React.Component<Props, State> {
         />
         */}
         <Playground
-          onMove={(e: any) => {
-            const { x, y } = e.currentTarget.pointerPos
-            this.setMousePositions({ x, y })
-          }}
-          onBandClick={(bandName: any) => () => {
-            this.setState({
-              me: {
-                ...this.state.me,
-                backgroundImage: bandName,
-              },
-            })
-            // this.state.me.backgroundImage;
-          }}
+          onMove={this.handlePlaygroundMove}
+          onBandClick={this.onBandClick}
           {...(this.state as any)}
         />
       </div>
@@ -252,4 +249,4 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default Root
+export default RootJLSGame
