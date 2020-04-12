@@ -1,5 +1,5 @@
 import './basicStyle.css'
-import { initSounds } from './audio/index'
+import { initSounds } from './audio/audio'
 import Playground from './Playground'
 import React, { Component } from 'react'
 

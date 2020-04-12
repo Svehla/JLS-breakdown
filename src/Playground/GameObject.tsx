@@ -1,6 +1,5 @@
-import { CIRCLE, RECTANGLE } from '../constants'
 import { Circle, Rect } from 'react-konva'
-import { getActualPossition } from './mathCalc'
+import { getActualPosition } from './mathCalc'
 import React from 'react'
 
 class GameObject extends React.Component<any, any> {
@@ -34,18 +33,18 @@ class GameObject extends React.Component<any, any> {
       // vibration,
       ...props
     } = this.props
-    return type === RECTANGLE ? (
+    return type === 'RECTANGLE' ? (
       <Rect
         {...(this.state.image ? { fillPatternImage: this.state.image } : { fill: background })}
         {...props}
-        {...getActualPossition(view, { x, y })}
+        {...getActualPosition(view, { x, y })}
       />
-    ) : type === CIRCLE ? (
+    ) : type === 'CIRCLE' ? (
       // @ts-ignore
       <Circle
         {...(this.state.image ? { fillPatternImage: this.state.image } : { fill: background })}
         {...props}
-        {...getActualPossition(view, { x, y })}
+        {...getActualPosition(view, { x, y })}
       />
     ) : (
       ''

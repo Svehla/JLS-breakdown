@@ -1,48 +1,42 @@
-import React from 'react'
-// @ts-ignore
 import { Rect } from 'react-konva'
-import { getActualPossition } from './mathCalc'
+import { View, getActualPosition } from './mathCalc'
+import React from 'react'
 import gridImage from '../img/grid.png'
 import gridReverseImage from '../img/grid-reverse.png'
+import useImage from 'use-image'
 
 const backgroundImageConfig = {
   fillPatternScale: { x: 1, y: 1 },
   fillPatternOffset: { x: -100, y: 100 },
 }
+const playgroundCoords = {
+  x: 0,
+  y: 0,
+}
 
-class Borders extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      imageLight: null,
-      imageDark: null,
-    }
-  }
+type Props = {
+  view: View
+  shaking: boolean
+  width: number
+  height: number
+}
 
-  componentDidMount() {
-    const imageLight = new window.Image()
-    const imageDark = new window.Image()
-    imageLight.src = gridImage
-    imageDark.src = gridReverseImage
-    imageLight.onload = () => {
-      this.setState({ imageLight: imageLight })
-    }
-    imageDark.onload = () => {
-      this.setState({ imageDark: imageDark })
-    }
-  }
+const Borders = ({ view, shaking, width, height }: any) => {
+  const [imageLight] = useImage(gridImage)
+  const [imageDark] = useImage(gridReverseImage)
 
-  render() {
-    const { view, x, y, shaking, ...props } = this.props
-    return (
-      <Rect
-        {...props}
-        {...getActualPossition(view, { x, y })}
-        {...backgroundImageConfig}
-        fillPatternImage={shaking ? this.state.imageDark : this.state.imageLight}
-      />
-    )
-  }
+  const { x, y } = getActualPosition(view, playgroundCoords)
+  return (
+    <Rect
+      type={'RECTANGLE'}
+      x={x}
+      y={y}
+      width={width}
+      height={height}
+      fillPatternImage={shaking ? imageDark : imageLight}
+      {...backgroundImageConfig}
+    />
+  )
 }
 
 export default Borders

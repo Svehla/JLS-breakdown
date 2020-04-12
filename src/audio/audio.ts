@@ -20,14 +20,16 @@ export const audioSources = [
 ]
 
 export const pauseSound = (audioBufferInstance: any) => {
-  // console.log('should pause: ', name, allData[name])
   // now i support only one instance per sound
 
   audioBufferInstance.stop()
 }
 // possible middleware
 // export const playAudio = () => ({ pause: () => 'play' })
-export const playAudio = async (name: any, conf: any) => {
+type PlayAudioConf = {
+  loop?: boolean
+}
+export const playAudio = async (name: string, conf: PlayAudioConf) => {
   // create audio context
   const audioContext = getAudioContext()
   // create audioBuffer (decode audio file)
@@ -76,7 +78,6 @@ export let allData: any = {}
 // export let allSounds = Object.fromEntries(audioNames.map(name => ([name, null])))
 
 export const initSounds = async () => {
-  console.time('loadSounds')
   // load audio file from server
 
   const audioBuffers = await Promise.all(audioSources.map(audioSrc => load(requirePath(audioSrc))))

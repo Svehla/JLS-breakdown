@@ -1,5 +1,7 @@
 import { Circle } from 'react-konva'
+import { KonvaEventObject } from 'konva/types/Node'
 import { Layer, Stage, Text } from 'react-konva'
+import { View } from './mathCalc'
 import BandIcon from './BandIcon'
 import Borders from './Borders'
 import GameObject from './GameObject'
@@ -8,6 +10,20 @@ import React from 'react'
 import architects from '../img/architects.png'
 import jakeLovesSpace from '../img/jakeLovesSpace.png'
 // import { playground } from "../config";
+
+type Props = {
+  view: View
+  objects: any[]
+  me: any
+  backgroundConfig: any
+  onMove: (e: KonvaEventObject<Event>) => void
+  onBandClick: any
+  deleteObjectCounter: any
+  deletedObjectsCounter: number
+  camera: any
+  consoleText: any
+  mousePos: any
+}
 
 const Playground = ({
   view,
@@ -20,8 +36,7 @@ const Playground = ({
   camera,
   consoleText,
   mousePos,
-  bandName,
-}: any) => {
+}: Props) => {
   return (
     <Stage
       background={'#456'}
@@ -33,10 +48,15 @@ const Playground = ({
     >
       <Layer>
         {deletedObjectsCounter !== objects.length && (
-          <Borders view={view} {...backgroundConfig} shaking={camera.fpsDeduction > 0} />
+          <Borders
+            view={view}
+            shaking={camera.fpsDeduction > 0}
+            width={backgroundConfig.width}
+            height={backgroundConfig.height}
+          />
         )}
 
-        {objects.map((item: any, index: any) =>
+        {objects.map((item, index) =>
           !item.visibleOnView || item.deleted ? null : (
             <GameObject key={index} view={view} {...item} />
           )
@@ -95,8 +115,6 @@ const Playground = ({
       </Layer>
     </Stage>
   )
-  // const inActualViewFunc += isInView(view)
-  // inActualViewFunc(item)
 }
 
 export default Playground

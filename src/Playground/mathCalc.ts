@@ -8,10 +8,24 @@ const {
   abs,
 } = Math
 
-// @ts-ignore
-export const lowerToZero = number => (number - 1 < 0 ? 0 : number - 1)
-// @ts-ignore
-export const pythagorC = (a, b) => sqrt(pow(a, 2) + pow(b, 2))
+export type View = {
+  width: number
+  height: number
+  leftX: number
+  topY: number
+}
+
+// Coordination
+export type Coord = {
+  x: number
+  y: number
+}
+
+// TODO: what about to use Math.min/max
+export const lowerToZero = (num: number) => (num - 1 < 0 ? 0 : num - 1)
+
+export const pythagorC = (a: number, b: number) => sqrt(pow(a, 2) + pow(b, 2))
+
 // export const toDegrees = angle => angle * (180 / PI)
 // export const toRadians = angle => angle * (PI / 180)
 
@@ -79,13 +93,16 @@ export const getInRange = ({ range = 1, number }) =>
   number > range ? range : number < -range ? -range : number
 
 // @ts-ignore
-export const isInView = view => ({
-  x,
-  y,
-  width, // width of element
-  height,
-  radius,
-}: any) => {
+export const isInView = (
+  view: View,
+  {
+    x,
+    y,
+    width, // width of element
+    height,
+    radius,
+  }: any
+) => {
   // circle has only radis -> ractangle has width and height
   height = height || radius
   width = width || radius
@@ -100,11 +117,11 @@ export const isInView = view => ({
 }
 
 // @ts-ignore
-export const getActualPossition = (view, { x, y }) => {
-  const relativeXCoor = x - view.leftX
-  const relativeYCoor = y - view.topY
+export const getActualPosition = (view: View, { x, y }: Coord): Coord => {
+  const relativeXCoord = x - view.leftX
+  const relativeYCoord = y - view.topY
   return {
-    x: relativeXCoor,
-    y: relativeYCoor,
+    x: relativeXCoord,
+    y: relativeYCoord,
   }
 }

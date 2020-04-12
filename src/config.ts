@@ -1,5 +1,4 @@
-import { CIRCLE, RECTANGLE } from './constants'
-import { createDataElements } from './Playground/createDataElement'
+import { createGameObjects } from './Playground/createGameObjects'
 import { isMobile } from './utils'
 import helloKitty from './img/hello-kitty.png'
 import jelinek from './img/jelinek.png'
@@ -12,8 +11,8 @@ export const initSoundsConf = {
 }
 
 export const view = {
-  width: window.innerWidth, // / 2 - 10,
-  height: window.innerHeight, // - 150,
+  width: window.innerWidth,
+  height: window.innerHeight,
   leftX: 20,
   topY: 20,
 }
@@ -23,38 +22,38 @@ export const playground = {
   height: isMobile ? 2500 : 5000,
 }
 
-export const dataObjects = [
-  ...createDataElements(2, CIRCLE, {
+export const gameObjects = [
+  ...createGameObjects(2, 'CIRCLE', {
     radius: 100,
     background: '#FFD700',
     audio: 'patAndMat',
   }),
-  ...createDataElements(9, RECTANGLE, {
+  ...createGameObjects(9, 'RECTANGLE', {
     width: 114,
     height: 137,
     backgroundImage: helloKitty,
     background: '#F00',
     audio: 'omg',
   }),
-  ...createDataElements(2, CIRCLE, {
+  ...createGameObjects(2, 'CIRCLE', {
     radius: 160,
     background: '#0FD',
     audio: 'slza',
   }),
-  ...createDataElements(2, CIRCLE, {
+  ...createGameObjects(2, 'CIRCLE', {
     radius: 200,
     background: '#00F',
     audio: 'blue',
   }),
-  ...createDataElements(isMobile ? 2 : 4, CIRCLE, {
-    shakingTime: 100, // 20
+  ...createGameObjects(isMobile ? 2 : 4, 'CIRCLE', {
+    shakingTime: 100,
     vibration: 100,
     audio: 'growl',
     backgroundImage: jolanda,
     fillPatternOffset: { x: -59, y: -59 },
     radius: 59,
   }),
-  ...createDataElements(1, CIRCLE, {
+  ...createGameObjects(1, 'CIRCLE', {
     x: playground.width / 2,
     y: playground.height / 2,
     shakingTime: 250,
@@ -63,13 +62,13 @@ export const dataObjects = [
     fillPatternOffset: { x: -150, y: -150 },
     radius: 150,
   }),
-  ...createDataElements(100, RECTANGLE, {
+  ...createGameObjects(100, 'RECTANGLE', {
     audio: 'scream',
   }),
-  ...createDataElements(100, RECTANGLE, {
+  ...createGameObjects(100, 'RECTANGLE', {
     audio: 'growl',
   }),
-  ...createDataElements(isMobile ? 150 : 250, CIRCLE, {
+  ...createGameObjects(isMobile ? 150 : 250, 'CIRCLE', {
     audio: 'fastZero',
   }),
 ]
