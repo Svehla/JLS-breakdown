@@ -1,8 +1,8 @@
 import { createGameObjects } from './Playground/createGameObjects'
 import { isMobile } from './utils'
 import helloKitty from './img/hello-kitty.png'
-import jelinek from './img/jelinek.png'
 import jolanda from './img/jolanda.png'
+import megaBoss from './img/mega-boss.jpg'
 
 export const initSoundsConf = {
   // have to return new instance
@@ -58,7 +58,7 @@ export const gameObjects = [
     y: playground.height / 2,
     shakingTime: 250,
     audio: 'growl',
-    backgroundImage: jelinek,
+    backgroundImage: megaBoss,
     fillPatternOffset: { x: -150, y: -150 },
     radius: 150,
   }),

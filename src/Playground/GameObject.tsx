@@ -17,19 +17,16 @@ const GameObject = ({ type, view, x, y, background, ...props }: Props) => {
 
   const isBgImage = Boolean(bgImage)
 
+  const properties = {
+    ...(isBgImage ? { fillPatternImage: bgImage } : { fill: background }),
+    ...props,
+    ...getActualPosition(view, { x, y }),
+  }
   return type === 'RECTANGLE' ? (
-    <Rect
-      {...(isBgImage ? { fillPatternImage: bgImage } : { fill: background })}
-      {...props}
-      {...getActualPosition(view, { x, y })}
-    />
+    <Rect {...properties} />
   ) : type === 'CIRCLE' ? (
     // @ts-ignore
-    <Circle
-      {...(isBgImage ? { fillPatternImage: bgImage } : { fill: background })}
-      {...props}
-      {...getActualPosition(view, { x, y })}
-    />
+    <Circle {...properties} />
   ) : (
     <React.Fragment />
   )

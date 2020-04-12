@@ -6,10 +6,9 @@ import gridImage from '../img/grid.png'
 import gridReverseImage from '../img/grid-reverse.png'
 import useImage from 'use-image'
 
-const backgroundImageConfig = {
-  fillPatternScale: { x: 1, y: 1 },
-  fillPatternOffset: { x: -100, y: 100 },
-}
+const fillPatternScale = { x: 1, y: 1 }
+const fillPatternOffset = { x: -100, y: 100 }
+
 const playgroundCoords = {
   x: 0,
   y: 0,
@@ -34,7 +33,8 @@ const Borders = ({ view, isDark }: Props) => {
       width={playground.width}
       height={playground.height}
       fillPatternImage={isDark ? imageDark : imageLight}
-      {...backgroundImageConfig}
+      fillPatternScale={fillPatternScale}
+      fillPatternOffset={fillPatternOffset}
     />
   )
 }
