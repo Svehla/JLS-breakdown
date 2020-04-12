@@ -1,16 +1,17 @@
 import React from 'react'
+// @ts-ignore
 import { Rect } from 'react-konva'
 import { getActualPossition } from './mathCalc'
 import gridImage from '../img/grid.png'
 import gridReverseImage from '../img/grid-reverse.png'
 
 const backgroundImageConfig = {
-  fillPatternScale: { x: 1 , y: 1 },
-  fillPatternOffset: { x : -100, y : 100 },
+  fillPatternScale: { x: 1, y: 1 },
+  fillPatternOffset: { x: -100, y: 100 },
 }
 
-class Borders extends React.Component {
-  constructor (props){
+class Borders extends React.Component<any, any> {
+  constructor(props: any) {
     super(props)
     this.state = {
       imageLight: null,
@@ -32,23 +33,13 @@ class Borders extends React.Component {
   }
 
   render() {
-    const {
-      view,
-      x,
-      y,
-      shaking,
-      ...props,
-    } = this.props
+    const { view, x, y, shaking, ...props } = this.props
     return (
       <Rect
         {...props}
         {...getActualPossition(view, { x, y })}
         {...backgroundImageConfig}
-        fillPatternImage={
-          shaking
-            ? this.state.imageDark
-            : this.state.imageLight
-        }
+        fillPatternImage={shaking ? this.state.imageDark : this.state.imageLight}
       />
     )
   }

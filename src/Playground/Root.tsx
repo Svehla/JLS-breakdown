@@ -1,31 +1,27 @@
-import React from 'react'
-import Playground from './Playground'
-import { isInView, calculateNewObjPos, lowerToZero, getInRange } from './mathCalc'
-import { RECTANGLE, CIRCLE } from '../constants'
-import { twoShapesColliding } from './collisions'
-import {
-  playground, view,
-  dataObjects, initSoundsConf
-} from '../config'
-import JLSMainLogo from '../img/JLSMainLogo.jpg'
-import ArchitectsMainLogo from '../img/architects.png'
+import { CIRCLE, RECTANGLE } from '../constants'
 import { allSounds, playAudio } from '../audio/index'
+import { calculateNewObjPos, getInRange, isInView, lowerToZero } from './mathCalc'
+import { changeCode, newDirection } from '../socket-handling'
+import { dataObjects, initSoundsConf, playground, view } from '../config'
 import { isMobile } from '../utils'
-import { newDirection, changeCode } from '../socket-handling'
+import { twoShapesColliding } from './collisions'
+import ArchitectsMainLogo from '../img/architects.png'
 import Config from './Config'
+import JLSMainLogo from '../img/JLSMainLogo.jpg'
+import Playground from './Playground'
+import React from 'react'
 
-const addViewKey = view => item => ({
+const addViewKey = (view: any) => (item: any) => ({
   ...item,
   visibleOnView: item.deleted
     ? false // performance optimalization
-    : isInView(view)(item)
+    : isInView(view)(item),
 })
 
-class Root extends React.Component {
-
-  constructor (props) {
+class Root extends React.Component<any, any> {
+  constructor(props: any) {
     super(props)
-    newDirection(({ beta, gamma }) => {
+    newDirection(({ beta, gamma }: any) => {
       this.handleOrientation({ beta, gamma })
     })
     this.state = {
@@ -38,9 +34,7 @@ class Root extends React.Component {
         type: CIRCLE,
         radius: isMobile ? 60 : 90,
         backgroundImage: JLSMainLogo,
-        fillPatternScale: (isMobile
-          ? { x: 0.66, y: 0.66 }
-          : { x: 1, y: 1 }),
+        fillPatternScale: isMobile ? { x: 0.66, y: 0.66 } : { x: 1, y: 1 },
         fillPatternOffset: { x: -100, y: 100 },
         shadowOffsetX: 20,
         shadowOffsetY: 25,
@@ -72,9 +66,7 @@ class Root extends React.Component {
       objects: dataObjects,
       // cache deleted data => high performance
       // 0.15-0.3 ms for 232 items
-      deletedObjectsCounter: dataObjects.reduce((pre, curr) => (
-        curr.deleted ? pre + 1 : pre
-      ), 0),
+      deletedObjectsCounter: dataObjects.reduce((pre, curr) => (curr.deleted ? pre + 1 : pre), 0),
       consoleText: '',
       // config
       authCode: '',
@@ -82,18 +74,15 @@ class Root extends React.Component {
     }
   }
 
-  componentWIllR
-  // LIVECYCLES
-  // game loop
-
-  componentWillReceiveProps (nextProps) {
+  // todo: remove it (deprecated i guess)
+  componentWillReceiveProps(nextProps: any) {
     if (!nextProps.stop) {
       // init game
       window.addEventListener('deviceorientation', this.handleOrientation, true)
       document.addEventListener('mousemove', this.onMouseMove)
       this.setState({
         request: requestAnimationFrame(this.tick),
-        actualDrum: this.play(allSounds.fastDrum, initSoundsConf.fastDrum())
+        actualDrum: this.play(allSounds.fastDrum, initSoundsConf.fastDrum()),
       })
     }
   }
@@ -104,22 +93,23 @@ class Root extends React.Component {
     window.removeEventListener('mousemove', this.onMouseMove, false)
   }
 
-  setMousePositions = ({ x, y }) => {
+  setMousePositions = ({ x, y }: any) => {
     if (!this.props.stop) {
       this.setState({ mousePos: { x, y } })
     }
   }
 
   // audio middleware
-  play = (audio, config) => {
+  play = (audio: any, config: any) => {
     const volume = this.state.volume
+    // @ts-ignore
     return playAudio(audio, { ...config, volume })
     // return playAudio(audio, config)
   }
 
   // beta nahoru dolů (y)
   // gama doleva doprava (x)
-  handleOrientation = ({ beta, gamma }) => {
+  handleOrientation = ({ beta, gamma }: any) => {
     const { width, height } = this.state.view
     // angle only {angleForMax} deg for 90pos
     const angleForMax = 20
@@ -132,11 +122,11 @@ class Root extends React.Component {
 
     this.setMousePositions({
       x: finalX,
-      y: finalY
+      y: finalY,
     })
   }
 
-  onMouseMove = (e) => {
+  onMouseMove = (e: any) => {
     const x = e.pageX
     const y = e.pageY
     this.setMousePositions({ x, y })
@@ -148,10 +138,11 @@ class Root extends React.Component {
     }, 1000 / this.state.framePerSec)
   }
 
-  stopDrumAndGetNew = (drumName) => {
+  stopDrumAndGetNew = (drumName: any) => {
     this.state.actualDrum.pause()
     return {
-      actualDrum: this.play(allSounds[drumName], initSoundsConf[drumName]())
+      // @ts-ignore
+      actualDrum: this.play(allSounds[drumName], initSoundsConf[drumName]()),
     }
   }
 
@@ -162,7 +153,8 @@ class Root extends React.Component {
     let newFpsDeduction = camera.fpsDeduction
     let newDrum = {}
     let newDeleteObjectsCounter = deletedObjectsCounter
-    const unEated = this.state.objects.map(addViewKey(view)).map((item) => {
+    // @ts-ignore
+    const unEated = this.state.objects.map(addViewKey(view)).map(item => {
       if (item.deleted) {
         return item
       } else {
@@ -179,11 +171,13 @@ class Root extends React.Component {
               newFpsDeduction += item.shakingTime
             }
             if (item.vibration && window.navigator.vibrate) {
-              window.navigator.vibrate(1000 / this.state.framePerSec * item.vibration)
+              window.navigator.vibrate((1000 / this.state.framePerSec) * item.vibration)
             }
             if (newFpsDeduction === 0) {
+              // @ts-ignore
               this.play(allSounds[item.audio])
             } else {
+              // @ts-ignore
               this.play(allSounds['slowZero'])
             }
             newDeleteObjectsCounter++
@@ -206,7 +200,7 @@ class Root extends React.Component {
       ...newDrum,
       camera: {
         ...camera,
-        fpsDeduction: lowerToZero(newFpsDeduction)
+        fpsDeduction: lowerToZero(newFpsDeduction),
       },
       request: requestAnimationFrame(this.tick),
       objects: unEated,
@@ -214,7 +208,7 @@ class Root extends React.Component {
     })
   }
 
-  render () {
+  render() {
     return (
       <div>
         {/*
@@ -232,22 +226,21 @@ class Root extends React.Component {
         />
         */}
         <Playground
-          onMove={(e) => {
+          onMove={(e: any) => {
             const { x, y } = e.currentTarget.pointerPos
             this.setMousePositions({ x, y })
           }}
           stop={this.props.stop}
           {...this.state}
-          onBandClick={bandName => () => {
+          onBandClick={(bandName: any) => () => {
             this.setState({
               me: {
                 ...this.state.me,
-                backgroundImage: bandName
-              }
+                backgroundImage: bandName,
+              },
             })
-            this.state.me.backgroundImage
+            // this.state.me.backgroundImage;
           }}
-
         />
       </div>
     )

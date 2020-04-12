@@ -1,12 +1,10 @@
-import {
-  CIRCLE,
-  RECTANGLE,
-  DEFAULT_AUDIO
-} from '../constants'
+import { CIRCLE, DEFAULT_AUDIO, RECTANGLE } from '../constants'
 import { playground } from '../config'
 
 const randomWidth = () => Math.random() * 20 + 10
-const randomColor = () => "#"+((1<<24)*Math.random()/8|0).toString(16)
+const randomColor = () => '#' + ((((1 << 24) * Math.random()) / 8) | 0).toString(16)
+
+// @ts-ignore
 export const createDataElement = type => ({
   x = Math.random() * playground.width,
   y = Math.random() * playground.height,
@@ -22,15 +20,10 @@ export const createDataElement = type => ({
 
   // performance tuning
   visibleOnView = true,
-  ...props,
+  ...props
 }) => {
-  const customProperties = (
-    type === CIRCLE
-      ? { radius }
-    : type === RECTANGLE
-      ? { height, width }
-    : {}
-  )
+  const customProperties =
+    type === CIRCLE ? { radius } : type === RECTANGLE ? { height, width } : {}
   return {
     type,
     x,
@@ -45,8 +38,8 @@ export const createDataElement = type => ({
   }
 }
 
-export const createDataElements = (counts, type, config) => (
-  Array(counts).fill(0).map(item => (
-    createDataElement(type)(config)
-  ))
-)
+// @ts-ignore
+export const createDataElements = (counts, type, config) =>
+  Array(counts)
+    .fill(0)
+    .map(item => createDataElement(type)(config))

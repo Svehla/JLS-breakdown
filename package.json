@@ -1,29 +1,56 @@
 {
-  "name": "canvas-app",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.35",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/socket.io-client": "^1.4.32",
+    "konva": "^4.2.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-konva": "^16.13.0-0",
+    "react-scripts": "3.4.1",
+    "socket.io-client": "^2.3.0",
+    "typescript": "^3.8.3"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
+    "l": "npm run lint:fix",
+    "lint": "eslint \"{src,scripts}/**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint \"{src,scripts}/**/*.{js,ts,tsx}\" --fix",
     "eject": "react-scripts eject"
   },
-  "dependencies": {
-    "audio-loader": "^1.0.3",
-    "audio-play": "^2.2.0",
-    "konva": "^1.6.8",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-konva": "^1.1.4",
-    "react-scripts": "1.0.13",
-    "socket.io-client": "^2.0.3"
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "eslint-config-standard": "^10.2.1",
-    "eslint-config-standard-react": "^5.0.0",
-    "eslint-plugin-babel": "^4.1.2",
-    "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "@types/validator": "^13.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.5.0",
+    "prettier": "^2.0.4"
   }
 }

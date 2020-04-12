@@ -1,13 +1,13 @@
+import { CIRCLE, RECTANGLE } from './constants'
 import { createDataElements } from './Playground/createDataElement'
-import { RECTANGLE, CIRCLE } from './constants'
-import jolanda from './img/jolanda.png'
-import jelinek from './img/jelinek.png'
-import helloKitty from './img/hello-kitty.png'
 import { isMobile } from './utils'
+import helloKitty from './img/hello-kitty.png'
+import jelinek from './img/jelinek.png'
+import jolanda from './img/jolanda.png'
 
 export const initSoundsConf = {
-// have to return new instance
-  fastDrum: () => ({ loop: true, }),
+  // have to return new instance
+  fastDrum: () => ({ loop: true }),
   slowDrum: () => ({ loop: true, volume: 4 }),
 }
 
@@ -51,7 +51,7 @@ export const dataObjects = [
     vibration: 100,
     audio: 'growl',
     backgroundImage: jolanda,
-    fillPatternOffset: { x : -59, y : -59 },
+    fillPatternOffset: { x: -59, y: -59 },
     radius: 59,
   }),
   ...createDataElements(1, CIRCLE, {
@@ -60,7 +60,7 @@ export const dataObjects = [
     shakingTime: 250,
     audio: 'growl',
     backgroundImage: jelinek,
-    fillPatternOffset: { x : -150, y : -150 },
+    fillPatternOffset: { x: -150, y: -150 },
     radius: 150,
   }),
   ...createDataElements(100, RECTANGLE, {
@@ -71,5 +71,5 @@ export const dataObjects = [
   }),
   ...createDataElements(isMobile ? 150 : 250, CIRCLE, {
     audio: 'fastZero',
-  })
+  }),
 ]
