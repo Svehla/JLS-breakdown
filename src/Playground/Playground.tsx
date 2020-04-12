@@ -16,7 +16,6 @@ const Playground = ({
   backgroundConfig,
   onMove,
   onBandClick,
-  stop,
   deletedObjectsCounter,
   camera,
   consoleText,
@@ -44,10 +43,6 @@ const Playground = ({
         )}
 
         <Me me={me} view={view} />
-
-        {stop && (
-          <Text x={10} y={20} text={`Loading`} fontSize={30} fontFamily={'Calibri'} fill={'#000'} />
-        )}
 
         <Text
           x={view.width / 2}

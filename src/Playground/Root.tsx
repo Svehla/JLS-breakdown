@@ -1,12 +1,10 @@
 import { CIRCLE, RECTANGLE } from '../constants'
-import { allSounds, playAudio } from '../audio/index'
+import { allSounds, pauseSound, playAudio } from '../audio/index'
 import { calculateNewObjPos, getInRange, isInView, lowerToZero } from './mathCalc'
-import { changeCode, newDirection } from '../socket-handling'
 import { dataObjects, initSoundsConf, playground, view } from '../config'
 import { isMobile } from '../utils'
+import { newDirection } from '../socket-handling'
 import { twoShapesColliding } from './collisions'
-import ArchitectsMainLogo from '../img/architects.png'
-import Config from './Config'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
 import React from 'react'
@@ -74,17 +72,15 @@ class Root extends React.Component<any, any> {
     }
   }
 
-  // todo: remove it (deprecated i guess)
-  componentWillReceiveProps(nextProps: any) {
-    if (!nextProps.stop) {
-      // init game
-      window.addEventListener('deviceorientation', this.handleOrientation, true)
-      document.addEventListener('mousemove', this.onMouseMove)
-      this.setState({
-        request: requestAnimationFrame(this.tick),
-        actualDrum: this.play(allSounds.fastDrum, initSoundsConf.fastDrum()),
-      })
-    }
+  componentDidMount() {
+    // init game
+    window.addEventListener('deviceorientation', this.handleOrientation, true)
+    document.addEventListener('mousemove', this.onMouseMove)
+
+    this.setState({
+      request: requestAnimationFrame(this.tick),
+      actualDrum: this.play(allSounds.fastDrum, initSoundsConf.fastDrum()),
+    })
   }
 
   componentWillUnmount() {
@@ -139,8 +135,11 @@ class Root extends React.Component<any, any> {
   }
 
   stopDrumAndGetNew = (drumName: any) => {
-    this.state.actualDrum.pause()
+    this.state.actualDrum.then((currDrum: any) => {
+      pauseSound(currDrum)
+    })
     return {
+      // todo: what about await??
       // @ts-ignore
       actualDrum: this.play(allSounds[drumName], initSoundsConf[drumName]()),
     }
@@ -230,7 +229,6 @@ class Root extends React.Component<any, any> {
             const { x, y } = e.currentTarget.pointerPos
             this.setMousePositions({ x, y })
           }}
-          stop={this.props.stop}
           {...this.state}
           onBandClick={(bandName: any) => () => {
             this.setState({
