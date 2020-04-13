@@ -3,9 +3,32 @@
 // // const play = require('audio-play')
 import axios from 'axios'
 
-// @ts-ignore
-const requirePath = fileName => require(`../audio/${fileName}`)
+// --------------
+//   helper fns
+// --------------
+// TODO: should i let there this dynamic requre?
+const requirePath = (fileName: string) => require(`../audio/${fileName}`)
 
+const getAudioContext = () => {
+  // does it work on older browsers?
+  AudioContext = window.AudioContext // || window.webkitAudioContext
+  const audioContent = new AudioContext()
+  return audioContent
+}
+
+// my custom polyfill for audio-loader lib
+// custom implementation of audio-loader (it stopped working after updating nodejs version)
+// https://apiko.com/blog/how-to-work-with-sound-java-script/
+const load = async (soundName: string, url: string) => {
+  const response = await axios.get(url, {
+    responseType: 'arraybuffer',
+  })
+  return [soundName, response.data]
+}
+
+// --------------
+//   load audios
+// --------------
 export const audioSources = [
   'fastDrum.wav',
   'fastZero.wav',
@@ -19,22 +42,33 @@ export const audioSources = [
   'slowDrum.mp3',
 ]
 
-export const pauseSound = (audioBufferInstance: any) => {
-  // now i support only one instance per sound
+let buffersByName: Record<string, ArrayBuffer> = {}
 
-  audioBufferInstance.stop()
+/**
+ * unpure async fn that load data from server
+ * http://jake-loves-space.svehlik.eu/
+ */
+export const initSounds = async () => {
+  // load audio file from server
+  const audioBuffers = await Promise.all(
+    audioSources.map(audioSrc => load(audioSrc.split('.')[0], requirePath(audioSrc)))
+  )
+
+  // write to global object
+  buffersByName = Object.fromEntries(audioBuffers)
 }
-// possible middleware
-// export const playAudio = () => ({ pause: () => 'play' })
-type PlayAudioConf = {
-  loop?: boolean
-}
+
+// --------------
+// control audios
+// --------------
+
+type PlayAudioConf = { loop?: boolean }
 export const playAudio = async (name: string, conf: PlayAudioConf) => {
   // create audio context
   const audioContext = getAudioContext()
   // create audioBuffer (decode audio file)
   // copy buffers: https://stackoverflow.com/questions/10100798/whats-the-most-straightforward-way-to-copy-an-arraybuffer-object
-  const audioBuffer = await audioContext.decodeAudioData(allData[name].slice(0))
+  const audioBuffer = await audioContext.decodeAudioData(buffersByName[name].slice(0))
 
   // create audio source
   const source = audioContext.createBufferSource()
@@ -52,51 +86,7 @@ export const playAudio = async (name: string, conf: PlayAudioConf) => {
   // prefer to find some lib for handling that sounds
   return source
 }
-export const audioNames = audioSources.map(item => item.split('.')[0])
 
-const getAudioContext = () => {
-  // does it work on older browsers?
-  AudioContext = window.AudioContext // || window.webkitAudioContext
-  const audioContent = new AudioContext()
-  return audioContent
+export const pauseSound = (audioBufferInstance: AudioBufferSourceNode) => {
+  audioBufferInstance.stop()
 }
-
-// my custom polyfill for audio-loader lib
-// custom implementation of audio-loader (it stopped working after updating nodejs version)
-// https://apiko.com/blog/how-to-work-with-sound-java-script/
-const load = async (url: string) => {
-  const response = await axios.get(url, {
-    responseType: 'arraybuffer',
-  })
-  // todo: figure it how to copy and paste sounds -> how to work with buffers
-  return response.data
-}
-
-// side effect shitty shit initSounds() se from bad scope
-// todo: shitty types
-export let allSounds: any = {}
-export let allData: any = {}
-// export let allSounds = Object.fromEntries(audioNames.map(name => ([name, null])))
-
-export const initSounds = async () => {
-  // load audio file from server
-
-  const audioBuffers = await Promise.all(audioSources.map(audioSrc => load(requirePath(audioSrc))))
-
-  // write to global object ... -> rofl
-  allData = Object.fromEntries(audioBuffers.map((buffer, index) => [audioNames[index], buffer]))
-
-  allSounds = Object.fromEntries(
-    audioBuffers.map((buffer, index) => [audioNames[index], audioNames[index]])
-  )
-
-  return allSounds
-}
-
-export const sounds = audioSources.reduce((pre, audioNameExt) => {
-  const audioName = audioNameExt.split('.')[0]
-  const filePath = require(`../audio/${audioNameExt}`)
-
-  ;(pre as any)[audioName] = new Audio(filePath)
-  return pre
-}, {})

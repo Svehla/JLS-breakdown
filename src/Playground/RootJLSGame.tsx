@@ -8,10 +8,10 @@ import {
 } from './mathCalc'
 import { GameElementType } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
-import { allSounds, pauseSound, playAudio } from '../audio/audio'
 import { gameObjects, getView, initSoundsConf, playground } from '../config'
 import { isMobile } from '../utils'
 import { isTwoShapesCollision } from './collisions'
+import { pauseSound, playAudio } from '../audio/audio'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
 import React from 'react'
@@ -88,7 +88,7 @@ class RootJLSGame extends React.Component<{}> {
     this._frameId = requestAnimationFrame(this.tick)
 
     // setup music for background
-    this._gameState.actualDrum = this.play(allSounds.fastDrum, initSoundsConf.fastDrum())
+    this._gameState.actualDrum = this.play('fastDrum', initSoundsConf.fastDrum())
   }
 
   componentWillUnmount() {
@@ -167,7 +167,7 @@ class RootJLSGame extends React.Component<{}> {
 
     // todo: create new structure for saving audio data
     // @ts-ignore
-    return this.play(allSounds[drumName], initSoundsConf[drumName]())
+    return this.play(drumName, initSoundsConf[drumName]())
   }
 
   recalculateGameLoopState = () => {
@@ -213,7 +213,7 @@ class RootJLSGame extends React.Component<{}> {
         }
 
         // @ts-ignore
-        this.play(allSounds[newCameraShakeIntensity === 0 ? item.audio : allSounds['slowZero']])
+        this.play(newCameraShakeIntensity === 0 ? item.audio : 'slowZero')
         return { ...item, deleted: true }
       })
 
