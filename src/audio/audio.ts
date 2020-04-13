@@ -1,7 +1,8 @@
 // audio loader is loaded from cdn in index.html -> nodegyp compiler does not work on node v12
 // const load = require('audio-loader')
 // // const play = require('audio-play')
-import { AudioContext } from 'standardized-audio-context'
+// import { AudioContext } from 'standardized-audio-context'
+import { isMobile } from '../utils'
 import axios from 'axios'
 
 // Audio context polyfill
@@ -25,9 +26,6 @@ const GoodAudioContext =
 const requirePath = (fileName: string) => require(`../audio/${fileName}`)
 
 const getAudioContext = () => {
-  // does it work on older browsers?
-  // AudioContext =  // || window.webkitAudioContext
-  // todo: works only on chrome (i guess)
   const audioContent = new GoodAudioContext()
   // const audioContent = new window.AudioContext()
   return audioContent
@@ -79,30 +77,42 @@ export const initSounds = async () => {
 // control audios
 // --------------
 
-type PlayAudioConf = { loop?: boolean }
-export const playAudio = async (name: string, conf: PlayAudioConf) => {
-  // // create audio context
-  // const audioContext = getAudioContext()
-  // // create audioBuffer (decode audio file)
-  // // copy buffers: https://stackoverflow.com/questions/10100798/whats-the-most-straightforward-way-to-copy-an-arraybuffer-object
-  // // const audioBuffer = await audioContext.decodeAudioData(buffersByName[name])
-  // const audioBuffer = await audioContext.decodeAudioData(buffersByName[name].slice(0))
-  // // create audio source
-  // const source = audioContext.createBufferSource()
-  // source.buffer = audioBuffer
-  // source.connect(audioContext.destination)
-  // if (conf.loop) {
-  //   source.loop = true
-  // }
-  // // play audio
-  // // TODO: there is too long time till the sound is started (from collision)
-  // source.start()
-  // // wtf api
-  // // todo: figure it how to make some normal consistent api for work with sound and better performance without libraries
-  // // prefer to find some lib for handling that sounds
-  // return source
+export type PlayAudioConf = { loop?: boolean; volume?: number }
+export const playAudio = async (
+  name: string,
+  conf: PlayAudioConf
+): Promise<AudioBufferSourceNode> => {
+  // todo: does not support mobile sounds at the moment
+  if (isMobile) {
+    // @ts-ignore
+    return
+  }
+  // create audio context
+  const audioContext = getAudioContext()
+  // create audioBuffer (decode audio file)
+  // copy buffers: https://stackoverflow.com/questions/10100798/whats-the-most-straightforward-way-to-copy-an-arraybuffer-object
+  // const audioBuffer = await audioContext.decodeAudioData(buffersByName[name])
+  const audioBuffer = await audioContext.decodeAudioData(buffersByName[name].slice(0))
+  // create audio source
+  const source = audioContext.createBufferSource()
+  source.buffer = audioBuffer
+  source.connect(audioContext.destination)
+  if (conf.loop) {
+    source.loop = true
+  }
+  // play audio
+  // TODO: there is too long time till the sound is started (from collision)
+  source.start()
+  // wtf api
+  // todo: figure it how to make some normal consistent api for work with sound and better performance without libraries
+  // prefer to find some lib for handling that sounds
+  return source
 }
 
 export const pauseSound = (audioBufferInstance: AudioBufferSourceNode) => {
-  // audioBufferInstance.stop()
+  // todo: does not support mobile sounds at the moment
+  if (isMobile) {
+    return
+  }
+  audioBufferInstance.stop()
 }

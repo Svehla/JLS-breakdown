@@ -5,11 +5,11 @@ import helloKitty from './img/hello-kitty.png'
 import jolanda from './img/jolanda.png'
 import megaBoss from './img/mega-boss.jpg'
 
+export type DrumType = 'fastDrum' | 'slowDrum'
 export const initSoundsConf = {
-  // have to return new instance
-  fastDrum: () => ({ loop: true }),
-  slowDrum: () => ({ loop: true, volume: 4 }),
-}
+  fastDrum: { loop: true },
+  slowDrum: { loop: true, volume: 4 },
+} as const
 
 export const getView = () => ({
   width: window.innerWidth,
@@ -23,7 +23,7 @@ export const playground = {
   height: isMobile ? 2500 : 5000,
 } as const
 
-export const gameObjects = [
+export const gameElements = [
   ...createGameElements(2, GameElementType.Circle, {
     radius: 100,
     background: '#FFD700',

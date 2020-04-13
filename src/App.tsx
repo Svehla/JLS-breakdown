@@ -23,6 +23,7 @@ const App = () => {
     return () => undefined
   }, [])
 
+  // TODO: add menu page for enabling sounds -> do not lag it browsers do
   if (isLoading) {
     return <div>loading</div>
   }

@@ -1,10 +1,10 @@
+import { DrumType, gameElements, getView, initSoundsConf, playground } from '../config'
 import { GameElementType } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
+import { PlayAudioConf, pauseSound, playAudio } from '../audio/audio'
 import { View, calculateNewObjPos, decreaseBy1ToZero, getInRange, isInView } from './mathCalc'
-import { gameObjects, getView, initSoundsConf, playground } from '../config'
 import { isMobile } from '../utils'
 import { isTwoShapesCollision } from './collisions'
-import { pauseSound, playAudio } from '../audio/audio'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
 import React from 'react'
@@ -18,7 +18,7 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
 
 const view = getView()
 
-const get_gameState = () => ({
+const getGameState = () => ({
   me: {
     bandName: 'jake-loves-space',
     // absolute coordinations
@@ -36,13 +36,13 @@ const get_gameState = () => ({
     shadowOffsetY: 25,
     shadowBlur: 40,
     background: '#F0F',
-    maxSpeed: isMobile ? 4.2 : 8,
+    maxSpeed: isMobile ? 6 : 12,
   },
   cameraShakeIntensity: 0,
   playground,
   view: getView(),
-  actualDrum: null as any,
-  gameObjects: gameObjects,
+  actualDrum: null as null | Promise<AudioBufferSourceNode>,
+  gameElements: gameElements,
   authCode: '',
   volume: 0,
   mousePosition: {
@@ -60,9 +60,9 @@ class RootJLSGame extends React.Component<{}> {
    *
    * i don't care about immutability
    *
-   * I use this.state for triggering of render method -> its triggered primarly by requestAnimationFrame
+   * I use this.state for triggering of render method -> its triggered by `requestAnimationFrame`
    */
-  _gameState = get_gameState()
+  _gameState = getGameState()
 
   /**
    * this is used for: `request animation frame`
@@ -80,7 +80,7 @@ class RootJLSGame extends React.Component<{}> {
     this._frameId = requestAnimationFrame(this.tick)
 
     // setup music for background
-    this._gameState.actualDrum = this.play('fastDrum', initSoundsConf.fastDrum())
+    this._gameState.actualDrum = this.play('fastDrum', initSoundsConf.fastDrum)
   }
 
   componentWillUnmount() {
@@ -135,40 +135,48 @@ class RootJLSGame extends React.Component<{}> {
 
   // audio middleware
   // TODO: refactor
-  play = (audio: any, config: any) => {
-    const volume = this._gameState.volume
-    // @ts-ignore
-    return playAudio(audio, { ...config, volume })
-    // return playAudio(audio, config)
+  play = (audioName: string, config: PlayAudioConf = {}) => {
+    const playConfig = {
+      ...config,
+      volume: config.volume || this._gameState.volume,
+    }
+    return playAudio(audioName, playConfig)
   }
+
   tick = () => {
     this.recalculateGameLoopState()
     // let rerender react app
     this.setState({})
   }
 
-  stopDrumAndGetNew = (drumName: string) => {
+  stopDrumAndGetNew = (drumName: DrumType): Promise<AudioBufferSourceNode> => {
     // make async call inside of sync fn (should refactor it somehow?)
     ;(async () => {
-      const currDrum = await this._gameState.actualDrum
-      pauseSound(currDrum)
+      if (this._gameState.actualDrum) {
+        const currDrum = await this._gameState.actualDrum
+        pauseSound(currDrum)
+      }
     })()
 
     // todo: create new structure for saving audio data
-    // @ts-ignore
-    return this.play(drumName, initSoundsConf[drumName]())
+    return this.play(drumName, initSoundsConf[drumName])
   }
 
   recalculateGameLoopState = () => {
-    const { me, playground, cameraShakeIntensity, view } = this._gameState
-    const mousePos = this._gameState.mousePosition
-    const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, cameraShakeIntensity)
+    const { me, mousePosition, playground, cameraShakeIntensity, view } = this._gameState
+    const { x, y } = calculateNewObjPos(
+      mousePosition,
+      me,
+      me.maxSpeed,
+      playground,
+      cameraShakeIntensity
+    )
 
     let newCameraShakeIntensity = cameraShakeIntensity
-    let newDrum = null as any
+    let newDrum: any | null = null
 
     // check collisions + add deleted items
-    const updatedGameObjects = this._gameState.gameObjects
+    const updatedGameElements = this._gameState.gameElements
       .map(item => addViewProperty(item, view))
       .map(item => {
         if (item.deleted) {
@@ -210,8 +218,8 @@ class RootJLSGame extends React.Component<{}> {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
-    // update game state and wait for next tick
-    // don't give a fuck about immutability
+    // setup game state for next frame
+    // update game state and wait for the next tick
     this._gameState.me = { ...me, x, y }
     this._gameState.view = {
       ...this._gameState.view,
@@ -219,7 +227,7 @@ class RootJLSGame extends React.Component<{}> {
       topY: y - this._gameState.view.height / 2,
     }
     this._gameState.cameraShakeIntensity = decreaseBy1ToZero(newCameraShakeIntensity)
-    this._gameState.gameObjects = updatedGameObjects
+    this._gameState.gameElements = updatedGameElements
     if (newDrum) {
       this._gameState.actualDrum = newDrum
     }
@@ -231,7 +239,7 @@ class RootJLSGame extends React.Component<{}> {
     return (
       <Playground
         view={this._gameState.view}
-        gameObjects={this._gameState.gameObjects}
+        gameElements={this._gameState.gameElements}
         me={this._gameState.me}
         cameraShakeIntensity={this._gameState.cameraShakeIntensity}
         mousePos={this._gameState.mousePosition}

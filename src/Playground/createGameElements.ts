@@ -3,6 +3,8 @@ import { playground } from '../config'
 import { randomColor } from '../utils'
 
 const getRandomWidth = () => Math.random() * 20 + 10
+const getRandomId = () => `element-${Math.floor(Math.random() * 1000000000000)}`
+console.log(getRandomId)
 
 export const createGameElement = (type: GameElementType) => ({
   // I use curry function for easier setup of default values
@@ -27,6 +29,7 @@ export const createGameElement = (type: GameElementType) => ({
       : {}
 
   return {
+    id: getRandomId(),
     type,
     x,
     y,

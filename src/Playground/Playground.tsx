@@ -12,7 +12,7 @@ import jakeLovesSpace from '../img/jakeLovesSpace.png'
 
 type Props = {
   view: View
-  gameObjects: any[]
+  gameElements: any[]
   me: any
   handlePlaygroundMove: (e: KonvaEventObject<Event>) => void
   handleBandClick: any
@@ -23,7 +23,7 @@ type Props = {
 const Playground = (props: Props) => {
   const {
     view,
-    gameObjects,
+    gameElements,
     me,
     handlePlaygroundMove,
     handleBandClick,
@@ -31,7 +31,7 @@ const Playground = (props: Props) => {
     mousePos,
   } = props
 
-  const deletedObjectsCounter = gameObjects.filter(item => item.deleted).length
+  const deletedObjectsCounter = gameElements.filter(item => item.deleted).length
 
   return (
     <Stage
@@ -43,13 +43,14 @@ const Playground = (props: Props) => {
       height={view.height}
     >
       <Layer>
-        {deletedObjectsCounter !== gameObjects.length && (
+        {deletedObjectsCounter !== gameElements.length && (
           <Borders view={view} isDark={cameraShakeIntensity > 0} />
         )}
 
-        {gameObjects.map(
-          (item, index) =>
-            item.visibleOnView && !item.deleted && <GameElement key={index} view={view} {...item} />
+        {gameElements.map(
+          item =>
+            item.visibleOnView &&
+            !item.deleted && <GameElement key={item.id} view={view} {...item} />
         )}
 
         <Me me={me} view={view} />
@@ -57,7 +58,7 @@ const Playground = (props: Props) => {
         <Text
           x={view.width / 2}
           y={10}
-          text={`${deletedObjectsCounter} / ${gameObjects.length}`}
+          text={`${deletedObjectsCounter} / ${gameElements.length}`}
           fontSize={30}
           fontFamily={'Calibri'}
           fill={'#000'}
@@ -73,7 +74,7 @@ const Playground = (props: Props) => {
           />
         )}
 
-        {deletedObjectsCounter === gameObjects.length && (
+        {deletedObjectsCounter === gameElements.length && (
           <Text
             x={102}
             y={10}
