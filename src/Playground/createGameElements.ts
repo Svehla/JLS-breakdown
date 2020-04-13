@@ -4,7 +4,6 @@ import { randomColor } from '../utils'
 
 const getRandomWidth = () => Math.random() * 20 + 10
 const getRandomId = () => `element-${Math.floor(Math.random() * 1000000000000)}`
-console.log(getRandomId)
 
 type CreateElementConf = {
   x?: number
