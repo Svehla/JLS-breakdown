@@ -3,6 +3,13 @@ import openSocket from 'socket.io-client'
 const socket = openSocket('http://localhost:1337')
 // const socket = openSocket('http://localhost:5000/')
 
+// insert to componentDIdMount ->
+/*
+ newDirection(({ beta, gamma }: any) => {
+   this.handleOrientation({ beta, gamma })
+ })
+ */
+
 export const newDirection = (cb: any) => {
   socket.on('newDirection', ({ beta, gamma }: any) => {
     // cb(null, timestamp)

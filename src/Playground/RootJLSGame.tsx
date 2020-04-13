@@ -1,4 +1,11 @@
-import { Coord, View, calculateNewObjPos, decreaseToZero, getInRange, isInView } from './mathCalc'
+import {
+  Coord,
+  View,
+  calculateNewObjPos,
+  decreaseBy1ToZero,
+  getInRange,
+  isInView,
+} from './mathCalc'
 import { GameElementType } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
 import { allSounds, pauseSound, playAudio } from '../audio/audio'
@@ -17,13 +24,16 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
 })
 
 const view = getView()
-const defaultState = {
+
+const get_gameState = () => ({
   me: {
     bandName: 'jake-loves-space',
-    x: view.leftX + view.width / 2, // x absolute
-    y: view.topY + view.height / 2, // y absolute
-    xRel: view.width / 2, // x relative
-    yRel: view.height / 2, // y relative
+    // absolute coordinations
+    x: view.leftX + view.width / 2,
+    y: view.topY + view.height / 2,
+    // relative coordinations
+    xRel: view.width / 2,
+    yRel: view.height / 2,
     type: GameElementType.Circle as GameElementType,
     radius: isMobile ? 60 : 90,
     backgroundImage: JLSMainLogo,
@@ -33,119 +43,125 @@ const defaultState = {
     shadowOffsetY: 25,
     shadowBlur: 40,
     background: '#F0F',
-    maxSpeed: isMobile ? 15 : 20,
+    maxSpeed: isMobile ? 5 : 10,
   },
-  // animation frame helper for game loop
-  request: 0,
   cameraShakeIntensity: 0,
-  // http://cubiq.org/performance-tricks-for-mobile-web-development
-  framePerSec: isMobile ? 33 : 44,
   playground,
   view: getView(),
-  mousePos: {
+  actualDrum: null as any,
+  gameObjects: gameObjects,
+  authCode: '',
+  volume: 0,
+  mousePosition: {
     x: view.width / 2,
     y: view.height / 2,
   },
-  actualDrum: null as any,
-  gameObjects: gameObjects,
-  // consoleText: '',
-  // config
-  authCode: '',
-  volume: 0,
-}
+})
 
-class RootJLSGame extends React.Component<{}, typeof defaultState> {
-  state = { ...defaultState }
+class RootJLSGame extends React.Component<{}> {
+  /**
+   * it's like React.ref
+   *
+   * don't want to rerender react app (aka change state)
+   * while i catch event for mouse is moved -> i will wait till game loop will check it by itself
+   *
+   * i don't care about immutability
+   *
+   * I use this.state for triggering of render method -> its triggered primarly by requestAnimationFrame
+   */
+  _gameState = get_gameState()
+
+  /**
+   * this is used for: `request animation frame`
+   *
+   * inspiration:
+   * > https://gist.github.com/jacob-beltran/aa114af1b6fd5de866aa365e3763a90b
+   */
+  _frameId = 0
 
   componentDidMount() {
-    // todo: solve socket.io somehow
-    // newDirection(({ beta, gamma }: any) => {
-    //   this.handleOrientation({ beta, gamma })
-    // })
-
-    // init game
     window.addEventListener('deviceorientation', this.handleOrientation)
     window.addEventListener('mousemove', this.handleMouseMove)
 
-    this.setState({
-      request: requestAnimationFrame(this.tick),
-      actualDrum: this.play(allSounds.fastDrum, initSoundsConf.fastDrum()),
-    })
+    // init infinite gameLoop
+
+    this._frameId = requestAnimationFrame(this.tick)
+
+    // setup music for background
+    this._gameState.actualDrum = this.play(allSounds.fastDrum, initSoundsConf.fastDrum())
   }
 
   componentWillUnmount() {
-    cancelAnimationFrame(this.state.request)
+    cancelAnimationFrame(this._frameId)
     window.removeEventListener('deviceorientation', this.handleOrientation)
     window.removeEventListener('mousemove', this.handleMouseMove)
   }
 
   // --------------------------
   // ---- event listeners -----
+  // --------------------------
 
   // beta (`up` and `down`) (y)
   // gama (`left` and `right`) (x)
-  handleOrientation = ({ beta, gamma }: any) => {
-    const { width, height } = this.state.view
+  handleOrientation = ({ beta, gamma }: DeviceOrientationEvent) => {
+    if (!beta || !gamma) {
+      return
+    }
+    const { width, height } = this._gameState.view
     // angle only {angleForMax} deg for 90pos
     const angleForMax = 20
     const gammaRatio = getInRange(gamma / angleForMax)
     const betaRatio = getInRange(beta / angleForMax)
     const xPlayGroundRelPos = (gammaRatio * width) / 2
     const yPlayGroundRelPos = (betaRatio * height) / 2
-    const x = xPlayGroundRelPos + this.state.me.xRel
-    const y = yPlayGroundRelPos + this.state.me.yRel
+    const x = xPlayGroundRelPos + this._gameState.me.xRel
+    const y = yPlayGroundRelPos + this._gameState.me.yRel
 
-    this.setMousePositions({ x, y })
+    this._gameState.mousePosition = { x, y }
   }
 
   handleMouseMove = (e: MouseEvent) => {
     const x = e.pageX
     const y = e.pageY
-    this.setMousePositions({ x, y })
+    this._gameState.mousePosition = { x, y }
   }
 
   handleBandClick = (bandName: string) => {
-    this.setState({
-      me: {
-        ...this.state.me,
-        bandName,
-      },
-    })
+    this._gameState.me.bandName = bandName
   }
 
   // support of mobile devices
   handlePlaygroundMove = (e: KonvaEventObject<Event>) => {
     // @ts-ignore
-    const { x, y } = e.currentTarget.pointerPos
-    this.setMousePositions({ x, y })
+    if (e.currentTarget.pointerPos) {
+      // @ts-ignore
+      const { x, y } = e.currentTarget.pointerPos
+      this._gameState.mousePosition = { x, y }
+    }
   }
 
   // --------------------------
   // --------- others --------
   // --------------------------
 
-  setMousePositions = ({ x, y }: Coord) => {
-    this.setState({ mousePos: { x, y } })
-  }
-
   // audio middleware
   // TODO: refactor
   play = (audio: any, config: any) => {
-    const volume = this.state.volume
+    const volume = this._gameState.volume
     // @ts-ignore
     return playAudio(audio, { ...config, volume })
     // return playAudio(audio, config)
   }
   tick = () => {
-    setTimeout(() => {
-      this.recalculateGameLoopState()
-    }, 1000 / this.state.framePerSec)
+    this.recalculateGameLoopState()
+    // let rerender react app
+    this.setState({})
   }
 
   stopDrumAndGetNew = (drumName: string) => {
     // make async call inside of sync fn (should refactor it somehow?)
     ;(async () => {
-      const currDrum = await this.state.actualDrum
+      const currDrum = await this._gameState.actualDrum
       pauseSound(currDrum)
     })()
 
@@ -155,13 +171,15 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
   }
 
   recalculateGameLoopState = () => {
-    const { mousePos, me, playground, cameraShakeIntensity, view } = this.state
+    const { me, playground, cameraShakeIntensity, view } = this._gameState
+    const mousePos = this._gameState.mousePosition
     const { x, y } = calculateNewObjPos(mousePos, me, me.maxSpeed, playground, cameraShakeIntensity)
 
     let newCameraShakeIntensity = cameraShakeIntensity
     let newDrum = null as any
 
-    const updatedGameObjects = this.state.gameObjects
+    // check collisions + add deleted items
+    const updatedGameObjects = this._gameState.gameObjects
       .map(item => addViewProperty(item, view))
       .map(item => {
         if (item.deleted) {
@@ -199,57 +217,38 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
         return { ...item, deleted: true }
       })
 
-    // un-effective filter??? todo: some optimisation
-
     if (newCameraShakeIntensity === 1) {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
-    // TODO: add setState updater
-    this.setState({
-      me: { ...me, x, y },
-      view: {
-        ...this.state.view,
-        leftX: x - this.state.view.width / 2,
-        topY: y - this.state.view.height / 2,
-      },
-      cameraShakeIntensity: decreaseToZero(newCameraShakeIntensity),
-      gameObjects: updatedGameObjects,
-      // TODO: change drum audio structure
-      ...(newDrum ? ({ actualDrum: newDrum } as any) : {}),
-      // next tick of game loop
-      request: requestAnimationFrame(this.tick),
-    })
+    // update game state and wait for next tick
+    // don't give a fuck about immutability
+    this._gameState.me = { ...me, x, y }
+    this._gameState.view = {
+      ...this._gameState.view,
+      leftX: x - this._gameState.view.width / 2,
+      topY: y - this._gameState.view.height / 2,
+    }
+    this._gameState.cameraShakeIntensity = decreaseBy1ToZero(newCameraShakeIntensity)
+    this._gameState.gameObjects = updatedGameObjects
+    if (newDrum) {
+      this._gameState.actualDrum = newDrum
+    }
+
+    this._frameId = requestAnimationFrame(this.tick)
   }
 
   render() {
     return (
-      <div>
-        {/*
-        // old configuration for debugging purposes
-        <Config
-          auth={this.state.authCode}
-          onAuthChange={e => {
-            const newCode = e.target.value
-            changeCode(newCode)
-            this.setState({ authCode: e.target.value })
-          }}
-          volume={this.state.volume}
-          onVolumeChange={e => {
-            this.setState({ volume: e.target.value })
-          }}
-        />
-        */}
-        <Playground
-          view={this.state.view}
-          gameObjects={this.state.gameObjects}
-          me={this.state.me}
-          cameraShakeIntensity={this.state.cameraShakeIntensity}
-          mousePos={this.state.mousePos}
-          handlePlaygroundMove={this.handlePlaygroundMove}
-          handleBandClick={this.handleBandClick}
-        />
-      </div>
+      <Playground
+        view={this._gameState.view}
+        gameObjects={this._gameState.gameObjects}
+        me={this._gameState.me}
+        cameraShakeIntensity={this._gameState.cameraShakeIntensity}
+        mousePos={this._gameState.mousePosition}
+        handlePlaygroundMove={this.handlePlaygroundMove}
+        handleBandClick={this.handleBandClick}
+      />
     )
   }
 }

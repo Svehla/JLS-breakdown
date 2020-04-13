@@ -1,6 +1,25 @@
 import React from 'react'
 
 type Props = any
+/*
+  old configuration for debugging purposes
+  example of use:
+------------------------
+
+<Config
+  auth={this.state.authCode}
+  onAuthChange={e => {
+    const newCode = e.target.value
+    changeCode(newCode)
+    this.setState({ authCode: e.target.value })
+  }}
+  volume={this.state.volume}
+  onVolumeChange={e => {
+    this.setState({ volume: e.target.value })
+  }}
+/>
+
+*/
 const Config = ({ authCode, onAuthChange, volume, onVolumeChange }: Props) => {
   return (
     <div>

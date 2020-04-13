@@ -44,7 +44,8 @@ export const playAudio = async (name: string, conf: PlayAudioConf) => {
   if (conf.loop) {
     source.loop = true
   }
-  // // play audio
+  // play audio
+  // TODO: there is too long time till the sound is started (from collision)
   source.start()
   // wtf api
   // todo: figure it how to make some normal consistent api for work with sound and better performance without libraries

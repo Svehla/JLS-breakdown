@@ -32,7 +32,7 @@ export type CurrentPosition = {
 
 export type CenterElement = CurrentPosition & AbsoluteCoord
 
-export const decreaseToZero = (num: number) => Math.max(num - 1, 0)
+export const decreaseBy1ToZero = (num: number) => Math.max(num - 1, 0)
 
 export const pythagorC = (a: number, b: number) => Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
 

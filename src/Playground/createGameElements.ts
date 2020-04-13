@@ -5,6 +5,7 @@ import { randomColor } from '../utils'
 const getRandomWidth = () => Math.random() * 20 + 10
 
 export const createGameElement = (type: GameElementType) => ({
+  // I use curry function for easier setup of default values
   x = Math.random() * playground.width,
   y = Math.random() * playground.height,
   radius = type === GameElementType.Rectangle ? undefined : getRandomWidth(),
