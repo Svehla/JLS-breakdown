@@ -31,6 +31,7 @@ const BandIcon = ({ onBandClick, bandName, x, y, backgroundImage }: Props) => {
       x={x}
       y={y}
       onClick={handleClick}
+      onTap={handleClick}
       radius={50}
       onMouseMove={setHoverTrue}
       onMouseLeave={setHoverFalse}

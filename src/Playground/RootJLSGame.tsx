@@ -1,13 +1,6 @@
-import {
-  Coord,
-  View,
-  calculateNewObjPos,
-  decreaseBy1ToZero,
-  getInRange,
-  isInView,
-} from './mathCalc'
 import { GameElementType } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
+import { View, calculateNewObjPos, decreaseBy1ToZero, getInRange, isInView } from './mathCalc'
 import { gameObjects, getView, initSoundsConf, playground } from '../config'
 import { isMobile } from '../utils'
 import { isTwoShapesCollision } from './collisions'
@@ -43,7 +36,7 @@ const get_gameState = () => ({
     shadowOffsetY: 25,
     shadowBlur: 40,
     background: '#F0F',
-    maxSpeed: isMobile ? 5 : 10,
+    maxSpeed: isMobile ? 4.2 : 8,
   },
   cameraShakeIntensity: 0,
   playground,
@@ -84,7 +77,6 @@ class RootJLSGame extends React.Component<{}> {
     window.addEventListener('mousemove', this.handleMouseMove)
 
     // init infinite gameLoop
-
     this._frameId = requestAnimationFrame(this.tick)
 
     // setup music for background
@@ -133,11 +125,8 @@ class RootJLSGame extends React.Component<{}> {
   // support of mobile devices
   handlePlaygroundMove = (e: KonvaEventObject<Event>) => {
     // @ts-ignore
-    if (e.currentTarget.pointerPos) {
-      // @ts-ignore
-      const { x, y } = e.currentTarget.pointerPos
-      this._gameState.mousePosition = { x, y }
-    }
+    const { x, y } = e.target.getStage().getPointerPosition()
+    this._gameState.mousePosition = { x, y }
   }
 
   // --------------------------
