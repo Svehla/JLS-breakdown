@@ -1,8 +1,15 @@
 import React from 'react'
 
-type Props = any
+type Props = {
+  volume: number
+  authCode: string
+  onAuthChange: any
+  onVolumeChange: any
+}
+
 /*
   old configuration for debugging purposes
+  -> i don't want to delete this code at the moment (for purpose that I'll support volume again)
   example of use:
 ------------------------
 

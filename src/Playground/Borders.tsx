@@ -1,6 +1,6 @@
 import { GameElementType } from './gameElementTypes'
 import { Rect } from 'react-konva'
-import { View, getCurrentPosition } from './mathCalc'
+import { View, getRelativePosByAbsPos } from './mathCalc'
 import { playground } from '../config'
 import React from 'react'
 import gridImage from '../img/grid.png'
@@ -24,7 +24,7 @@ const Borders = ({ view, isDark }: Props) => {
   const [imageLight] = useImage(gridImage)
   const [imageDark] = useImage(gridReverseImage)
 
-  const { x, y } = getCurrentPosition(view, playgroundCoords)
+  const { x, y } = getRelativePosByAbsPos(view, playgroundCoords)
 
   return (
     <Rect

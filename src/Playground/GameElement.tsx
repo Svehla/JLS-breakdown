@@ -2,7 +2,7 @@ import { Circle, Rect } from 'react-konva'
 import { CircleConfig } from 'konva/types/shapes/Circle'
 import { GameElementType } from './gameElementTypes'
 import { RectConfig } from 'konva/types/shapes/Rect'
-import { View, getCurrentPosition } from './mathCalc'
+import { View, getRelativePosByAbsPos } from './mathCalc'
 import React from 'react'
 import useImage from 'use-image'
 
@@ -25,7 +25,7 @@ const GameElement = ({ type, view, x, y, background: bgColor, ...props }: Props)
   const properties = {
     ...(isBgImage ? { fillPatternImage: bgImage } : { fill: bgColor }),
     ...props,
-    ...getCurrentPosition(view, { x, y }),
+    ...getRelativePosByAbsPos(view, { x, y }),
   }
   return type === GameElementType.Rectangle ? (
     <Rect {...properties} />

@@ -4,7 +4,7 @@ import { KonvaEventObject } from 'konva/types/Node'
 import { PlayAudioConf, pauseSound, playAudio } from '../audio/audio'
 import { View, calculateNewObjPos, decreaseBy1ToZero, getInRange, isInView } from './mathCalc'
 import { isMobile } from '../utils'
-import { isTwoShapesCollision } from './collisions'
+import { isTwoElementCollision } from './collisions'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
 import React from 'react'
@@ -189,13 +189,14 @@ class RootJLSGame extends React.Component<{}> {
         if (item.deleted) {
           return item
         }
+        // I don't want to calculate collisions of items out of `view`
         if (!item.visibleOnView) {
           return item
         }
 
         // is not in collision -> just return and ignore next code..
         // @ts-ignore
-        if (!isTwoShapesCollision(me, item)) {
+        if (!isTwoElementCollision(me, item)) {
           return item
         }
 
@@ -211,13 +212,12 @@ class RootJLSGame extends React.Component<{}> {
         }
 
         // @ts-ignore
-        if (item.vibration && window.navigator.vibrate) {
-          // @ts-ignore
-          window.navigator.vibrate((1000 / this.state.framePerSec) * item.vibration)
-        }
-
-        // @ts-ignore
-        this.play(newCameraShakeIntensity === 0 ? item.audio : 'slowZero')
+        this.play(
+          newCameraShakeIntensity === 0
+            ? item.audio
+            : // for shaking camera use only slow zero sounds
+              'slowZero'
+        )
         return { ...item, deleted: true }
       })
 

@@ -19,7 +19,7 @@ type CreateElementConf = {
 }
 
 export const createGameElement = (type: GameElementType, conf: CreateElementConf) => {
-  // destructuring default values FTW
+  // destructuring for default values FTW
   const {
     x = Math.random() * playground.width,
     y = Math.random() * playground.height,
@@ -35,12 +35,11 @@ export const createGameElement = (type: GameElementType, conf: CreateElementConf
     ...properties
   } = conf
 
-  const propertiesByType =
-    type === GameElementType.Circle
-      ? { radius }
-      : type === GameElementType.Rectangle
-      ? { height, width }
-      : {}
+  // functional switch case trick
+  const propertiesByType = {
+    [GameElementType.Circle]: { radius },
+    [GameElementType.Rectangle]: { height, width },
+  }[type]
 
   return {
     id: getRandomId(),

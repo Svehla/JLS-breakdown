@@ -54,8 +54,9 @@ export const getDistance = (mousePos: MousePos, currentPos: CurrentPosition, max
   const tanRatio = yDiff / xDiff
   const tanAngle = Math.atan(tanRatio)
   const c = pythagorC(xDiff, yDiff)
+  // TODO: some random constants?
   const possibleAcceleration = Math.pow(c / 40, 2)
-  const finAcceleration = possibleAcceleration < maxSpeed ? possibleAcceleration : maxSpeed
+  const finAcceleration = Math.min(possibleAcceleration, maxSpeed)
   const newX = Math.cos(tanAngle) * finAcceleration || 0
   const newY = Math.sin(tanAngle) * finAcceleration || 0
   return {
@@ -64,8 +65,8 @@ export const getDistance = (mousePos: MousePos, currentPos: CurrentPosition, max
   }
 }
 
-const borderCollisions = (axisCoordinate: number, min: number, max: number) =>
-  axisCoordinate < min ? min : axisCoordinate > max ? max : axisCoordinate
+const stayInRange = (num: number, { min, max }: { min: number; max: number }) =>
+  Math.min(Math.max(min, num), max)
 
 const addShaking = (cameraShakeIntensity: number, axisPosition: number) =>
   cameraShakeIntensity > 0
@@ -82,8 +83,9 @@ export const calculateNewObjPos = (
   const { distanceX, distanceY } = getDistance(mousePos, meElement, maxSpeed)
   const x = calculateProgress(mousePos.x, meElement.x, meElement.xRel, distanceX)
   const y = calculateProgress(mousePos.y, meElement.y, meElement.yRel, distanceY)
-  const xWithBorder = borderCollisions(x, 0, playground.width)
-  const yWithBorder = borderCollisions(y, 0, playground.height)
+  // calculate new pos and stay in playground
+  const xWithBorder = stayInRange(x, { min: 0, max: playground.width })
+  const yWithBorder = stayInRange(y, { min: 0, max: playground.height })
   return {
     x: addShaking(cameraShakeIntensity, xWithBorder),
     y: addShaking(cameraShakeIntensity, yWithBorder),
@@ -93,9 +95,21 @@ export const calculateNewObjPos = (
 const isInAxios = (axisPosition: number, larger: number, lower: number, halfWidth: number) =>
   axisPosition + halfWidth >= larger && axisPosition <= lower + halfWidth
 
-export const getInRange = (num: number, range = 1) =>
-  num > range ? range : num < -range ? -range : num
+/**
+ * range define borders like:
+ *  -1 ... 1
+ *  -5 ... 5
+ *
+ * this function check if `num` is inside of that range
+ * if not -> move it to max/min value
+ */
+export const getInRange = (num: number, range = 1) => stayInRange(num, { min: -range, max: range })
 
+/**
+ * check if `gameElement` is in view (screen that user can see)
+ *
+ * collisions of screen and elements are compared by absolute coordinations
+ */
 export const isInView = (view: View, gameElement: GameElement): boolean => {
   let height = null
   let width = null
@@ -117,7 +131,11 @@ export const isInView = (view: View, gameElement: GameElement): boolean => {
   return isInX && isInY
 }
 
-export const getCurrentPosition = (view: View, { x, y }: Coord): Coord => {
+/**
+ * calculate player position from absolute playground coordinations
+ * to screen view relative coordinations
+ */
+export const getRelativePosByAbsPos = (view: View, { x, y }: Coord): Coord => {
   const relativeXCoord = x - view.leftX
   const relativeYCoord = y - view.topY
   return {
