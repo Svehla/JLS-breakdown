@@ -51,6 +51,10 @@ const getGameState = () => ({
   },
 })
 
+/**
+ *
+ * base Component for handling game logic
+ */
 class RootJLSGame extends React.Component<{}> {
   /**
    * it's like React.ref
@@ -73,6 +77,9 @@ class RootJLSGame extends React.Component<{}> {
   _frameId = 0
 
   componentDidMount() {
+    // does not work on ios devices:
+    // > https://medium.com/flawless-app-stories/how-to-request-device-motion-and-orientation-permission-in-ios-13-74fc9d6cd140
+    // https://github.com/aframevr/aframe/issues/3976
     window.addEventListener('deviceorientation', this.handleOrientation)
     window.addEventListener('mousemove', this.handleMouseMove)
 
@@ -95,6 +102,7 @@ class RootJLSGame extends React.Component<{}> {
 
   // beta (`up` and `down`) (y)
   // gama (`left` and `right`) (x)
+  // todo: does not work on new ios phones (security `feature` i guess)
   handleOrientation = ({ beta, gamma }: DeviceOrientationEvent) => {
     if (!beta || !gamma) {
       return
@@ -134,7 +142,6 @@ class RootJLSGame extends React.Component<{}> {
   // --------------------------
 
   // audio middleware
-  // TODO: refactor
   play = (audioName: string, config: PlayAudioConf = {}) => {
     const playConfig = {
       ...config,

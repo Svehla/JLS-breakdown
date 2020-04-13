@@ -80,13 +80,14 @@ export const initSounds = async () => {
 export type PlayAudioConf = { loop?: boolean; volume?: number }
 export const playAudio = async (
   name: string,
-  conf: PlayAudioConf
+  conf: PlayAudioConf = {}
 ): Promise<AudioBufferSourceNode> => {
-  // todo: does not support mobile sounds at the moment
+  // TODO: does not support mobile sounds at the moment
   if (isMobile) {
     // @ts-ignore
     return
   }
+  // TODO: control output volume somehow
   // create audio context
   const audioContext = getAudioContext()
   // create audioBuffer (decode audio file)

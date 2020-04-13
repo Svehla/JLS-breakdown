@@ -1,4 +1,5 @@
 import { Circle } from 'react-konva'
+import { GameElementShape } from './createGameElements'
 import { KonvaEventObject } from 'konva/types/Node'
 import { Layer, Stage, Text } from 'react-konva'
 import { View } from './mathCalc'
@@ -12,7 +13,7 @@ import jakeLovesSpace from '../img/jakeLovesSpace.png'
 
 type Props = {
   view: View
-  gameElements: any[]
+  gameElements: GameElementShape[]
   me: any
   handlePlaygroundMove: (e: KonvaEventObject<Event>) => void
   handleBandClick: any
@@ -50,6 +51,7 @@ const Playground = (props: Props) => {
         {gameElements.map(
           item =>
             item.visibleOnView &&
+            // @ts-ignore
             !item.deleted && <GameElement key={item.id} view={view} {...item} />
         )}
 
