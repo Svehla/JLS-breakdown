@@ -1,5 +1,6 @@
 import { GameElement, GameElementType } from './gameElementTypes'
 
+// todo: extract types out of `mathCalc.js` to another file
 export type View = {
   width: number
   height: number

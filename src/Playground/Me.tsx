@@ -1,4 +1,5 @@
 import { Circle } from 'react-konva'
+import { CircleConfig } from 'konva/types/shapes/Circle'
 import { View } from './mathCalc'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import React from 'react'
@@ -6,7 +7,7 @@ import architectsMainLogo from '../img/architectsMainLogo.png'
 import useImage from 'use-image'
 
 type Props = {
-  me: any
+  me: CircleConfig & { bandName: string }
   view: View
 }
 

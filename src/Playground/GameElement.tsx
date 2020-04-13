@@ -1,10 +1,14 @@
 import { Circle, Rect } from 'react-konva'
+import { CircleConfig } from 'konva/types/shapes/Circle'
 import { GameElementType } from './gameElementTypes'
+import { RectConfig } from 'konva/types/shapes/Rect'
 import { View, getCurrentPosition } from './mathCalc'
 import React from 'react'
 import useImage from 'use-image'
 
-type Props = {
+type KonvaGameElementProps = RectConfig & CircleConfig
+
+type Props = KonvaGameElementProps & {
   backgroundImage?: string
   type: GameElementType
   view: View
