@@ -1,14 +1,13 @@
-// @ts-ignore
-export const isTwoShapesCollision = (circleShape1, shape2) =>
-  shape2.type === 'CIRCLE'
+import { Circle, GameElement, GameElementType, Rectangle } from './gameElementTypes'
+
+export const isTwoShapesCollision = (circleShape1: Circle, shape2: GameElement) =>
+  shape2.type === GameElementType.Circle
     ? isCircleCircleCollision(circleShape1, shape2)
-    : shape2.type === 'RECTANGLE'
-    ? isRectCircleCollision(circleShape1, shape2)
+    : shape2.type === GameElementType.Rectangle
+    ? isRectangleCircleCollision(circleShape1, shape2)
     : false
 
-// return true if the rectangle and circle are colliding
-// @ts-ignore
-const isRectCircleCollision = (circle, rect) => {
+const isRectangleCircleCollision = (circle: Circle, rect: Rectangle) => {
   const distX = Math.abs(circle.x - rect.x - rect.width / 2)
   const distY = Math.abs(circle.y - rect.y - rect.height / 2)
 
@@ -31,9 +30,11 @@ const isRectCircleCollision = (circle, rect) => {
   return dx * dx + dy * dy <= circle.radius * circle.radius
 }
 
-// https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-// @ts-ignore
-const isCircleCircleCollision = (circle1, circle2) => {
+/**
+ * inspiration:
+ * > https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+ */
+const isCircleCircleCollision = (circle1: Circle, circle2: Circle): boolean => {
   const dx = circle1.x - circle2.x
   const dy = circle1.y - circle2.y
   const distance = Math.sqrt(dx * dx + dy * dy)

@@ -4,12 +4,11 @@ import { Layer, Stage, Text } from 'react-konva'
 import { View } from './mathCalc'
 import BandIcon from './BandIcon'
 import Borders from './Borders'
-import GameObject from './GameObject'
+import GameElement from './GameElement'
 import Me from './Me'
 import React from 'react'
 import architects from '../img/architects.png'
 import jakeLovesSpace from '../img/jakeLovesSpace.png'
-// import { playground } from "../config";
 
 type Props = {
   view: View
@@ -18,7 +17,6 @@ type Props = {
   handlePlaygroundMove: (e: KonvaEventObject<Event>) => void
   handleBandClick: any
   cameraShakeIntensity: any
-  // consoleText: any
   mousePos: any
 }
 
@@ -51,7 +49,7 @@ const Playground = (props: Props) => {
 
         {gameObjects.map(
           (item, index) =>
-            item.visibleOnView && !item.deleted && <GameObject key={index} view={view} {...item} />
+            item.visibleOnView && !item.deleted && <GameElement key={index} view={view} {...item} />
         )}
 
         <Me me={me} view={view} />

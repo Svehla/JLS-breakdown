@@ -1,10 +1,9 @@
-import { Coord, View, calculateNewObjPos, getInRange, isInView, lowerToZero } from './mathCalc'
-import { GameObjectType } from './createGameObjects'
+import { Coord, View, calculateNewObjPos, decreaseToZero, getInRange, isInView } from './mathCalc'
+import { GameElementType } from './gameElementTypes'
+import { KonvaEventObject } from 'konva/types/Node'
 import { allSounds, pauseSound, playAudio } from '../audio/audio'
 import { gameObjects, getView, initSoundsConf, playground } from '../config'
 import { isMobile } from '../utils'
-// import { newDirection } from '../socket-handling'
-import { KonvaEventObject } from 'konva/types/Node'
 import { isTwoShapesCollision } from './collisions'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
@@ -14,7 +13,7 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
   ...item,
   visibleOnView: item.deleted
     ? false // performance optimisation
-    : isInView(view, item),
+    : isInView(view, item as any),
 })
 
 const view = getView()
@@ -25,7 +24,7 @@ const defaultState = {
     y: view.topY + view.height / 2, // y absolute
     xRel: view.width / 2, // x relative
     yRel: view.height / 2, // y relative
-    type: 'CIRCLE' as GameObjectType,
+    type: GameElementType.Circle as GameElementType,
     radius: isMobile ? 60 : 90,
     backgroundImage: JLSMainLogo,
     fillPatternScale: isMobile ? { x: 0.66, y: 0.66 } : { x: 1, y: 1 },
@@ -89,8 +88,8 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
     const { width, height } = this.state.view
     // angle only {angleForMax} deg for 90pos
     const angleForMax = 20
-    const gammaRatio = getInRange({ number: gamma / angleForMax })
-    const betaRatio = getInRange({ number: beta / angleForMax })
+    const gammaRatio = getInRange(gamma / angleForMax)
+    const betaRatio = getInRange(beta / angleForMax)
     const xPlayGroundRelPos = (gammaRatio * width) / 2
     const yPlayGroundRelPos = (betaRatio * height) / 2
     const x = xPlayGroundRelPos + this.state.me.xRel
@@ -173,6 +172,7 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
         }
 
         // is not in collision -> just return and ignore next code..
+        // @ts-ignore
         if (!isTwoShapesCollision(me, item)) {
           return item
         }
@@ -213,7 +213,7 @@ class RootJLSGame extends React.Component<{}, typeof defaultState> {
         leftX: x - this.state.view.width / 2,
         topY: y - this.state.view.height / 2,
       },
-      cameraShakeIntensity: lowerToZero(newCameraShakeIntensity),
+      cameraShakeIntensity: decreaseToZero(newCameraShakeIntensity),
       gameObjects: updatedGameObjects,
       // TODO: change drum audio structure
       ...(newDrum ? ({ actualDrum: newDrum } as any) : {}),

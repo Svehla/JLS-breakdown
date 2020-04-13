@@ -1,16 +1,9 @@
-const {
-  // PI,
-  cos,
-  sin,
-  atan,
-  sqrt,
-  pow,
-  abs,
-} = Math
+import { GameElement, GameElementType } from './gameElementTypes'
 
 export type View = {
   width: number
   height: number
+  // absolute coordination for view in playground
   leftX: number
   topY: number
 }
@@ -21,55 +14,68 @@ export type Coord = {
   y: number
 }
 
-// TODO: what about to use Math.min/max
-export const lowerToZero = (num: number) => (num - 1 < 0 ? 0 : num - 1)
-
-export const pythagorC = (a: number, b: number) => sqrt(pow(a, 2) + pow(b, 2))
-
-// export const toDegrees = angle => angle * (180 / PI)
-// export const toRadians = angle => angle * (PI / 180)
-
-export const calculateProgress = (
-  mousePos: any,
-  currPosAbs: any,
-  currPosRel: any,
-  distance: any
-) => {
-  return mousePos > currPosRel ? currPosAbs + distance : currPosAbs - distance
+export type AbsoluteCoord = {
+  x: number
+  y: number
 }
 
-// @ts-ignore
-export const getDistance = (mousePos, actualPos, maxSpeed) => {
-  const xDiff = mousePos.x - actualPos.xRel // division by zero => .js Infinity
-  const yDiff = mousePos.y - actualPos.yRel
+export type MousePos = {
+  x: number
+  y: number
+}
+
+export type CurrentPosition = {
+  xRel: number
+  yRel: number
+}
+
+export type CenterElement = CurrentPosition & AbsoluteCoord
+
+export const decreaseToZero = (num: number) => Math.max(num - 1, 0)
+
+export const pythagorC = (a: number, b: number) => Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
+
+export const calculateProgress = (
+  axisMousePos: number,
+  currPosAbs: number,
+  currPosRel: number,
+  distance: number
+) => {
+  return axisMousePos > currPosRel ? currPosAbs + distance : currPosAbs - distance
+}
+
+/**
+ * return new coordinations of moved element
+ */
+export const getDistance = (mousePos: MousePos, currentPos: CurrentPosition, maxSpeed: number) => {
+  const xDiff = mousePos.x - currentPos.xRel // division by zero => .js Infinity
+  const yDiff = mousePos.y - currentPos.yRel
   const tanRatio = yDiff / xDiff
-  const tanAngle = atan(tanRatio)
+  const tanAngle = Math.atan(tanRatio)
   const c = pythagorC(xDiff, yDiff)
-  const possibleAcceleration = pow(c / 40, 2)
+  const possibleAcceleration = Math.pow(c / 40, 2)
   const finAcceleration = possibleAcceleration < maxSpeed ? possibleAcceleration : maxSpeed
-  const newX = cos(tanAngle) * finAcceleration || 0
-  const newY = sin(tanAngle) * finAcceleration || 0
+  const newX = Math.cos(tanAngle) * finAcceleration || 0
+  const newY = Math.sin(tanAngle) * finAcceleration || 0
   return {
-    distanceX: abs(newX),
-    distanceY: abs(newY),
+    distanceX: Math.abs(newX),
+    distanceY: Math.abs(newY),
   }
 }
 
-// @ts-ignore
-const borderCollisions = (coordinate, min, max) =>
-  coordinate < min ? min : coordinate > max ? max : coordinate
+const borderCollisions = (axisCoordinate: number, min: number, max: number) =>
+  axisCoordinate < min ? min : axisCoordinate > max ? max : axisCoordinate
 
-// @ts-ignore
-const addShaking = (cameraShakeIntensity, position) =>
+const addShaking = (cameraShakeIntensity: number, axisPosition: number) =>
   cameraShakeIntensity > 0
-    ? position + Math.random() * cameraShakeIntensity - cameraShakeIntensity / 2
-    : position
+    ? axisPosition + Math.random() * cameraShakeIntensity - cameraShakeIntensity / 2
+    : axisPosition
 
 export const calculateNewObjPos = (
-  mousePos: { x: number; y: number },
-  meElement: any,
+  mousePos: MousePos,
+  meElement: CenterElement,
   maxSpeed: number,
-  playground: any,
+  playground: { width: number; height: number },
   cameraShakeIntensity: number
 ) => {
   const { distanceX, distanceY } = getDistance(mousePos, meElement, maxSpeed)
@@ -83,40 +89,34 @@ export const calculateNewObjPos = (
   }
 }
 
-// @ts-ignore
-const isInAxios = (position, larger, lower, halfWidth) =>
-  position + halfWidth >= larger && position <= lower + halfWidth
+const isInAxios = (axisPosition: number, larger: number, lower: number, halfWidth: number) =>
+  axisPosition + halfWidth >= larger && axisPosition <= lower + halfWidth
 
-// @ts-ignore
-export const getInRange = ({ range = 1, number }) =>
-  number > range ? range : number < -range ? -range : number
+export const getInRange = (num: number, range = 1) =>
+  num > range ? range : num < -range ? -range : num
 
-// @ts-ignore
-export const isInView = (
-  view: View,
-  {
-    x,
-    y,
-    width, // width of element
-    height,
-    radius,
-  }: any
-) => {
-  // circle has only radis -> ractangle has width and height
-  height = height || radius
-  width = width || radius
-  const v = view // abbrevation for me
-  const rightX = v.leftX + v.width
-  const bottomY = v.topY + v.height
+export const isInView = (view: View, gameElement: GameElement): boolean => {
+  let height = null
+  let width = null
+  // make square position for easier calculating of `isInView` fn
+  if (gameElement.type === GameElementType.Circle) {
+    width = gameElement.radius
+    height = gameElement.radius
+  } else {
+    width = gameElement.width
+    height = gameElement.height
+  }
 
-  const isInX = isInAxios(x, v.leftX, rightX, width)
-  const isInY = isInAxios(y, v.topY, bottomY, height)
+  const rightX = view.leftX + view.width
+  const bottomY = view.topY + view.height
+
+  const isInX = isInAxios(gameElement.x, view.leftX, rightX, width)
+  const isInY = isInAxios(gameElement.y, view.topY, bottomY, height)
 
   return isInX && isInY
 }
 
-// @ts-ignore
-export const getActualPosition = (view: View, { x, y }: Coord): Coord => {
+export const getCurrentPosition = (view: View, { x, y }: Coord): Coord => {
   const relativeXCoord = x - view.leftX
   const relativeYCoord = y - view.topY
   return {

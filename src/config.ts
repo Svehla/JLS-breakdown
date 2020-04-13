@@ -1,4 +1,5 @@
-import { createGameObjects } from './Playground/createGameObjects'
+import { GameElementType } from './Playground/gameElementTypes'
+import { createGameElements } from './Playground/createGameElements'
 import { isMobile } from './utils'
 import helloKitty from './img/hello-kitty.png'
 import jolanda from './img/jolanda.png'
@@ -20,32 +21,32 @@ export const getView = () => ({
 export const playground = {
   width: isMobile ? 5500 : 5500,
   height: isMobile ? 2500 : 5000,
-}
+} as const
 
 export const gameObjects = [
-  ...createGameObjects(2, 'CIRCLE', {
+  ...createGameElements(2, GameElementType.Circle, {
     radius: 100,
     background: '#FFD700',
     audio: 'patAndMat',
   }),
-  ...createGameObjects(9, 'RECTANGLE', {
+  ...createGameElements(9, GameElementType.Rectangle, {
     width: 114,
     height: 137,
     backgroundImage: helloKitty,
     background: '#F00',
     audio: 'omg',
   }),
-  ...createGameObjects(2, 'CIRCLE', {
+  ...createGameElements(2, GameElementType.Circle, {
     radius: 160,
     background: '#0FD',
     audio: 'slza',
   }),
-  ...createGameObjects(2, 'CIRCLE', {
+  ...createGameElements(2, GameElementType.Circle, {
     radius: 200,
     background: '#00F',
     audio: 'blue',
   }),
-  ...createGameObjects(isMobile ? 2 : 4, 'CIRCLE', {
+  ...createGameElements(isMobile ? 2 : 4, GameElementType.Circle, {
     shakingTime: 100,
     vibration: 100,
     audio: 'growl',
@@ -53,7 +54,7 @@ export const gameObjects = [
     fillPatternOffset: { x: -59, y: -59 },
     radius: 59,
   }),
-  ...createGameObjects(1, 'CIRCLE', {
+  ...createGameElements(1, GameElementType.Circle, {
     x: playground.width / 2,
     y: playground.height / 2,
     shakingTime: 250,
@@ -62,13 +63,13 @@ export const gameObjects = [
     fillPatternOffset: { x: -150, y: -150 },
     radius: 150,
   }),
-  ...createGameObjects(100, 'RECTANGLE', {
+  ...createGameElements(100, GameElementType.Rectangle, {
     audio: 'scream',
   }),
-  ...createGameObjects(100, 'RECTANGLE', {
+  ...createGameElements(100, GameElementType.Rectangle, {
     audio: 'growl',
   }),
-  ...createGameObjects(isMobile ? 150 : 250, 'CIRCLE', {
+  ...createGameElements(isMobile ? 150 : 250, GameElementType.Circle, {
     audio: 'fastZero',
   }),
 ]

@@ -1,5 +1,6 @@
+import { GameElementType } from './gameElementTypes'
 import { Rect } from 'react-konva'
-import { View, getActualPosition } from './mathCalc'
+import { View, getCurrentPosition } from './mathCalc'
 import { playground } from '../config'
 import React from 'react'
 import gridImage from '../img/grid.png'
@@ -23,11 +24,11 @@ const Borders = ({ view, isDark }: Props) => {
   const [imageLight] = useImage(gridImage)
   const [imageDark] = useImage(gridReverseImage)
 
-  const { x, y } = getActualPosition(view, playgroundCoords)
+  const { x, y } = getCurrentPosition(view, playgroundCoords)
 
   return (
     <Rect
-      type={'RECTANGLE'}
+      type={GameElementType.Rectangle}
       x={x}
       y={y}
       width={playground.width}
