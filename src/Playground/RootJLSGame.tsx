@@ -107,6 +107,7 @@ class RootJLSGame extends React.Component<{}> {
     if (!beta || !gamma) {
       return
     }
+    // TODO: move this logic out of component to util file
     const { width, height } = this._gameState.view
     // angle only {angleForMax} deg for 90pos
     const angleForMax = 20
@@ -225,7 +226,6 @@ class RootJLSGame extends React.Component<{}> {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
-    // setup game state for next frame
     // update game state and wait for the next tick
     this._gameState.me = { ...me, x, y }
     this._gameState.view = {
