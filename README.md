@@ -15,7 +15,11 @@ In 2020 I did small refactor to hooks and typescript and publish it on my github
 
 ## Screenshot
 
-![game preview](/docs/game-preview-1.png)
+![game preview](/docs/game-preview.png)
+
+visualised performance for `getAnimationFrame` event game loop
+
+![game preview](/docs/game-performance-overview.png)
 
 ## dev
 
