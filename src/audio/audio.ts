@@ -22,7 +22,7 @@ const GoodAudioContext =
 // --------------
 //   helper fns
 // --------------
-// TODO: should i let there this dynamic requre?
+// TODO: should i let there this dynamic require?
 const requirePath = (fileName: string) => require(`../audio/${fileName}`)
 
 const getAudioContext = () => {
