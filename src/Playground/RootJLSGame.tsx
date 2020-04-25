@@ -36,7 +36,7 @@ const getGameState = () => ({
     shadowOffsetY: 25,
     shadowBlur: 40,
     background: '#F0F',
-    maxSpeed: isMobile ? 6 : 12,
+    maxSpeedPerSecond: isMobile ? 125 : 250,
   },
   cameraShakeIntensity: 0,
   playground,
@@ -67,7 +67,7 @@ class RootJLSGame extends React.Component<{}> {
    * I use this.state for triggering of render method -> its triggered by `requestAnimationFrame`
    */
   _gameState = getGameState()
-
+  _highResTimestamp = 0
   /**
    * this is used for: `request animation frame`
    *
@@ -151,8 +151,11 @@ class RootJLSGame extends React.Component<{}> {
     return playAudio(audioName, playConfig)
   }
 
-  tick = () => {
-    this.recalculateGameLoopState()
+  tick = (highResTimestamp: number) => {
+    const timeSinceLastTick = highResTimestamp - this._highResTimestamp
+    this._highResTimestamp = highResTimestamp
+
+    this.recalculateGameLoopState(timeSinceLastTick)
     // let rerender react app
     this.setState({})
   }
@@ -170,15 +173,11 @@ class RootJLSGame extends React.Component<{}> {
     return this.play(drumName, initSoundsConf[drumName])
   }
 
-  recalculateGameLoopState = () => {
+  recalculateGameLoopState = (timeSinceLastTick: number) => {
     const { me, mousePosition, playground, cameraShakeIntensity, view } = this._gameState
-    const { x, y } = calculateNewObjPos(
-      mousePosition,
-      me,
-      me.maxSpeed,
-      playground,
-      cameraShakeIntensity
-    )
+    const { x, y } = calculateNewObjPos(mousePosition, me, timeSinceLastTick, playground, {
+      cameraShakeIntensity,
+    })
 
     let newCameraShakeIntensity = cameraShakeIntensity
     let newDrum: any | null = null
@@ -239,7 +238,9 @@ class RootJLSGame extends React.Component<{}> {
       this._gameState.actualDrum = newDrum
     }
 
+    // setTimeout(() => {
     this._frameId = requestAnimationFrame(this.tick)
+    // }, 100)
   }
 
   render() {

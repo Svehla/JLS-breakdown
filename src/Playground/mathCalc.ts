@@ -30,7 +30,7 @@ export type CurrentPosition = {
   yRel: number
 }
 
-export type CenterElement = CurrentPosition & AbsoluteCoord
+export type CenterElement = { maxSpeedPerSecond: number } & CurrentPosition & AbsoluteCoord
 
 export const decreaseBy1ToZero = (num: number) => Math.max(num - 1, 0)
 
@@ -46,9 +46,14 @@ export const calculateProgress = (
 }
 
 /**
- * return new coordinations of moved element
+ * return new relative movement for element
  */
-export const getDistance = (mousePos: MousePos, currentPos: CurrentPosition, maxSpeed: number) => {
+export const getDistance = (
+  mousePos: MousePos,
+  currentPos: CenterElement,
+  maxSpeedPerSecond: number,
+  timeSinceLastTick: number
+) => {
   const xDiff = mousePos.x - currentPos.xRel // division by zero => .js Infinity
   const yDiff = mousePos.y - currentPos.yRel
   const tanRatio = yDiff / xDiff
@@ -56,7 +61,10 @@ export const getDistance = (mousePos: MousePos, currentPos: CurrentPosition, max
   const c = pythagorC(xDiff, yDiff)
   // TODO: some random constants?
   const possibleAcceleration = Math.pow(c / 40, 2)
-  const finAcceleration = Math.min(possibleAcceleration, maxSpeed)
+  const finAcceleration = Math.min(
+    possibleAcceleration,
+    maxSpeedPerSecond / (1000 / timeSinceLastTick)
+  )
   const newX = Math.cos(tanAngle) * finAcceleration || 0
   const newY = Math.sin(tanAngle) * finAcceleration || 0
   return {
@@ -76,11 +84,16 @@ const addShaking = (cameraShakeIntensity: number, axisPosition: number) =>
 export const calculateNewObjPos = (
   mousePos: MousePos,
   meElement: CenterElement,
-  maxSpeed: number,
+  timeSinceLastTick: number,
   playground: { width: number; height: number },
-  cameraShakeIntensity: number
+  { cameraShakeIntensity }: { cameraShakeIntensity: number }
 ) => {
-  const { distanceX, distanceY } = getDistance(mousePos, meElement, maxSpeed)
+  const { distanceX, distanceY } = getDistance(
+    mousePos,
+    meElement,
+    meElement.maxSpeedPerSecond,
+    timeSinceLastTick
+  )
   const x = calculateProgress(mousePos.x, meElement.x, meElement.xRel, distanceX)
   const y = calculateProgress(mousePos.y, meElement.y, meElement.yRel, distanceY)
   // calculate new pos and stay in playground
