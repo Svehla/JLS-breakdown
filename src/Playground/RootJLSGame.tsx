@@ -1,10 +1,18 @@
+import { Arc } from 'konva/types/shapes/Arc'
 import { DrumType, gameElements, getView, initSoundsConf, playground } from '../config'
-import { GameElementType } from './gameElementTypes'
+import { GameElementType, Radar } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
 import { PlayAudioConf, pauseSound, playAudio } from '../audio/audio'
-import { View, calculateNewObjPos, decreaseBy1ToZero, getInRange, isInView } from './mathCalc'
+import {
+  View,
+  calcNewRadarRotation,
+  calculateNewObjPos,
+  decreaseBy1ToZero,
+  getInRange,
+  isInView,
+} from './mathCalc'
+import { arcRectCollision, isTwoElementCollision } from './collisions'
 import { isMobile } from '../utils'
-import { isTwoElementCollision } from './collisions'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
 import React from 'react'
@@ -14,6 +22,11 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
   visibleOnView: item.deleted
     ? false // performance optimisation
     : isInView(view, item as any),
+})
+
+const addArcViewProperty = (radar: any, item: any) => ({
+  ...item,
+  visibleOnView: arcRectCollision(radar, item as any),
 })
 
 const view = getView()
@@ -49,6 +62,15 @@ const getGameState = () => ({
     x: view.width / 2,
     y: view.height / 2,
   },
+  // speed of radar is const by timestamp
+  radar: {
+    // center coordination
+    x1: view.width / 2,
+    y1: view.height / 2,
+    rotation: 0,
+    sectorAngle: 60,
+    radius: 300,
+  } as Radar,
 })
 
 /**
@@ -179,12 +201,15 @@ class RootJLSGame extends React.Component<{}> {
       cameraShakeIntensity,
     })
 
+    const newRadarRotationAngle = calcNewRadarRotation()
     let newCameraShakeIntensity = cameraShakeIntensity
     let newDrum: any | null = null
 
     // check collisions + add deleted items
     const updatedGameElements = this._gameState.gameElements
       .map(item => addViewProperty(item, view))
+      // todo: outdated value of radar (one frame out -> change order of setting values)
+      .map(item => addArcViewProperty(this._gameState.radar, item))
       .map(item => {
         if (item.deleted) {
           return item
@@ -226,21 +251,29 @@ class RootJLSGame extends React.Component<{}> {
     }
 
     // update game state and wait for the next tick
-    this._gameState.me = { ...me, x, y }
-    this._gameState.view = {
-      ...this._gameState.view,
-      leftX: x - this._gameState.view.width / 2,
-      topY: y - this._gameState.view.height / 2,
+    this._gameState = {
+      ...this._gameState,
+      me: { ...me, x, y },
+      view: {
+        ...this._gameState.view,
+        leftX: x - this._gameState.view.width / 2,
+        topY: y - this._gameState.view.height / 2,
+      },
+      cameraShakeIntensity: decreaseBy1ToZero(newCameraShakeIntensity),
+      gameElements: updatedGameElements,
+      radar: {
+        ...this._gameState.radar,
+        x1: x,
+        y1: y,
+        rotation: newRadarRotationAngle,
+      },
     }
-    this._gameState.cameraShakeIntensity = decreaseBy1ToZero(newCameraShakeIntensity)
-    this._gameState.gameElements = updatedGameElements
+
     if (newDrum) {
       this._gameState.actualDrum = newDrum
     }
 
-    // setTimeout(() => {
     this._frameId = requestAnimationFrame(this.tick)
-    // }, 100)
   }
 
   render() {
@@ -249,6 +282,7 @@ class RootJLSGame extends React.Component<{}> {
         view={this._gameState.view}
         gameElements={this._gameState.gameElements}
         me={this._gameState.me}
+        radar={this._gameState.radar}
         cameraShakeIntensity={this._gameState.cameraShakeIntensity}
         mousePos={this._gameState.mousePosition}
         handlePlaygroundMove={this.handlePlaygroundMove}

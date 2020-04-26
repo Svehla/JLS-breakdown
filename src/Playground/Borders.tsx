@@ -28,7 +28,6 @@ const Borders = ({ view, isDark }: Props) => {
 
   return (
     <Rect
-      type={GameElementType.Rectangle}
       x={x}
       y={y}
       width={playground.width}

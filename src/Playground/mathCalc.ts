@@ -1,4 +1,4 @@
-import { GameElement, GameElementType } from './gameElementTypes'
+import { GameElement, GameElementType, Radar } from './gameElementTypes'
 
 // todo: extract types out of `mathCalc.js` to another file
 export type View = {
@@ -32,6 +32,19 @@ export type CurrentPosition = {
 
 export type CenterElement = { maxSpeedPerSecond: number } & CurrentPosition & AbsoluteCoord
 
+/**
+ * all game have to use degrees and not native radians
+ * someone told me that its more clear)
+ */
+export const toRadians = (degrees: number) => (degrees * Math.PI) / 180
+export const toDegrees = (radians: number) => (radians * 180) / Math.PI
+
+/**
+ * make it more function??? + add tests
+ * TODO:  add angel arithmetic
+ */
+export const subAngles = (ang1: number, ang2: number) => (360 + (ang1 - ang2)) % 360
+
 export const decreaseBy1ToZero = (num: number) => Math.max(num - 1, 0)
 
 export const pythagorC = (a: number, b: number) => Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
@@ -45,6 +58,45 @@ export const calculateProgress = (
   return axisMousePos > currPosRel ? currPosAbs + distance : currPosAbs - distance
 }
 
+/**
+ *
+ * every `odd` second:  (1|3|...) -> bottom half of radar circle
+ * every `even` second: (2|4|...) -> top half of radar circle
+ * radar has to have position by timestamp (aka it has to be synchronized by server)
+ *
+ * how to sync it with server? (have to use server timestamp + calc ping time somehow)
+ * https://stackoverflow.com/a/5357794/8995887
+ *
+ */
+export const calcNewRadarRotation = () => {
+  const clockTime = new Date()
+  const ms = clockTime.getMilliseconds()
+  const sec = clockTime.getSeconds()
+  const halfCircleShift = (180 / 1000) * ms
+
+  // bottom part of radar circle
+  let newRadarRotation = (sec % 2) * 180 + halfCircleShift
+
+  newRadarRotation = newRadarRotation % 360
+
+  return newRadarRotation
+}
+
+/**
+ *
+ * transpose axis system into start
+ * TODO: add documentation
+ * edge case over 360deg???
+ * const startShifted = 0
+ * TODO: add angle module
+ * TODO: add radius of `Arc` Component
+ */
+export const isAngleInArcSector = (angle: number, startAngle: number, endAngle: number) => {
+  const endAngleShifted = subAngles(endAngle, startAngle)
+  const compareAngle = subAngles(angle, startAngle)
+
+  return compareAngle <= endAngleShifted
+}
 /**
  * return new relative movement for element
  */

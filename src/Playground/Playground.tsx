@@ -7,6 +7,7 @@ import BandIcon from './BandIcon'
 import Borders from './Borders'
 import GameElement from './GameElement'
 import Me from './Me'
+import RadarView from './RadarView'
 import React from 'react'
 import architects from '../img/architects.png'
 import jakeLovesSpace from '../img/jakeLovesSpace.png'
@@ -18,6 +19,7 @@ type Props = {
   handlePlaygroundMove: (e: KonvaEventObject<Event>) => void
   handleBandClick: any
   cameraShakeIntensity: any
+  radar: any
   mousePos: any
 }
 
@@ -29,6 +31,7 @@ const Playground = (props: Props) => {
     handlePlaygroundMove,
     handleBandClick,
     cameraShakeIntensity,
+    radar,
     mousePos,
   } = props
 
@@ -36,7 +39,6 @@ const Playground = (props: Props) => {
 
   return (
     <Stage
-      background={'#456'}
       onTap={handlePlaygroundMove}
       onTouchStart={handlePlaygroundMove}
       onTouchMove={handlePlaygroundMove}
@@ -88,7 +90,6 @@ const Playground = (props: Props) => {
         )}
 
         <Circle x={mousePos.x} y={mousePos.y} radius={5} fill='#f45' />
-
         <BandIcon
           x={view.width - 100}
           y={60}
@@ -103,6 +104,7 @@ const Playground = (props: Props) => {
           bandName={'architects'}
           onBandClick={handleBandClick}
         />
+        <RadarView view={view} radar={radar} />
       </Layer>
     </Stage>
   )

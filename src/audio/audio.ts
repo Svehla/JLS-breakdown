@@ -82,6 +82,8 @@ export const playAudio = async (
   name: string,
   conf: PlayAudioConf = {}
 ): Promise<AudioBufferSourceNode> => {
+  // @ts-ignore
+  return undefined
   // TODO: does not support mobile sounds at the moment
   if (isMobile) {
     // @ts-ignore
@@ -115,5 +117,5 @@ export const pauseSound = (audioBufferInstance: AudioBufferSourceNode) => {
   if (isMobile) {
     return
   }
-  audioBufferInstance.stop()
+  // audioBufferInstance.stop()
 }

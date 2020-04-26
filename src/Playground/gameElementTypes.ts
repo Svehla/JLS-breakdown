@@ -18,4 +18,20 @@ export type Circle = {
   y: number
 }
 
+export type Radar = {
+  x1: number
+  y1: number
+  sectorAngle: number
+  rotation: number
+  radius: number
+  anglePerSecond: number
+}
+
+// TODO: only used for Radar -> should join them
+export type Arc = {
+  x1: number
+  y1: number
+  angle: number
+  radius: number
+}
 export type GameElement = Rectangle | Circle
