@@ -1,4 +1,3 @@
-import { Arc } from 'konva/types/shapes/Arc'
 import { DrumType, gameElements, getView, initSoundsConf, playground } from '../config'
 import { GameElementType, Radar } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
@@ -26,8 +25,9 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
 
 const addArcViewProperty = (radar: any, item: any) => ({
   ...item,
-  visibleOnView: arcRectCollision(radar, item as any),
+  visibleOnView: item.deleted || !item.visibleOnView ? false : arcRectCollision(radar, item as any),
 })
+//
 
 const view = getView()
 
@@ -179,7 +179,10 @@ class RootJLSGame extends React.Component<{}> {
 
     this.recalculateGameLoopState(timeSinceLastTick)
     // let rerender react app
+    // TODO: is react efficient way for app like this? what about pure canvas+konva?
     this.setState({})
+
+    this._frameId = requestAnimationFrame(this.tick)
   }
 
   stopDrumAndGetNew = (drumName: DrumType): Promise<AudioBufferSourceNode> => {
@@ -205,7 +208,24 @@ class RootJLSGame extends React.Component<{}> {
     let newCameraShakeIntensity = cameraShakeIntensity
     let newDrum: any | null = null
 
-    // check collisions + add deleted items
+    // update static tick stuffs (radar & view & my position)
+    this._gameState = {
+      ...this._gameState,
+      me: { ...me, x, y },
+      view: {
+        ...this._gameState.view,
+        leftX: x - this._gameState.view.width / 2,
+        topY: y - this._gameState.view.height / 2,
+      },
+      radar: {
+        ...this._gameState.radar,
+        x1: x,
+        y1: y,
+        rotation: newRadarRotationAngle,
+      },
+    }
+
+    // check collisions
     const updatedGameElements = this._gameState.gameElements
       .map(item => addViewProperty(item, view))
       // todo: outdated value of radar (one frame out -> change order of setting values)
@@ -250,30 +270,12 @@ class RootJLSGame extends React.Component<{}> {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
-    // update game state and wait for the next tick
-    this._gameState = {
-      ...this._gameState,
-      me: { ...me, x, y },
-      view: {
-        ...this._gameState.view,
-        leftX: x - this._gameState.view.width / 2,
-        topY: y - this._gameState.view.height / 2,
-      },
-      cameraShakeIntensity: decreaseBy1ToZero(newCameraShakeIntensity),
-      gameElements: updatedGameElements,
-      radar: {
-        ...this._gameState.radar,
-        x1: x,
-        y1: y,
-        rotation: newRadarRotationAngle,
-      },
-    }
+    this._gameState.gameElements = updatedGameElements
+    this._gameState.cameraShakeIntensity = decreaseBy1ToZero(newCameraShakeIntensity)
 
     if (newDrum) {
       this._gameState.actualDrum = newDrum
     }
-
-    this._frameId = requestAnimationFrame(this.tick)
   }
 
   render() {

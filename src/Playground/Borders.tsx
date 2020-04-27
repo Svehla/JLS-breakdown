@@ -1,4 +1,3 @@
-import { GameElementType } from './gameElementTypes'
 import { Rect } from 'react-konva'
 import { View, getRelativePosByAbsPos } from './mathCalc'
 import { playground } from '../config'

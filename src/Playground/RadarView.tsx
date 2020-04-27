@@ -1,4 +1,4 @@
-import { Arc, Line } from 'react-konva'
+import { Arc } from 'react-konva'
 import { Radar } from './gameElementTypes'
 import { View } from './mathCalc'
 import React from 'react'
@@ -8,7 +8,9 @@ type Props = {
   radar: Radar
 }
 
-// make appear radar view
+const fillLinearGradientColorStops = [0.0, 'rgba(255, 0, 0, 0.1)', 0.94, 'rgba(0, 0, 255, 1)']
+
+// TODO: make appear radar view
 // https://stackoverflow.com/questions/24271401/fade-out-lines-after-drawing-canvas
 const RadarView = ({ view, radar }: Props) => {
   return (
@@ -20,7 +22,7 @@ const RadarView = ({ view, radar }: Props) => {
       angle={radar.sectorAngle}
       rotation={radar.rotation}
       fillLinearGradientEndPoint={{ x: view.height / 2, y: view.width / 2 }}
-      fillLinearGradientColorStops={[0.0, 'rgba(255, 0, 0, 0.1)', 0.94, 'rgba(0, 0, 255, 1)']}
+      fillLinearGradientColorStops={fillLinearGradientColorStops}
     />
   )
 }

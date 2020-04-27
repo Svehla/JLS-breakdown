@@ -62,7 +62,7 @@ export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
  * * pa -> returns positive angle
  * * na -> returns negative angle
  *
- * ## different behavior for left and right half of quadrant
+ * ## different behavior for left and right half of quadrants
  * * q.2 + q.3 - we have to add 180deg for correct angle value
  * * q4        - returns negative number -> so we correct it back to 360 range
  */
@@ -89,27 +89,27 @@ const isPointArcCollision = (arc: Radar, rect: Rectangle) => {
 }
 
 const isRectangleCircleCollision = (circle: Circle, rect: Rectangle) => {
-  const distanceX = Math.abs(circle.x - rect.x - rect.width / 2)
-  const distanceY = Math.abs(circle.y - rect.y - rect.height / 2)
+  const xDistance = Math.abs(circle.x - rect.x - rect.width / 2)
+  const yDistance = Math.abs(circle.y - rect.y - rect.height / 2)
 
-  if (distanceX > rect.width / 2 + circle.radius) {
+  if (xDistance > rect.width / 2 + circle.radius) {
     return false
   }
 
-  if (distanceY > rect.height / 2 + circle.radius) {
+  if (yDistance > rect.height / 2 + circle.radius) {
     return false
   }
 
-  if (distanceX <= rect.width / 2) {
+  if (xDistance <= rect.width / 2) {
     return true
   }
 
-  if (distanceY <= rect.height / 2) {
+  if (yDistance <= rect.height / 2) {
     return true
   }
 
-  const dx = distanceX - rect.width / 2
-  const dy = distanceY - rect.height / 2
+  const dx = xDistance - rect.width / 2
+  const dy = yDistance - rect.height / 2
   return dx * dx + dy * dy <= circle.radius * circle.radius
 }
 
