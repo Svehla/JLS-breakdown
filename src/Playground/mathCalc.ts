@@ -32,21 +32,22 @@ export type CurrentPosition = {
 
 export type CenterElement = { maxSpeedPerSecond: number } & CurrentPosition & AbsoluteCoord
 
+/*******************************/
+/*********** angles ************/
+/*******************************/
+// TODO: bad API: is ok that functions take angle out of 360 range but return only ranged angles?
 /**
  * all game have to use degrees and not native radians
  * someone told me that its more clear)
+ * toRadians
  */
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180
 const toDegrees = (radians: number) => (radians * 180) / Math.PI
-
-/**
- * TODO: Add tests
- */
 const subAngles = (ang1: number, ang2: number) => angleTo360Range(ang1 - ang2)
 const addAngles = (ang1: number, ang2: number) => angleTo360Range(ang1 + ang2)
 
 // module operator works also for negative number <3 sweet
-const angleTo360Range = (ang: number) => 360 + ((ang % 360) % 360)
+const angleTo360Range = (ang: number) => (360 + (ang % 360)) % 360
 
 /**
  *
@@ -77,6 +78,7 @@ export const decreaseBy1ToZero = (num: number) => Math.max(num - 1, 0)
 
 export const pythagorC = (a: number, b: number) => Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
 
+// TODO: fn in math module should be more app agnostic (not mouse pos i guess -> prefer to use Point)
 export const calculateProgress = (
   axisMousePos: number,
   currPosAbs: number,

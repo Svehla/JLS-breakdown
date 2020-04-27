@@ -33,34 +33,37 @@ export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
 
 /**
  *
- * Find angle between two elements and check if this angle is between arc startAngle & endAngle
- *
  * ## Math helper for my future me
  * for each sector i calculate ratio of triangle sides
  *
  * `atan` calculate opposite to adjacent side.In our case its `y/x` like:
  *
- * | q. 1 | q.2 | q. 3 | q. 4 |
+ * ```
+ * | q. 1 |  q.2 | q. 3 | q. 4 |
  * |------|------|------|------|
+ * |      |      |      |      |
  * | C___ | C___ | C    |    C |
  * |    | | |    | |    |    | |
  * |  \ | | | /  | | \  |  / | |
  * |    y | y    | ___x | x___ |
  * |      |      |      |      |
- * ---------------------------
+ * |------|------|------|------|
+ * ```
  * * x -> x axis
  * * y -> y axis
  * * C -> relative center (0, 0)
  *
  * on diagram below you can see math quadrants
  *
- * -----------------
+ * ```
+ * |-------|-------|
  * | 3→ pa | 4↓ na |
  * |-------|-------| 0deg - 360deg
  * | ↑2 na | ←1 pa |
- * -----------------
+ * |-------|-------|
  * * pa -> returns positive angle
  * * na -> returns negative angle
+ * ```
  *
  * ## different behavior for left and right half of quadrants
  * * q.2 + q.3 - we have to add 180deg for correct angle value
@@ -123,3 +126,6 @@ const isCircleCircleCollision = (circle1: Circle, circle2: Circle): boolean => {
   const distance = Math.sqrt(dx * dx + dy * dy)
   return distance < circle1.radius + circle2.radius
 }
+
+// export for unit test cases
+export const _isPointArcCollision = isPointArcCollision
