@@ -1,4 +1,4 @@
-import { GameElement, GameElementType, Radar } from './gameElementTypes'
+import { GameElement, GameElementType } from './gameElementTypes'
 
 // todo: extract types out of `mathCalc.js` to another file
 export type View = {
@@ -36,15 +36,43 @@ export type CenterElement = { maxSpeedPerSecond: number } & CurrentPosition & Ab
  * all game have to use degrees and not native radians
  * someone told me that its more clear)
  */
-export const toRadians = (degrees: number) => (degrees * Math.PI) / 180
-export const toDegrees = (radians: number) => (radians * 180) / Math.PI
+const toRadians = (degrees: number) => (degrees * Math.PI) / 180
+const toDegrees = (radians: number) => (radians * 180) / Math.PI
 
 /**
- * make it more function??? + add tests
- * TODO:  add angel arithmetic
+ * TODO: Add tests
  */
-export const subAngles = (ang1: number, ang2: number) => (360 + (ang1 - ang2)) % 360
+const subAngles = (ang1: number, ang2: number) => angleTo360Range(ang1 - ang2)
+const addAngles = (ang1: number, ang2: number) => angleTo360Range(ang1 + ang2)
 
+// module operator works also for negative number <3 sweet
+const angleTo360Range = (ang: number) => 360 + ((ang % 360) % 360)
+
+/**
+ *
+ * transpose axis system into start
+ * TODO: add documentation
+ * edge case over 360deg???
+ * const startShifted = 0
+ * TODO: add angle module
+ * TODO: add radius of `Arc` Component
+ */
+export const isAngleInArcSector = (angle: number, startAngle: number, endAngle: number) => {
+  const endAngleShifted = subAngles(endAngle, startAngle)
+  const compareAngle = subAngles(angle, startAngle)
+
+  return compareAngle <= endAngleShifted
+}
+
+// static methods :smirk:
+export const Angle = {
+  toRadians,
+  toDegrees,
+  sub: subAngles,
+  add: addAngles,
+  to360Range: angleTo360Range,
+}
+//
 export const decreaseBy1ToZero = (num: number) => Math.max(num - 1, 0)
 
 export const pythagorC = (a: number, b: number) => Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
@@ -82,21 +110,6 @@ export const calcNewRadarRotation = () => {
   return newRadarRotation
 }
 
-/**
- *
- * transpose axis system into start
- * TODO: add documentation
- * edge case over 360deg???
- * const startShifted = 0
- * TODO: add angle module
- * TODO: add radius of `Arc` Component
- */
-export const isAngleInArcSector = (angle: number, startAngle: number, endAngle: number) => {
-  const endAngleShifted = subAngles(endAngle, startAngle)
-  const compareAngle = subAngles(angle, startAngle)
-
-  return compareAngle <= endAngleShifted
-}
 /**
  * return new relative movement for element
  */

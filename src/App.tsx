@@ -28,6 +28,12 @@ const styles = {
 } as const
 
 const App = () => {
+  return (
+    <div style={styles.backgroundStyle}>
+      <RootJLSGame />
+    </div>
+  )
+
   const [isLoading, setIsLoading] = useState(true)
   const [playing, setPlaying] = useState(false)
 

@@ -1,5 +1,5 @@
+import { Angle, isAngleInArcSector } from './mathCalc'
 import { Circle, GameElement, GameElementType, Radar, Rectangle } from './gameElementTypes'
-import { isAngleInArcSector, toDegrees } from './mathCalc'
 
 export const isTwoElementCollision = (circleShape1: Circle, shape2: GameElement) => {
   switch (shape2.type) {
@@ -10,12 +10,16 @@ export const isTwoElementCollision = (circleShape1: Circle, shape2: GameElement)
   }
 }
 
-// todo: add arc collision (no just circle fake)
+/**
+ * TODO: correct arc collision ->
+ *
+ * now its arc -> Point collision
+ */
 export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
   switch (shape2.type) {
     case GameElementType.Circle:
-      return isRectangleArcCollision(arc, {
-        // temporary transform circles into rectangles
+      return isPointArcCollision(arc, {
+        // for easier math I temporary transform circles into rectangles
         type: GameElementType.Rectangle,
         x: shape2.x,
         y: shape2.y,
@@ -23,31 +27,65 @@ export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
         height: shape2.radius,
       })
     case GameElementType.Rectangle:
-      return isRectangleArcCollision(arc, shape2)
+      return isPointArcCollision(arc, shape2)
   }
 }
 
-// TODO: add docs
-// make it via line & angle ...
-const isRectangleArcCollision = (arc: Radar, rect: Rectangle) => {
-  const xDistance = rect.x - arc.x1 // division by zero => .js Infinity
+/**
+ *
+ * Find angle between two elements and check if this angle is between arc startAngle & endAngle
+ *
+ * ## Math helper for my future me
+ * for each sector i calculate ratio of triangle sides
+ *
+ * `atan` calculate opposite to adjacent side.In our case its `y/x` like:
+ *
+ * | q. 1 | q.2 | q. 3 | q. 4 |
+ * |------|------|------|------|
+ * | C___ | C___ | C    |    C |
+ * |    | | |    | |    |    | |
+ * |  \ | | | /  | | \  |  / | |
+ * |    y | y    | ___x | x___ |
+ * |      |      |      |      |
+ * ---------------------------
+ * * x -> x axis
+ * * y -> y axis
+ * * C -> relative center (0, 0)
+ *
+ * on diagram below you can see math quadrants
+ *
+ * -----------------
+ * | 3→ pa | 4↓ na |
+ * |-------|-------| 0deg - 360deg
+ * | ↑2 na | ←1 pa |
+ * -----------------
+ * * pa -> returns positive angle
+ * * na -> returns negative angle
+ *
+ * ## different behavior for left and right half of quadrant
+ * * q.2 + q.3 - we have to add 180deg for correct angle value
+ * * q4        - returns negative number -> so we correct it back to 360 range
+ */
+const isPointArcCollision = (arc: Radar, rect: Rectangle) => {
+  const xDistance = rect.x - arc.x1
   const yDistance = rect.y - arc.y1
-  const tanRatio = yDistance / xDistance
 
-  const arcRecAngle = toDegrees(Math.atan(tanRatio))
+  // opposite to adjacent triangle side
+  const arcRecCalcAngle = Angle.toDegrees(Math.atan(yDistance / xDistance))
 
-  // right half of game
-  let finalAngle
-  if (xDistance > 0) {
-    finalAngle = (360 + arcRecAngle) % 360
+  //
+  let arcRecAngle
+  if (xDistance < 0) {
+    // quadrant 2 & 3
+    arcRecAngle = Angle.add(180, arcRecCalcAngle)
   } else {
-    // it works coz of negative angles
-    finalAngle = 180 + arcRecAngle
+    // quadrant 1 & 4
+    arcRecAngle = Angle.to360Range(arcRecCalcAngle)
   }
 
   const startAngle = arc.rotation
-  const endAngle = (arc.rotation + arc.sectorAngle) % 360
-  return isAngleInArcSector(finalAngle, startAngle, endAngle)
+  const endAngle = Angle.add(arc.rotation, arc.sectorAngle)
+  return isAngleInArcSector(arcRecAngle, startAngle, endAngle)
 }
 
 const isRectangleCircleCollision = (circle: Circle, rect: Rectangle) => {
