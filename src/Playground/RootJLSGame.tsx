@@ -1,4 +1,11 @@
-import { DrumType, gameElements, getView, initSoundsConf, playground } from '../config'
+import {
+  DrumType,
+  RADAR_VISIBLE_DELAY,
+  gameElements,
+  getView,
+  initSoundsConf,
+  playground,
+} from '../config'
 import { GameElementType, Radar } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
 import { PlayAudioConf, pauseSound, playAudio } from '../audio/audio'
@@ -10,7 +17,7 @@ import {
   getInRange,
   isInView,
 } from './mathCalc'
-import { arcRectCollision, isTwoElementCollision } from './collisions'
+import { isArcRectCollision, isTwoElementCollision } from './collisions'
 import { isMobile } from '../utils'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
 import Playground from './Playground'
@@ -25,9 +32,10 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
 
 const addArcViewProperty = (radar: any, item: any) => ({
   ...item,
-  visibleOnView: item.deleted || !item.visibleOnView ? false : arcRectCollision(radar, item as any),
+  isSeenByRadar:
+    // random constants
+    item.deleted || !item.visibleOnView ? false : isArcRectCollision(radar, item as any),
 })
-//
 
 const view = getView()
 
@@ -68,7 +76,7 @@ const getGameState = () => ({
     x1: view.width / 2,
     y1: view.height / 2,
     rotation: 0,
-    sectorAngle: 60,
+    sectorAngle: 20,
     radius: 300,
   } as Radar,
 })
@@ -234,6 +242,10 @@ class RootJLSGame extends React.Component<{}> {
         if (item.deleted) {
           return item
         }
+        if (item.isSeenByRadar) {
+          // mutable grc!!!
+          item.seenByRadar = RADAR_VISIBLE_DELAY
+        }
         // I don't want to calculate collisions of items out of `view`
         if (!item.visibleOnView) {
           return item
@@ -270,7 +282,10 @@ class RootJLSGame extends React.Component<{}> {
       newDrum = this.stopDrumAndGetNew('fastDrum')
     }
 
-    this._gameState.gameElements = updatedGameElements
+    this._gameState.gameElements = updatedGameElements.map(item => ({
+      ...item,
+      seenByRadar: item.seenByRadar > 0 ? item.seenByRadar - timeSinceLastTick : 0,
+    }))
     this._gameState.cameraShakeIntensity = decreaseBy1ToZero(newCameraShakeIntensity)
 
     if (newDrum) {

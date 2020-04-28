@@ -13,6 +13,7 @@ type CreateElementConf = {
   height?: number
   background?: string
   audio?: string
+  seenByRadar?: number
   deleted?: boolean
   shakingTime?: null | number
   visibleOnView?: boolean
@@ -30,6 +31,7 @@ export const createGameElement = (type: GameElementType, conf: CreateElementConf
     audio = 'slowZero',
     deleted = false,
     shakingTime = null,
+    seenByRadar = 0,
     // performance tuning
     visibleOnView = true,
     ...properties
@@ -49,6 +51,7 @@ export const createGameElement = (type: GameElementType, conf: CreateElementConf
     background,
     audio,
     deleted,
+    seenByRadar,
     shakingTime,
     visibleOnView,
     ...properties,

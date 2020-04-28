@@ -53,6 +53,7 @@ const Playground = (props: Props) => {
         {gameElements.map(
           item =>
             item.visibleOnView &&
+            item.seenByRadar > 0 &&
             // @ts-ignore
             !item.deleted && <GameElement key={item.id} view={view} {...item} />
         )}

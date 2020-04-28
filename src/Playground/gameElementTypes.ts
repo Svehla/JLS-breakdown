@@ -34,4 +34,17 @@ export type Arc = {
   angle: number
   radius: number
 }
+
+export type Line = {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+}
+
+export type Point = {
+  x: number
+  y: number
+}
+
 export type GameElement = Rectangle | Circle

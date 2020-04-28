@@ -18,6 +18,8 @@ export const getView = () => ({
   topY: 20,
 })
 
+export const RADAR_VISIBLE_DELAY = 900 // ms
+
 export const playground = {
   width: isMobile ? 5500 : 5500,
   height: isMobile ? 2500 : 5000,

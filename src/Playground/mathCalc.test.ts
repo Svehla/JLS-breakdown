@@ -1,4 +1,4 @@
-import { Angle, decreaseBy1ToZero, isAngleInArcSector } from './mathCalc'
+import { Angle, decreaseBy1ToZero, distance, isAngleInArcSector } from './mathCalc'
 
 describe('angles', () => {
   it('add', () => {
@@ -40,6 +40,14 @@ describe('angles', () => {
     expect(isAngleInArcSector(200, 280, 60)).toEqual(false)
     expect(isAngleInArcSector(180, 181, 179)).toEqual(false)
     expect(isAngleInArcSector(180, 180, 179)).toEqual(true)
+  })
+})
+
+describe('math', () => {
+  it('distance', () => {
+    expect(distance({ x: 0, y: 0 }, { x: 10, y: 0 })).toEqual(10)
+    expect(distance({ x: 0, y: 10 }, { x: 0, y: 20 })).toEqual(10)
+    expect(distance({ x: 10, y: 10 }, { x: 14, y: 13 })).toEqual(5)
   })
 })
 

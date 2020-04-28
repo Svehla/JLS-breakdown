@@ -1,5 +1,13 @@
-import { Angle, isAngleInArcSector } from './mathCalc'
-import { Circle, GameElement, GameElementType, Radar, Rectangle } from './gameElementTypes'
+import { Angle, distance, isAngleInArcSector } from './mathCalc'
+import {
+  Circle,
+  GameElement,
+  GameElementType,
+  Line,
+  Point,
+  Radar,
+  Rectangle,
+} from './gameElementTypes'
 
 export const isTwoElementCollision = (circleShape1: Circle, shape2: GameElement) => {
   switch (shape2.type) {
@@ -15,7 +23,7 @@ export const isTwoElementCollision = (circleShape1: Circle, shape2: GameElement)
  *
  * now its arc -> Point collision
  */
-export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
+export const isArcRectCollision = (arc: Radar, shape2: GameElement) => {
   switch (shape2.type) {
     case GameElementType.Circle:
       return isPointArcCollision(arc, {
@@ -33,7 +41,21 @@ export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
 
 /**
  *
- * ## Math helper for my future me
+ * inspiration:
+ * > http://www.jeffreythompson.org/collision-detection/line-point.php
+ * > https://stackoverflow.com/questions/17692922/check-is-a-point-x-y-is-between-two-points-drawn-on-a-straight-line/17693146#17693146
+ */
+export const isLinePointCollision = (line: Line, point: Point) => {
+  const d1 = distance(point, { x: line.x1, y: line.y1 })
+  const d2 = distance(point, { x: line.x2, y: line.y2 })
+  const lineLen = distance({ x: line.x1, y: line.y1 }, { x: line.x2, y: line.y2 })
+  // what about float inaccuracy
+  return d1 + d2 === lineLen
+}
+
+/**
+ *
+ * ## How does it work
  * for each sector i calculate ratio of triangle sides
  *
  * `atan` calculate opposite to adjacent side.In our case its `y/x` like:
@@ -65,9 +87,13 @@ export const arcRectCollision = (arc: Radar, shape2: GameElement) => {
  * * na -> returns negative angle
  * ```
  *
- * ## different behavior for left and right half of quadrants
+ * ### different behavior for left and right half of quadrants
  * * q.2 + q.3 - we have to add 180deg for correct angle value
  * * q4        - returns negative number -> so we correct it back to 360 range
+ *
+ * Why use Arc Collision and not the `line point/object`?
+ * I have to use sector for checking collisions coz line is too thin and I frame rate is too fast
+ * so it could miss some object
  */
 const isPointArcCollision = (arc: Radar, rect: Rectangle) => {
   const xDistance = rect.x - arc.x1
