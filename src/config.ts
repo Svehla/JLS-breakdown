@@ -18,9 +18,8 @@ export const getView = () => ({
   topY: 20,
 })
 
-export const RAY_COUNT = 40
-// export const RAY_COUNT = 20
-export const RADAR_LOOP_SPEED = 2000
+export const RAY_COUNT = 50
+export const RADAR_LOOP_SPEED = 5000
 // export const RADAR_LOOP_SPEED = 1500
 export const RADAR_VISIBLE_DELAY = RADAR_LOOP_SPEED / 2 // ms
 export const playground = {

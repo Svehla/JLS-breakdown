@@ -1,4 +1,12 @@
-import { GameElement, GameElementType, Line, Point, Radar, Rectangle } from './gameElementTypes'
+import {
+  Arc,
+  GameElement,
+  GameElementType,
+  Line,
+  Point,
+  Radar,
+  Rectangle,
+} from './gameElementTypes'
 
 import { Angle, distance } from './mathCalc'
 import { RAY_COUNT } from '../config'
@@ -61,6 +69,7 @@ type CollideRect = {
 // > code: https://github.com/bmoren/p5.collide2D/blob/master/p5.collide2d.js#L193
 // > docs: https://github.com/bmoren/p5.collide2D#collidelinerect
 // return false if there is no collision
+// TODO: what about infinite match if line is same as rectangle side?
 export const collideLineRect = (line: Line, rect: Rectangle): CollideRect | false => {
   const { x1, y1, x2, y2 } = line
   const { x: rx, y: ry, width: rw, height: rh } = rect
@@ -85,39 +94,78 @@ export const collideLineRect = (line: Line, rect: Rectangle): CollideRect | fals
   return false
 }
 
+/**
+ * return closer collision point between line and rectangle
+ */
+const getNearestLineRectCollision = (
+  line: Line,
+  rect: Rectangle
+): { point: Point; distance: number } | undefined => {
+  const collisions = collideLineRect(line, rect)
+  const c: any = collisions
+  if (!c) return undefined
+
+  const startPoint = {
+    x: line.x1,
+    y: line.y1,
+  }
+
+  // -> fix of infinite behavior for same lines intersection
+  const bottomPointDist = c.bottom.x && c.bottom.y && distance(c.bottom, startPoint)
+  const topPointDist = c.top.x && c.top.y && distance(c.top, startPoint)
+  const leftPointDist = c.left.x && c.left.y && distance(c.left, startPoint)
+  const rightPointDist = c.right.x && c.right.y && distance(c.right, startPoint)
+
+  // Add it to array and iterate coz i want to abstract this operation
+  // out of rectangle behavior to more global data process pipeline
+  const closerColPoint = [
+    { point: c.bottom, distance: bottomPointDist },
+    { point: c.left, distance: leftPointDist },
+    { point: c.right, distance: rightPointDist },
+    { point: c.top, distance: topPointDist },
+  ]
+    // filter points without collisions
+    .filter(({ point }) => point.x && point.y)
+    // find the lowest distance -> closest point
+    .sort((r1, r2) => r1.distance - r2.distance)[0]
+
+  return closerColPoint
+}
+
 // TODO: make optimization -> only elements in radar arc
 export const getRayCastCollisions = (
-  radar: Radar,
-  viewer: Point,
+  arc: Arc,
   gameElements: GameElement[]
 ): (Line & { elementMatchedId: string | null })[] => {
   // generate vectors from radar values
   const rayVectors = Array.from({ length: RAY_COUNT })
     .map((_, index) =>
-      Angle.to360Range(radar.rotation + (radar.sectorAngle / (RAY_COUNT - 1)) * index)
+      Angle.to360Range(arc.startAngle + (arc.sectorAngle / (RAY_COUNT - 1)) * index)
     )
     .map(angle => [Math.cos(Angle.toRadians(angle)), Math.sin(Angle.toRadians(angle))])
 
   const rayLines = rayVectors
     // recalculate angles to 2D lines
     .map(([x, y]) => ({
-      x1: viewer.x,
-      y1: viewer.y,
-      x2: x * radar.radius + viewer.x,
-      y2: y * radar.radius + viewer.y,
+      x1: arc.x,
+      y1: arc.y,
+      x2: x * arc.radius + arc.x,
+      y2: y * arc.radius + arc.y,
     }))
     .map(rayLine => {
       // calculate collisions cor each ray
       // make rectangle line collision
-      // does not support circles yet
-      const collisions = gameElements
+      const rayElCollisions = gameElements
         .map(el => {
           switch (el.type) {
             case GameElementType.Rectangle:
+              const nearestPoint = getNearestLineRectCollision(rayLine, el)
+              if (!nearestPoint) return undefined
               return {
-                collisions: collideLineRect(rayLine, el),
                 // @ts-ignore
                 id: el.id,
+                distance: nearestPoint.distance,
+                point: nearestPoint.point,
               }
 
             // TODO: implement circle collision behavior
@@ -127,57 +175,18 @@ export const getRayCastCollisions = (
         })
         .filter(Boolean)
 
-      if (collisions.length === 0) {
+      if (rayElCollisions.length === 0) {
         return rayLine
       }
 
-      // TODO: make code more optimise
-      // move it to get nearest rect collision point from viewer perspective
-      // array of elements with closer collision points
-      const closerRayElementCollisions = collisions
-        // @ts-ignore
-        .map((co: any) => {
-          if (!co) return undefined
-          const { id, collisions: c } = co
-
-          // -> fix of infinite behavior for same lines intersection
-          const bottomPointDist = c.bottom.x && c.bottom.y && distance(c.bottom, viewer)
-          const topPointDist = c.top.x && c.top.y && distance(c.top, viewer)
-          const leftPointDist = c.left.x && c.left.y && distance(c.left, viewer)
-          const rightPointDist = c.right.x && c.right.y && distance(c.right, viewer)
-
-          const closerRayPoint = [
-            { point: c.bottom, distance: bottomPointDist },
-            { point: c.left, distance: leftPointDist },
-            { point: c.right, distance: rightPointDist },
-            { point: c.top, distance: topPointDist },
-          ]
-            .filter(
-              // filter points without collisions
-              ({ point }) => point.x && point.y
-            )
-            .sort(
-              // sort by distance to the viewer
-              (r1, r2) => r1.distance - r2.distance
-            )
-            .map(collisionPoint => ({
-              ...collisionPoint,
-              id,
-            }))
-
-          // return closer collision point for element... or undefined
-          // find closer ray collision or return undefined
-          return closerRayPoint[0]
-        })
-        .filter(Boolean)
-
       const rayEndPoint = { x: rayLine.x2, y: rayLine.y2 }
+
       // const shortestDistance = Math.min(...distances, radar.radius)
       // get nearest point and add radar radius (should be the max one)
       // want to find min (sort is not optimised solution)
       const shortestDistance = [
-        ...closerRayElementCollisions,
-        { point: rayEndPoint, distance: radar.radius },
+        ...rayElCollisions,
+        { point: rayEndPoint, distance: arc.radius },
         // @ts-ignore
       ].sort((a, b) => a.distance - b.distance)[0]
 

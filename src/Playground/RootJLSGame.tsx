@@ -89,7 +89,7 @@ const getGameState = () => ({
     // center coordination
     rotation: 0,
     sectorAngle: 20,
-    radius: 500,
+    radius: 420,
   } as Radar,
   rayCast: {
     rays: [] as Line[],
@@ -312,8 +312,12 @@ class RootJLSGame extends React.Component<{}> {
     )
 
     this._gameState.rayCast.rays = getRayCastCollisions(
-      this._gameState.radar,
-      this._gameState.me,
+      {
+        x: this._gameState.me.x,
+        y: this._gameState.me.y,
+        ...this._gameState.radar,
+        startAngle: this._gameState.radar.rotation,
+      },
       visibleGameElements as any
     )
 
