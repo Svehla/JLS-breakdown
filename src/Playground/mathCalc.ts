@@ -1,4 +1,5 @@
 import { GameElement, GameElementType, Point } from './gameElementTypes'
+import { RADAR_LOOP_SPEED } from '../config'
 
 // todo: extract types out of `mathCalc.js` to another file
 export type View = {
@@ -51,6 +52,7 @@ const angleTo360Range = (ang: number) => (360 + (ang % 360)) % 360
 
 /**
  *
+ *
  * transpose axis system into start
  * TODO: add documentation
  * edge case over 360deg???
@@ -90,26 +92,19 @@ export const calculateProgress = (
 
 /**
  *
- * every `odd` second:  (1|3|...) -> bottom half of radar circle
- * every `even` second: (2|4|...) -> top half of radar circle
  * radar has to have position by timestamp (aka it has to be synchronized by server)
  *
  * how to sync it with server? (have to use server timestamp + calc ping time somehow)
  * https://stackoverflow.com/a/5357794/8995887
  *
  */
+// todo: make variable for slow down the radar
 export const calcNewRadarRotation = () => {
-  const clockTime = new Date()
-  const ms = clockTime.getMilliseconds()
-  const sec = clockTime.getSeconds()
-  const halfCircleShift = (180 / 1000) * ms
+  const ms = new Date().getTime()
 
-  // bottom part of radar circle
-  let newRadarRotation = (sec % 2) * 180 + halfCircleShift
+  const currentCircle = ms % RADAR_LOOP_SPEED
 
-  newRadarRotation = newRadarRotation % 360
-
-  return newRadarRotation
+  return normalizeInto01(currentCircle, 0, RADAR_LOOP_SPEED) * 360
 }
 
 // inspiration: https://stackoverflow.com/questions/39776819/function-to-normalize-any-number-from-0-1

@@ -8,6 +8,7 @@ import Borders from './Borders'
 import GameElement from './GameElement'
 import Me from './Me'
 import RadarView from './RadarView'
+import RayCast from './RayCast'
 import React from 'react'
 import architects from '../img/architects.png'
 import jakeLovesSpace from '../img/jakeLovesSpace.png'
@@ -21,6 +22,7 @@ type Props = {
   cameraShakeIntensity: any
   radar: any
   mousePos: any
+  rayCast: any
 }
 
 const Playground = (props: Props) => {
@@ -33,6 +35,7 @@ const Playground = (props: Props) => {
     cameraShakeIntensity,
     radar,
     mousePos,
+    rayCast,
   } = props
 
   const deletedObjectsCounter = gameElements.filter(item => item.deleted).length
@@ -60,6 +63,7 @@ const Playground = (props: Props) => {
 
         <Me me={me} view={view} />
 
+        <RayCast rays={rayCast.rays} view={view} />
         <Text
           x={view.width / 2}
           y={10}

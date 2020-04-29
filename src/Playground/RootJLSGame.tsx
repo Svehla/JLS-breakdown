@@ -1,3 +1,4 @@
+import './rayCasting'
 import {
   DrumType,
   RADAR_VISIBLE_DELAY,
@@ -6,7 +7,8 @@ import {
   initSoundsConf,
   playground,
 } from '../config'
-import { GameElementType, Radar } from './gameElementTypes'
+import { GameElementShape } from './createGameElements'
+import { GameElementType, Line, Point, Radar } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
 import { PlayAudioConf, pauseSound, playAudio } from '../audio/audio'
 import {
@@ -17,6 +19,7 @@ import {
   getInRange,
   isInView,
 } from './mathCalc'
+import { getRayCastCollisions } from './rayCasting'
 import { isArcRectCollision, isTwoElementCollision } from './collisions'
 import { isMobile } from '../utils'
 import JLSMainLogo from '../img/JLSMainLogo.jpg'
@@ -30,13 +33,23 @@ const addViewProperty = <T extends { deleted: boolean }>(item: T, view: View) =>
     : isInView(view, item as any),
 })
 
-const addArcViewProperty = (radar: any, item: any) => ({
+const addArcViewProperty = (radar: Radar, viewer: Point, item: GameElementShape) => ({
   ...item,
   isSeenByRadar:
-    // random constants
-    item.deleted || !item.visibleOnView ? false : isArcRectCollision(radar, item as any),
+    item.deleted || !item.visibleOnView
+      ? false
+      : isArcRectCollision(
+          {
+            x: viewer.x,
+            y: viewer.y,
+            sectorAngle: radar.sectorAngle,
+            startAngle: radar.rotation,
+            radius: radar.radius,
+          },
+          item as any
+        ),
 })
-
+//
 const view = getView()
 
 const getGameState = () => ({
@@ -71,14 +84,16 @@ const getGameState = () => ({
     y: view.height / 2,
   },
   // speed of radar is const by timestamp
+  // ray cast is calculated from radar view
   radar: {
     // center coordination
-    x1: view.width / 2,
-    y1: view.height / 2,
     rotation: 0,
     sectorAngle: 20,
-    radius: 300,
+    radius: 500,
   } as Radar,
+  rayCast: {
+    rays: [] as Line[],
+  },
 })
 
 /**
@@ -227,8 +242,6 @@ class RootJLSGame extends React.Component<{}> {
       },
       radar: {
         ...this._gameState.radar,
-        x1: x,
-        y1: y,
         rotation: newRadarRotationAngle,
       },
     }
@@ -237,15 +250,16 @@ class RootJLSGame extends React.Component<{}> {
     const updatedGameElements = this._gameState.gameElements
       .map(item => addViewProperty(item, view))
       // todo: outdated value of radar (one frame out -> change order of setting values)
-      .map(item => addArcViewProperty(this._gameState.radar, item))
+      // todo: does it make sense for implemented rayCasting?
+      .map(item => addArcViewProperty(this._gameState.radar, me, item as any))
       .map(item => {
         if (item.deleted) {
           return item
         }
-        if (item.isSeenByRadar) {
-          // mutable grc!!!
-          item.seenByRadar = RADAR_VISIBLE_DELAY
-        }
+        // todo: does it make sense for implemented rayCasting?
+        // if (item.isSeenByRadar) {
+        //   item.seenByRadar = RADAR_VISIBLE_DELAY
+        // }
         // I don't want to calculate collisions of items out of `view`
         if (!item.visibleOnView) {
           return item
@@ -291,6 +305,28 @@ class RootJLSGame extends React.Component<{}> {
     if (newDrum) {
       this._gameState.actualDrum = newDrum
     }
+
+    const visibleGameElements = this._gameState.gameElements.filter(
+      // todo: radar does not detect elements correctly (it checks points, not shapes)
+      e => e.visibleOnView && !e.deleted // && e.seenByRadar > 0
+    )
+
+    this._gameState.rayCast.rays = getRayCastCollisions(
+      this._gameState.radar,
+      this._gameState.me,
+      visibleGameElements as any
+    )
+
+    // make radar elements collisions visible
+    this._gameState.rayCast.rays.forEach(r => {
+      // @ts-ignore
+      const id = r.elementMatchedId
+      if (!id) return
+      const el = this._gameState.gameElements.find(({ id: elId }) => elId === id)
+      // mutable shiiiiitttty code
+      // @ts-ignore
+      el.seenByRadar = RADAR_VISIBLE_DELAY
+    })
   }
 
   render() {
@@ -304,6 +340,7 @@ class RootJLSGame extends React.Component<{}> {
         mousePos={this._gameState.mousePosition}
         handlePlaygroundMove={this.handlePlaygroundMove}
         handleBandClick={this.handleBandClick}
+        rayCast={this._gameState.rayCast}
       />
     )
   }

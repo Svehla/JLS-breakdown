@@ -1,13 +1,5 @@
 import { GameElementType } from './gameElementTypes'
-import { _isPointArcCollision, isLinePointCollision } from './collisions'
-
-describe.only('point line collision', () => {
-  it('collision with point', () => {
-    expect(isLinePointCollision({ x1: 0, y1: 0, x2: 10, y2: 10 }, { x: 10, y: 10 })).toEqual(true)
-    expect(isLinePointCollision({ x1: 5, y1: 5, x2: 10, y2: 10 }, { x: 2, y: 2 })).toEqual(false)
-    // expect(isLinePointCollision({ x1: 5, y1: 5, x2: 10, y2: 10 }, { x: 2, y: 2 })).toEqual(false)
-  })
-})
+import { _isPointArcCollision } from './collisions'
 
 describe('arc collisions', () => {
   const radar = {

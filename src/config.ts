@@ -18,14 +18,41 @@ export const getView = () => ({
   topY: 20,
 })
 
-export const RADAR_VISIBLE_DELAY = 900 // ms
-
+export const RAY_COUNT = 40
+// export const RAY_COUNT = 20
+export const RADAR_LOOP_SPEED = 2000
+// export const RADAR_LOOP_SPEED = 1500
+export const RADAR_VISIBLE_DELAY = RADAR_LOOP_SPEED / 2 // ms
 export const playground = {
   width: isMobile ? 5500 : 5500,
   height: isMobile ? 2500 : 5000,
 } as const
 
+const view = getView()
+
 export const gameElements = [
+  ...createGameElements(1, GameElementType.Rectangle, {
+    background: '#0FD700',
+    x: view.leftX + view.width / 2 + 400,
+    y: 50 + view.topY + view.height / 2,
+    width: 5,
+    height: 500,
+  }),
+  ...createGameElements(1, GameElementType.Rectangle, {
+    background: '#0F0700',
+    x: view.leftX + view.width / 2 + 300,
+    y: -450 + view.topY + view.height / 2,
+    width: 5,
+    height: 410,
+  }),
+  ...createGameElements(1, GameElementType.Rectangle, {
+    background: '#0FD700',
+    x: view.leftX + view.width / 2 + 200,
+    y: 50 + view.topY + view.height / 2,
+    width: 5,
+    height: 500,
+  }),
+  /*
   ...createGameElements(2, GameElementType.Circle, {
     radius: 100,
     background: '#FFD700',
@@ -65,13 +92,16 @@ export const gameElements = [
     fillPatternOffset: { x: -150, y: -150 },
     radius: 150,
   }),
-  ...createGameElements(100, GameElementType.Rectangle, {
+  */
+  ...createGameElements(200, GameElementType.Rectangle, {
     audio: 'scream',
   }),
   ...createGameElements(100, GameElementType.Rectangle, {
     audio: 'growl',
   }),
+  /*
   ...createGameElements(isMobile ? 150 : 250, GameElementType.Circle, {
     audio: 'fastZero',
   }),
+  */
 ]

@@ -19,8 +19,6 @@ export type Circle = {
 }
 
 export type Radar = {
-  x1: number
-  y1: number
   sectorAngle: number
   rotation: number
   radius: number
@@ -29,9 +27,10 @@ export type Radar = {
 
 // TODO: only used for Radar -> should join them
 export type Arc = {
-  x1: number
-  y1: number
-  angle: number
+  x: number
+  y: number
+  sectorAngle: number
+  startAngle: number
   radius: number
 }
 
