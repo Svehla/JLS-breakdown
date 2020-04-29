@@ -133,55 +133,61 @@ export const getRayCastCollisions = (
 
       // TODO: make code more optimise
       // move it to get nearest rect collision point from viewer perspective
-      const distances = collisions
+      // array of elements with closer collision points
+      const closerRayElementCollisions = collisions
         // @ts-ignore
-        .map(({ id, collisions: c }) =>
-          // ts cant inherit filter(Boolean) -> so i again check falsy values
-          !c
-            ? []
-            : [
-                {
-                  id,
-                  point: c.bottom,
-                  // @ts-ignore -> fix of infinite behavior for same lines intersection
-                  distance: c.bottom.x && c.bottom.y && distance(c.bottom, viewer),
-                },
-                {
-                  id,
-                  point: c.left,
-                  // @ts-ignore -> fix of infinite behavior for same lines intersection
-                  distance: c.left.x && c.left.y && distance(c.left, viewer),
-                },
-                {
-                  id,
-                  point: c.right,
-                  // @ts-ignore -> fix of infinite behavior for same lines intersection
-                  distance: c.right.x && c.right.y && distance(c.right, viewer),
-                },
-                {
-                  id,
-                  point: c.top,
-                  // @ts-ignore -> fix of infinite behavior for same lines intersection
-                  distance: c.top.x && c.top.y && distance(c.top, viewer),
-                },
-              ]
-        )
-        // find shortest distance
-        .flat()
-        .filter(i => Boolean(i.distance))
+        .map((co: any) => {
+          if (!co) return undefined
+          const { id, collisions: c } = co
+
+          // -> fix of infinite behavior for same lines intersection
+          const bottomPointDist = c.bottom.x && c.bottom.y && distance(c.bottom, viewer)
+          const topPointDist = c.top.x && c.top.y && distance(c.top, viewer)
+          const leftPointDist = c.left.x && c.left.y && distance(c.left, viewer)
+          const rightPointDist = c.right.x && c.right.y && distance(c.right, viewer)
+
+          const closerRayPoint = [
+            { point: c.bottom, distance: bottomPointDist },
+            { point: c.left, distance: leftPointDist },
+            { point: c.right, distance: rightPointDist },
+            { point: c.top, distance: topPointDist },
+          ]
+            .filter(
+              // filter points without collisions
+              ({ point }) => point.x && point.y
+            )
+            .sort(
+              // sort by distance to the viewer
+              (r1, r2) => r1.distance - r2.distance
+            )
+            .map(collisionPoint => ({
+              ...collisionPoint,
+              id,
+            }))
+
+          // return closer collision point for element... or undefined
+          // find closer ray collision or return undefined
+          return closerRayPoint[0]
+        })
+        .filter(Boolean)
 
       const rayEndPoint = { x: rayLine.x2, y: rayLine.y2 }
       // const shortestDistance = Math.min(...distances, radar.radius)
       // get nearest point and add radar radius (should be the max one)
-      const shortestDistance = [...distances, { point: rayEndPoint, distance: radar.radius }].sort(
-        (a, b) => a.distance - b.distance
-      )[0]
+      // want to find min (sort is not optimised solution)
+      const shortestDistance = [
+        ...closerRayElementCollisions,
+        { point: rayEndPoint, distance: radar.radius },
+        // @ts-ignore
+      ].sort((a, b) => a.distance - b.distance)[0]
 
       return {
         // @ts-ignore
         elementMatchedId: shortestDistance.id ?? null,
         ...rayLine,
+        // @ts-ignore
         x2: shortestDistance.point.x,
+        // @ts-ignore
         y2: shortestDistance.point.y,
       }
     })
