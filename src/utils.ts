@@ -1,4 +1,4 @@
-// copied solution by
+// copied solution from:
 // > https://stackoverflow.com/a/58236281/8995887
 /* eslint-disable */
 export const isMobile = (function (a) {
@@ -12,3 +12,6 @@ export const isMobile = (function (a) {
 
 // eslint-disable-next-line no-bitwise
 export const randomColor = () => '#' + ((((1 << 24) * Math.random()) / 8) | 0).toString(16)
+
+// https://github.com/microsoft/TypeScript/issues/20707#issuecomment-351874491
+export const notNullable = <T>(x: T | null | undefined): x is T => x !== undefined && x !== null

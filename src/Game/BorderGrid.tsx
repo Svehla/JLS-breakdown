@@ -1,9 +1,9 @@
 import { Rect } from 'react-konva'
 import { View, getRelativePosByAbsPos } from './mathCalc'
-import { playground } from '../config'
+import { playground } from './gameSetup'
 import React from 'react'
-import gridImage from '../img/grid.png'
-import gridReverseImage from '../img/grid-reverse.png'
+import gridImage from './img/grid.png'
+import gridReverseImage from './img/grid-reverse.png'
 import useImage from 'use-image'
 
 const fillPatternScale = { x: 1, y: 1 }
@@ -19,7 +19,7 @@ type Props = {
   isDark: boolean
 }
 
-const Borders = ({ view, isDark }: Props) => {
+const BorderGrid = ({ view, isDark }: Props) => {
   const [imageLight] = useImage(gridImage)
   const [imageDark] = useImage(gridReverseImage)
 
@@ -38,4 +38,4 @@ const Borders = ({ view, isDark }: Props) => {
   )
 }
 
-export default Borders
+export default BorderGrid

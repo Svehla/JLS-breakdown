@@ -1,6 +1,6 @@
-import { Angle, View } from './mathCalc'
-import { Arc, Line } from 'react-konva'
+import { Arc } from 'react-konva'
 import { Radar } from './gameElementTypes'
+import { View } from './mathCalc'
 import React from 'react'
 
 type Props = {
@@ -15,6 +15,7 @@ const RadarView = ({ view, radar }: Props) => {
   const x1 = view.width / 2
   const y1 = view.height / 2
 
+  // return <React.Fragment />
   return (
     <Arc
       x={x1}

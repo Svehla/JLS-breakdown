@@ -1,5 +1,5 @@
 import { GameElement, GameElementType, Point } from './gameElementTypes'
-import { RADAR_LOOP_SPEED } from '../config'
+import { RADAR_LOOP_SPEED } from './gameSetup'
 
 // todo: extract types out of `mathCalc.js` to another file
 export type View = {
@@ -176,7 +176,16 @@ export const calculateNewObjPos = (
   }
 }
 
-const isInAxios = (axisPosition: number, larger: number, lower: number, halfWidth: number) =>
+/**
+ * if array has length 0 => reduce return init value (so it returns undefined as we expect)
+ */
+
+export const findMinByKey = <T extends { [key: string]: any }>(
+  arr: T[],
+  key: string
+): T | undefined => arr.reduce((min, curr) => (min[key] < curr[key] ? min : curr), arr[0])
+
+const isInAxis = (axisPosition: number, larger: number, lower: number, halfWidth: number) =>
   axisPosition + halfWidth >= larger && axisPosition <= lower + halfWidth
 
 /**
@@ -193,24 +202,51 @@ export const getInRange = (num: number, range = 1) => stayInRange(num, { min: -r
  * check if `gameElement` is in view (screen that user can see)
  *
  * collisions of screen and elements are compared by absolute coordinations
+ *
+ * todo: add support for Polygons
+ * todo: implement this fn via collisions :| now its shitty
  */
 export const isInView = (view: View, gameElement: GameElement): boolean => {
   let height = null
   let width = null
+  let x = null
+  let y = null
   // make square position for easier calculating of `isInView` fn
-  if (gameElement.type === GameElementType.Circle) {
-    width = gameElement.radius
-    height = gameElement.radius
-  } else {
-    width = gameElement.width
-    height = gameElement.height
+  switch (gameElement.type) {
+    case GameElementType.Circle: {
+      x = gameElement.x
+      y = gameElement.y
+      width = gameElement.radius
+      height = gameElement.radius
+      break
+    }
+    case GameElementType.Rectangle: {
+      x = gameElement.x
+      y = gameElement.y
+      width = gameElement.width
+      height = gameElement.height
+      break
+    }
+    case GameElementType.Polygon: {
+      // work with rects for simplify code
+      // todo: write test -> it does not work
+      // shitty collisions i guess -> but it could be fast :D
+      // todo: implement logic for polygons
+      const xPoints = gameElement.points.map(({ x }) => x)
+      const yPoints = gameElement.points.map(({ y }) => y)
+      x = Math.min(...xPoints)
+      y = Math.min(...yPoints)
+      width = Math.max(...xPoints) - x
+      height = Math.max(...yPoints) - y
+      break
+    }
   }
 
   const rightX = view.leftX + view.width
   const bottomY = view.topY + view.height
 
-  const isInX = isInAxios(gameElement.x, view.leftX, rightX, width)
-  const isInY = isInAxios(gameElement.y, view.topY, bottomY, height)
+  const isInX = isInAxis(x, view.leftX, rightX, width)
+  const isInY = isInAxis(y, view.topY, bottomY, height)
 
   return isInX && isInY
 }

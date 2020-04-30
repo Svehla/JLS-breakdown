@@ -1,41 +1,40 @@
 import { Circle } from 'react-konva'
-import { GameElementShape } from './createGameElements'
+import { GameElementFood, Line, Point, Radar } from './gameElementTypes'
 import { KonvaEventObject } from 'konva/types/Node'
 import { Layer, Stage, Text } from 'react-konva'
 import { View } from './mathCalc'
-import BandIcon from './BandIcon'
-import Borders from './Borders'
+import { playground } from './gameSetup'
+import BorderGrid from './BorderGrid'
 import GameElement from './GameElement'
 import Me from './Me'
+import PolygonBorder from './PolygonBorder'
 import RadarView from './RadarView'
 import RayCast from './RayCast'
 import React from 'react'
-import architects from '../img/architects.png'
-import jakeLovesSpace from '../img/jakeLovesSpace.png'
 
 type Props = {
   view: View
-  gameElements: GameElementShape[]
+  gameElements: GameElementFood[]
   me: any
   handlePlaygroundMove: (e: KonvaEventObject<Event>) => void
-  handleBandClick: any
-  cameraShakeIntensity: any
-  radar: any
-  mousePos: any
-  rayCast: any
+  cameraShakeIntensity: number
+  radar: Radar
+  mousePos: Point
+  rayCastRays: Line[]
+  playground: typeof playground
 }
 
-const Playground = (props: Props) => {
+const PlaygroundGrid = (props: Props) => {
   const {
     view,
     gameElements,
     me,
     handlePlaygroundMove,
-    handleBandClick,
     cameraShakeIntensity,
     radar,
     mousePos,
-    rayCast,
+    rayCastRays,
+    playground,
   } = props
 
   const deletedObjectsCounter = gameElements.filter(item => item.deleted).length
@@ -49,21 +48,21 @@ const Playground = (props: Props) => {
       height={view.height}
     >
       <Layer>
-        {deletedObjectsCounter !== gameElements.length && (
-          <Borders view={view} isDark={cameraShakeIntensity > 0} />
+        <BorderGrid view={view} isDark={cameraShakeIntensity > 0} />
+        {/* bad naming with mountains etc... */}
+        {playground.borders.map(
+          border =>
+            border.visibleInView && <PolygonBorder view={view} key={border.id} {...border} />
         )}
-
         {gameElements.map(
           item =>
-            item.visibleOnView &&
+            item.visibleInView &&
             item.seenByRadar > 0 &&
             // @ts-ignore
             !item.deleted && <GameElement key={item.id} view={view} {...item} />
         )}
-
         <Me me={me} view={view} />
-
-        <RayCast rays={rayCast.rays} view={view} />
+        <RayCast rays={rayCastRays} view={view} />
         <Text
           x={view.width / 2}
           y={10}
@@ -82,7 +81,6 @@ const Playground = (props: Props) => {
             fill={'#FFF'}
           />
         )}
-
         {deletedObjectsCounter === gameElements.length && (
           <Text
             x={102}
@@ -93,26 +91,11 @@ const Playground = (props: Props) => {
             fill={'#330'}
           />
         )}
-
         <Circle x={mousePos.x} y={mousePos.y} radius={5} fill='#f45' />
-        <BandIcon
-          x={view.width - 100}
-          y={60}
-          backgroundImage={jakeLovesSpace}
-          bandName={'jake-loves-space'}
-          onBandClick={handleBandClick}
-        />
-        <BandIcon
-          x={view.width - 230}
-          y={60}
-          backgroundImage={architects}
-          bandName={'architects'}
-          onBandClick={handleBandClick}
-        />
         <RadarView view={view} radar={radar} />
       </Layer>
     </Stage>
   )
 }
 
-export default Playground
+export default PlaygroundGrid

@@ -1,7 +1,15 @@
 // what about to use some library?
 // https://github.com/bmoren/p5.collide2D
 import { Angle, distance, isAngleInArcSector } from './mathCalc'
-import { Arc, Circle, GameElement, GameElementType, Rectangle } from './gameElementTypes'
+import {
+  Arc,
+  Circle,
+  GameElement,
+  GameElementType,
+  Point,
+  Polygon,
+  Rectangle,
+} from './gameElementTypes'
 
 export const isTwoElementCollision = (circleShape1: Circle, shape2: GameElement) => {
   switch (shape2.type) {
@@ -9,6 +17,8 @@ export const isTwoElementCollision = (circleShape1: Circle, shape2: GameElement)
       return isCircleCircleCollision(circleShape1, shape2)
     case GameElementType.Rectangle:
       return isRectangleCircleCollision(circleShape1, shape2)
+    case GameElementType.Polygon:
+      return isPolygonCircleCollision(circleShape1, shape2)
   }
 }
 
@@ -21,16 +31,28 @@ export const isArcRectCollision = (arc: Arc, shape2: GameElement) => {
   switch (shape2.type) {
     case GameElementType.Circle:
       return isPointArcCollision(arc, {
-        // for easier math I temporary transform circles into rectangles
-        type: GameElementType.Rectangle,
+        // for easier math I temporary transform circles into point
         x: shape2.x,
         y: shape2.y,
-        width: shape2.radius,
-        height: shape2.radius,
       })
     case GameElementType.Rectangle:
       return isPointArcCollision(arc, shape2)
+    case GameElementType.Polygon:
+      // will not use it in the future -> refactor
+      return isPolygonArcCollision(arc, shape2)
+    default:
+      throw new Error('bad runtime shape type')
   }
+}
+
+const isPolygonCircleCollision = (circle: Circle, polygon: Polygon) => {
+  // todo: implement method
+  return false
+}
+
+const isPolygonArcCollision = (arc: Arc, polygon: Polygon) => {
+  // todo: implement method
+  return false
 }
 
 /**
@@ -77,7 +99,7 @@ export const isArcRectCollision = (arc: Arc, shape2: GameElement) => {
  *
  * TODO: make isRectArcCollision
  */
-const isPointArcCollision = (arc: Arc, rect: Rectangle) => {
+const isPointArcCollision = (arc: Arc, rect: Point) => {
   const xDistance = rect.x - arc.x
   const yDistance = rect.y - arc.y
 

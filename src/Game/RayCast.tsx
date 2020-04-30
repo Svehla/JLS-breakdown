@@ -1,4 +1,4 @@
-import { Line, Shape } from 'react-konva'
+import { Line } from 'react-konva'
 import { Line as LineType } from './gameElementTypes'
 import { View, getRelativePosByAbsPos } from './mathCalc'
 import React from 'react'

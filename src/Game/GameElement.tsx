@@ -1,7 +1,7 @@
 import { Circle, Rect } from 'react-konva'
 import { CircleConfig } from 'konva/types/shapes/Circle'
 import { GameElementType } from './gameElementTypes'
-import { RADAR_VISIBLE_DELAY } from '../config'
+import { RADAR_VISIBLE_DELAY } from './gameSetup'
 import { RectConfig } from 'konva/types/shapes/Rect'
 import { View, getRelativePosByAbsPos, normalizeInto01 } from './mathCalc'
 import React from 'react'
