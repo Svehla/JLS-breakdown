@@ -11,7 +11,7 @@ In 2020 I did small refactor to hooks and typescript and publish it on my github
 
 ## Preview
 
-[Game is temporary deployed this url: http://jake-loves-space.svehlik.eu/](http://jake-loves-space.svehlik.eu/)
+[Game is temporary deployed this url: http://jake-loves-space-game.svehlik.eu/](http://jake-loves-space-game.svehlik.eu/)
 
 ## Screenshot
 
