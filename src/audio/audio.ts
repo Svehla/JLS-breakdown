@@ -61,7 +61,7 @@ let buffersByName: Record<string, ArrayBuffer> = {}
 
 /**
  * unpure async fn that load data from server
- * http://jake-loves-space.svehlik.eu/
+ * https://svehla.github.io/JLS-breakdown/
  */
 export const initSounds = async () => {
   // load audio file from server
