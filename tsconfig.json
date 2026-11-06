@@ -8,6 +8,12 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
+    "types": [
+      "node",
+      "jest",
+      "react",
+      "react-dom"
+    ],
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
